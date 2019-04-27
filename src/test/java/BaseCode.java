@@ -1,52 +1,4 @@
-interface GraphicalScreen {
-    void outputWelcomeScreen();
-
-    void outputLogoScreen();
-
-    void outputLoadingScreen();
-
-    void outputMainScreen();
-
-    void inputCommandScreen();
-
-    void outputHelpScreen();
-
-    void displayTableData();
-
-    void writeDataScreen();
-
-    void readDataScreen();
-
-    void updataDataScreen();
-
-    void deleteDataScreen();
-
-    void searchDataScreen();
-
-    void gotoDataScreen();
-
-    void setRowScreen();
-}
-
-interface ProcessOperation {
-    void saveDataToFile();
-
-    void backUpDataToFile();
-
-    void restoreDataToFile();
-
-    void moveToFirstPage();
-
-    void moveToLastPage();
-
-    void moveToPreviousRow();
-
-    void moveToNextRow();
-
-    void shortcutCommand();
-
-    void exitProgram();
-}
+import java.util.Scanner;
 
 class BaseCode implements GraphicalScreen, ProcessOperation {
     public void saveDataToFile() {
@@ -108,7 +60,8 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
 
     public void outputWelcomeScreen() {
         // OUTPUT WELCOME
-        String []stock = {"                      _____  _                _      __  __                                                            _    ",
+        String[] stockText = {
+                "                      _____  _                _      __  __                                                            _    ",
                 "                     / ____|| |              | |    |  \\/  |                                                          | |   ",
                 "                    | (___  | |_  ___    ___ | | __ | \\  / |  __ _  _ __    __ _   __ _   ___  _ __ ___    ___  _ __  | |_  ",
                 "                     \\___ \\ | __|/ _ \\  / __|| |/ / | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '_ ` _ \\  / _ \\| '_ \\ | __| ",
@@ -117,18 +70,16 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
                 "                                                                                   __/ |                                    ",
                 "                                                                                  |___/"};
 
-        for (String a : stock) {
-            System.out.println(a);
-
+        for (String text : stockText) {
+            System.out.println(text);
         }
-
-
     }
 
 
     public void outputLogoScreen() {
         // OUTPUT LOGO
-        String []classBTB = {"                                    ____     ___                                       ____     ______  ____  ",
+        String[] classBTBText = {
+                "                                    ____     ___                                       ____     ______  ____  ",
                 "                                   /\\  _`\\  /\\_ \\                                     /\\  _`\\  /\\__  _\\/\\  _`\\",
                 "                                   \\ \\ \\/\\_\\\\//\\ \\       __       ____    ____   __   \\ \\ \\L\\ \\\\/_/\\ \\/\\ \\ \\L\\ \\",
                 "                                    \\ \\ \\/_/_ \\ \\ \\    /'__`\\    /',__\\  /',__\\ /\\_\\   \\ \\  _ <'  \\ \\ \\ \\ \\  _ <'",
@@ -136,12 +87,11 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
                 "                                      \\ \\____/ /\\____\\\\ \\__/.\\_\\\\/\\____/\\/\\____/  /\\_\\   \\ \\____/   \\ \\_\\ \\ \\____/",
                 "                                       \\/___/  \\/____/ \\/__/\\/_/ \\/___/  \\/___/   \\/_/    \\/___/     \\/_/  \\/___/ "};
 
-        for (String c : classBTB) {
-            System.out.println(c);
+        for (String text : classBTBText) {
+            System.out.println(text);
         }
 
-
-        String []groupBTB = {
+        String[] groupBTBText = {
                 "                                              ____                                                __ ",
                 "                                             /\\  _`\\                                            /'__`\\",
                 "                                             \\ \\ \\L\\_\\   _ __   ___    __  __   _____    __    /\\_\\L\\ \\",
@@ -151,10 +101,10 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
                 "                                                 \\/___/   \\/_/ \\/___/   \\/___/   \\ \\ \\/   \\/_/    \\/___/",
                 "                                                                                  \\ \\_\\",
                 "                                                                                   \\/_/"
-
         };
-        for (String g : groupBTB) {
-            System.out.println(g);
+
+        for (String text : groupBTBText) {
+            System.out.println(text);
         }
     }
 
@@ -269,28 +219,10 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
     }
 }
 
-class Tester {
-
-}
-
-class ProtoGUI {
-    public static void main(String[] args) {
-        BaseCode bc = new BaseCode();
-        bc.outputWelcomeScreen();
-
-        BaseCode bcs=new BaseCode();
-        bcs.outputLogoScreen();
-
-        BaseCode baseCode = new BaseCode();
-        baseCode.outputLoadingScreen();
-
-    }
-}
-
 class OutputLoadingOnScreen implements Runnable {
     public void run() {
-        String a = "Please Wait,Loading...";
-        for (int i = 0; i < a.length(); i++) {
+        String a = "Please Wait, Loading.......";
+        for (int i=0; i< a.length(); i++) {
             char ch = a.charAt(i);
             String st = String.valueOf(ch);
             try {
