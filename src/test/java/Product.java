@@ -5,15 +5,16 @@ public class Product {
     private String importDate;
     private int qty;
 
+    public Product() {
+
+    }
+
     public Product(int proId, String proName, String author, String importDate, int qty) {
         this.proId = proId;
         this.proName = proName;
         this.author = author;
         this.importDate = importDate;
         this.qty = qty;
-    }
-
-    public Product() {
     }
 
     public int getQty() {
