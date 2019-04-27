@@ -1,37 +1,7 @@
-interface GraphicalScreen {
-    void outputWelcomeScreen();
-    void outputLogoScreen();
-    void outputLoadingScreen();
-    void outputMainScreen();
-    void inputCommandScreen();
-    void outputHelpScreen();
-    
-    void displayTableData();
-    void writeDataScreen();
-    void readDataScreen();
-    void updataDataScreen();
-    void deleteDataScreen();
-    void searchDataScreen();
-    void gotoDataScreen();
-    void setRowScreen();
-}
+import java.util.Scanner;
 
-interface ProcessOperation {
-    void saveDataToFile();
-    void backUpDataToFile();
-    void restoreDataToFile();
+public class BaseCode implements GraphicalScreen, ProcessOperation {
 
-    void moveToFirstPage();
-    void moveToLastPage();
-    void moveToPreviousRow();
-    void moveToNextRow();
-
-    void shortcutCommand();
-
-    void exitProgram();
-}
-
-class BaseCode implements GraphicalScreen, ProcessOperation {
     public void saveDataToFile() {
         // OUTPUT "DATA IS ADDING..."
         // SAVE DATA INTO FILE
@@ -41,7 +11,7 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
     public void backUpDataToFile() {
         // CREATE BACKUP FILE
         // TO BACKUP OR NOT
-        // OUPUT MESSAGE
+        // OUTPUT MESSAGE
     }
 
     public void restoreDataToFile() {
@@ -102,16 +72,20 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
     }
 
     public void outputMainScreen() {
-
+        // OUTPUT MAIN TABLE
     }
 
     public void inputCommandScreen() {
-
+        // GET USER INPUT
     }
 
     public void outputHelpScreen() {
         // OUTPUT SHORTCUT
         // PROGRAM DESCRIPTION
+    }
+
+    public void outputProductData() {
+        // DISPLAY PRODUCT INFORMATION
     }
 
     public void displayTableData() {
@@ -152,38 +126,45 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
     }
 
     public void deleteDataScreen() {
+        Scanner scan = new Scanner(System.in);
         // DELETE BY ID
+        System.out.println("Please Input the ID of Product : ");
+        int id = scan.nextInt();
         // OUTPUT PRODUCT INFORMATION OR MESSAGE
+        System.out.println("Product Found for [" + id + "] : " );
         // TO DELETE OR NOT
+        System.out.println("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
         // OUTPUT MESSAGE
+        System.out.println("Product was removed");
+        scan.close();
     }
 
     public void searchDataScreen() {
+        Scanner scan = new Scanner(System.in);
         // SEARCH BY NAME (REGEX EDITION)
+        System.out.println("Please Input the Name of Product : ");
+        String name = scan.nextLine();
         // OUTPUT SEARCH RESULT COUNT OR MESSAGE
+        System.out.println("Product Found for [" + name + "] : " );
         // DISPLAY TABLE
-        // DISPLAY SEARCH RESULT
+
         // DISPLAY PAGE NUMBER
-        // TOTOAL RECORD
+
+        // TOTAL RECORD
     }
 
     public void gotoDataScreen() {
+        // INPUT PAGE
+        System.out.println("Go to Page : ");
         // DISPLAY TABLE
+
         // AT SPECIFIC PAGE
     }
 
     public void setRowScreen() {
         // INPUT SET ROW (HOW MANY ROW TO DISPLAY)
+        System.out.println("Please Enter Row for Display : ");
         // OUTPUT MESSAGE
-    }
-}
-
-class Tester {
-
-}
-
-class ProtoGUI {
-    public static void main(String[] args) {
-
+        System.out.println("Set Row for N Successfully!");
     }
 }

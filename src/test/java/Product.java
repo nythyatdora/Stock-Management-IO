@@ -1,59 +1,36 @@
 public class Product {
-    private int proId;
-    private String proName;
-    private String author;
+    private int productID;
+    private String productName;
+    private double unitPrice;
+    private int quantity;
     private String importDate;
-    private int qty;
 
     public Product() {
-
+        this.productID = -1;
+        this.productName = "";
+        this.unitPrice = -1;
+        this.quantity = -1;
+        this.importDate = "DD-MM-YY";
     }
 
-    public Product(int proId, String proName, String author, String importDate, int qty) {
-        this.proId = proId;
-        this.proName = proName;
-        this.author = author;
-        this.importDate = importDate;
-        this.qty = qty;
-    }
-
-    public int getQty() {
-        return qty;
-    }
-
-    public int getProId() {
-        return proId;
-    }
-
-    public String getProName() {
-        return proName;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getImportDate() {
-        return importDate;
-    }
-
-    public void setProId(int proId) {
-        this.proId = proId;
-    }
-
-    public void setProName(String proName) {
-        this.proName = proName;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setImportDate(String importDate) {
+    public Product(int productID, String productName, double unitPrice, int quantity, String importDate) {
+        this.productID = productID;
+        this.productName = productName;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
         this.importDate = importDate;
     }
 
-    public void setQty(int qty) {
-        this.qty = qty;
+    private void createFileForTesting() {
+        Product product = new Product(1, "Coca Cola", 2.50, 10, "12-12-2019");
+
+        final int TEN_MILLION_RECORDS = 10000000;
+        for(int i=0; i<TEN_MILLION_RECORDS; i++) {
+            // WRITE INTO FILE
+        }
+    }
+
+    public static void main(String[] args) {
+
     }
 }
