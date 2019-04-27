@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component LANGUAGE_LEVEL="JDK_1_5" jdk="&quot;10.0.1&quot; 2018-04-17" jdk_type="JavaSDK">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
+	<levels>
+		<level name="Maven: de.vandermeer:asciitable:0.3.2" value="project"/>
+		<level name="Maven: de.vandermeer:ascii-utf-themes:0.0.1" value="project"/>
+		<level name="Maven: de.vandermeer:skb-interfaces:0.0.1" value="project"/>
+		<level name="Maven: org.apache.commons:commons-lang3:3.4" value="project"/>
+		<level name="Maven: org.antlr:ST4:4.0.8" value="project"/>
+		<level name="Maven: org.antlr:antlr-runtime:3.5.2" value="project"/>
+		<level name="Maven: org.antlr:antlr4:4.5.1" value="project"/>
+		<level name="Maven: org.slf4j:slf4j-api:1.7.12" value="project"/>
+		<level name="Maven: de.vandermeer:char-translation:0.0.2" value="project"/>
+		<level name="de.vandermeer:asciitable:0.3.2" value="project"/>
+	</levels>
+</component>
