@@ -1,3 +1,5 @@
+import de.vandermeer.asciitable.AsciiTable;
+
 import java.util.Scanner;
 
 class BaseCode implements GraphicalScreen, ProcessOperation {
@@ -124,15 +126,51 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
 
     public void outputMainScreen() {
         // OUTPUT MAIN TABLE
+        AsciiTable ac = new AsciiTable();
+        ac.addRule();
+        ac.addRow("*)Display", "W)rite", "R)ead", "U)pdate", "D)elete", "F)irst", "P)rivious", "N)ext");
+        ac.addRule();
+        ac.addRow("L)ast", "G)o to", "S)et row", "Sa)ve", "B)ack up", "Re)store", "H)elp", "E)xit");
+        ac.addRule();
+        System.out.println(ac.render());
     }
 
     public void inputCommandScreen() {
         // GET USER INPUT
+        System.out.println("Please Input Command : ");
     }
 
     public void outputHelpScreen() {
         // OUTPUT SHORTCUT
         // PROGRAM DESCRIPTION
+        String[] st = new String[17];
+        st[0] = "1.Press *:Display all record of product.";
+        st[1] = "2.Press W: Add new Product";
+        st[2] = "Press w ->#proname-unitprice-qty: sortcut for add new product";
+        st[3] = "3. Press r: Read contents";
+        st[4] = "Press r#productId: shortCUt for read product by Id";
+        st[5] = "4. Press u : Update Data";
+        st[6] = "5. Press d: Delete Data";
+        st[7] = "   Press d#proId : shortcut for delete product by id";
+        st[8] = "6. Press f : Display first page";
+        st[9] = "7. Press p : Display Previous page";
+        st[10] = "8. Press n: Display Next Page";
+        st[11] = "9. Press l : Display Last Page";
+        st[12] = "10. Press s : Search Product by name";
+        st[13] = "11. Press sa : To save record to file";
+        st[14] = "12. Press ba : Backup data";
+        st[15] = "13. Press re : To restore data";
+        st[16] = "14. Press h : To Help";
+
+
+        AsciiTable ac = new AsciiTable();
+
+        ac.addRule();
+        for (String te : st) {
+            ac.addRow("" + te).setPaddingLeft(3);
+        }
+        ac.addRule();
+        System.out.println(ac.render());
     }
 
     public void outputProductData() {
