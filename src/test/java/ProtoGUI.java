@@ -1,29 +1,46 @@
 interface GraphicalScreen {
     void outputWelcomeScreen();
+
     void outputLogoScreen();
+
     void outputLoadingScreen();
+
     void outputMainScreen();
+
     void inputCommandScreen();
+
     void outputHelpScreen();
-    
+
     void displayTableData();
+
     void writeDataScreen();
+
     void readDataScreen();
+
     void updataDataScreen();
+
     void deleteDataScreen();
+
     void searchDataScreen();
+
     void gotoDataScreen();
+
     void setRowScreen();
 }
 
 interface ProcessOperation {
     void saveDataToFile();
+
     void backUpDataToFile();
+
     void restoreDataToFile();
 
     void moveToFirstPage();
+
     void moveToLastPage();
+
     void moveToPreviousRow();
+
     void moveToNextRow();
 
     void shortcutCommand();
@@ -91,14 +108,68 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
 
     public void outputWelcomeScreen() {
         // OUTPUT WELCOME
+        String []stock = {"                      _____  _                _      __  __                                                            _    ",
+                "                     / ____|| |              | |    |  \\/  |                                                          | |   ",
+                "                    | (___  | |_  ___    ___ | | __ | \\  / |  __ _  _ __    __ _   __ _   ___  _ __ ___    ___  _ __  | |_  ",
+                "                     \\___ \\ | __|/ _ \\  / __|| |/ / | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '_ ` _ \\  / _ \\| '_ \\ | __| ",
+                "                     ____) || |_| (_) || (__ |   <  | |  | || (_| || | | || (_| || (_| ||  __/| | | | | ||  __/| | | || |_  ",
+                "                    |_____/  \\__|\\___/  \\___||_|\\_\\ |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___||_| |_| |_| \\___||_| |_| \\__| ",
+                "                                                                                   __/ |                                    ",
+                "                                                                                  |___/"};
+
+        for (String a : stock) {
+            System.out.println(a);
+
+        }
+
+
     }
+
 
     public void outputLogoScreen() {
         // OUTPUT LOGO
+        String []classBTB = {"                                    ____     ___                                       ____     ______  ____  ",
+                "                                   /\\  _`\\  /\\_ \\                                     /\\  _`\\  /\\__  _\\/\\  _`\\",
+                "                                   \\ \\ \\/\\_\\\\//\\ \\       __       ____    ____   __   \\ \\ \\L\\ \\\\/_/\\ \\/\\ \\ \\L\\ \\",
+                "                                    \\ \\ \\/_/_ \\ \\ \\    /'__`\\    /',__\\  /',__\\ /\\_\\   \\ \\  _ <'  \\ \\ \\ \\ \\  _ <'",
+                "                                     \\ \\ \\L\\ \\ \\_\\ \\_ /\\ \\L\\.\\_ /\\__, `\\/\\__, `\\\\/_/_   \\ \\ \\L\\ \\  \\ \\ \\ \\ \\ \\L\\ \\",
+                "                                      \\ \\____/ /\\____\\\\ \\__/.\\_\\\\/\\____/\\/\\____/  /\\_\\   \\ \\____/   \\ \\_\\ \\ \\____/",
+                "                                       \\/___/  \\/____/ \\/__/\\/_/ \\/___/  \\/___/   \\/_/    \\/___/     \\/_/  \\/___/ "};
+
+        for (String c : classBTB) {
+            System.out.println(c);
+        }
+
+
+        String []groupBTB = {
+                "                                              ____                                                __ ",
+                "                                             /\\  _`\\                                            /'__`\\",
+                "                                             \\ \\ \\L\\_\\   _ __   ___    __  __   _____    __    /\\_\\L\\ \\",
+                "                                              \\ \\ \\L_L  /\\`'__\\/ __`\\ /\\ \\/\\ \\ /\\ '__`\\ /\\_\\   \\/_/_\\_<_",
+                "                                               \\ \\ \\/, \\\\ \\ \\//\\ \\L\\ \\\\ \\ \\_\\ \\\\ \\ \\L\\ \\\\/_/_    /\\ \\L\\ \\",
+                "                                                \\ \\____/ \\ \\_\\\\ \\____/ \\ \\____/ \\ \\ ,__/  /\\_\\   \\ \\____/",
+                "                                                 \\/___/   \\/_/ \\/___/   \\/___/   \\ \\ \\/   \\/_/    \\/___/",
+                "                                                                                  \\ \\_\\",
+                "                                                                                   \\/_/"
+
+        };
+        for (String g : groupBTB) {
+            System.out.println(g);
+        }
     }
 
     public void outputLoadingScreen() {
         // OUTPUT LOADING SCREEN
+        OutputLoadingOnScreen outputLoadingOnScreen = new OutputLoadingOnScreen();
+        Thread thread = new Thread(outputLoadingOnScreen);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+        System.out.println("Current Time Loading:");
     }
 
     public void outputMainScreen() {
@@ -184,6 +255,30 @@ class Tester {
 
 class ProtoGUI {
     public static void main(String[] args) {
+        BaseCode bc = new BaseCode();
+        bc.outputWelcomeScreen();
 
+        BaseCode bcs=new BaseCode();
+        bcs.outputLogoScreen();
+
+        BaseCode baseCode = new BaseCode();
+        baseCode.outputLoadingScreen();
+
+    }
+}
+
+class OutputLoadingOnScreen implements Runnable {
+    public void run() {
+        String a = "Please Wait,Loading...";
+        for (int i = 0; i < a.length(); i++) {
+            char ch = a.charAt(i);
+            String st = String.valueOf(ch);
+            try {
+                System.out.print(st);
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
