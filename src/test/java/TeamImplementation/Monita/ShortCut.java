@@ -1,9 +1,9 @@
 package TeamImplementation.Monita;
 
 public class ShortCut {
-    private static String INPUT_TO_READ = "r#proID";
-    private static String INPUT_TO_DELETE = "d#proID";
-    private static String INPUT_TO_WRITE = "w#production-unit-price";
+    private static String INPUT_TO_READ = "r#proId";
+    private static String INPUT_TO_DELETE = "d#proId";
+    private static String INPUT_TO_WRITE = "w ->#proname-unitprice-qty";
 
 
     public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class ShortCut {
             System.out.println(d);
         }
 
-        String[] write = INPUT_TO_WRITE.split("[#-]+");
+        String[] write = INPUT_TO_WRITE.split("[ ->#-]+");
         for (String w : write) {
             System.out.println(w);
         }
