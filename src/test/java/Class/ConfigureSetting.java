@@ -1,4 +1,6 @@
-public class LogData {
+package Class;
+
+public class ConfigureSetting {
     public int currentRowSetup;
     public int currentRowStart;
     public int currentRowEnd;

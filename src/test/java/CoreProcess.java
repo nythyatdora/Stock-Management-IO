@@ -1,4 +1,4 @@
-public interface ProcessOperation {
+public interface CoreProcess {
     void saveDataToFile();
     void backUpDataToFile();
     void restoreDataToFile();
