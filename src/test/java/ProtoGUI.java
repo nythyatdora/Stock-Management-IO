@@ -234,6 +234,44 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
 		// OUTPUT FINAL INFORMATION
 		// TO SAVE OR NOT
 		// OUTPUT MESSAGE
+
+
+		Scanner sc = new Scanner(System.in);
+		AsciiTable at = new AsciiTable();
+		AsciiTable msg= new AsciiTable();
+		at.addRule();
+		at.addRow("ID",":"+"10000000");
+		at.addRule();
+		at.addRow("Name",":"+"Coca Cola");
+		at.addRule();
+		at.addRow( "Unit price",":"+"2.0");
+		at.addRule();
+		at.addRow("Qty",":"+90);
+		at.addRule();
+		at.addRow("Imported Date",":"+"24-04-2019");
+		at.addRule();
+		at.setPaddingRight(1);
+		at.setPaddingLeft(1);
+		at.setTextAlignment(TextAlignment.LEFT);
+		at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+		at.getContext().setGrid(U8_Grids.borderDoubleLight());
+
+		System.out.println(at.render(50));
+
+		System.out.print("Are you sure want to update this record? [Y/y] or [N/n]");
+		sc.next();
+
+		msg.addRule();
+		msg.addRow("Product was update");
+		msg.addRule();
+		msg.setTextAlignment(TextAlignment.CENTER);
+		msg.getContext().setGridTheme(TA_GridThemes.TOPBOTTOM);
+		msg.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+		System.out.println(msg.render(50));
+
+
+
+
 	}
 
 	public void deleteDataScreen() {
@@ -241,6 +279,39 @@ class BaseCode implements GraphicalScreen, ProcessOperation {
 		// OUTPUT PRODUCT INFORMATION OR MESSAGE
 		// TO DELETE OR NOT
 		// OUTPUT MESSAGE
+
+		Scanner sc = new Scanner(System.in);
+		AsciiTable at = new AsciiTable();
+		AsciiTable msg= new AsciiTable();
+		at.addRule();
+		at.addRow("ID",":"+"10000000");
+		at.addRule();
+		at.addRow("Name",":"+"Coca Cola");
+		at.addRule();
+		at.addRow( "Unit price",":"+"2.0");
+		at.addRule();
+		at.addRow("Qty",":"+90);
+		at.addRule();
+		at.addRow("Imported Date",":"+"24-04-2019");
+		at.addRule();
+		at.setPaddingRight(1);
+		at.setPaddingLeft(1);
+		at.setTextAlignment(TextAlignment.LEFT);
+		at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+		at.getContext().setGrid(U8_Grids.borderDoubleLight());
+
+		System.out.println(at.render(50));
+
+		System.out.print("Are you sure want to delete this record? [Y/y] or [N/n]");
+		sc.next();
+
+		msg.addRule();
+		msg.addRow("Product was delete");
+		msg.addRule();
+		msg.setTextAlignment(TextAlignment.CENTER);
+		msg.getContext().setGridTheme(TA_GridThemes.TOPBOTTOM);
+		msg.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+		System.out.println(msg.render(50));
 
 	}
 
@@ -273,5 +344,7 @@ class ProtoGUI {
 		BaseCode bs = new BaseCode();
 		bs.displayTableData();
 		bs.writeDataScreen();
+		bs.deleteDataScreen();
+		bs.updataDataScreen();
 	}
 }
