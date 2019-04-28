@@ -106,13 +106,7 @@ public class BaseCode extends AbstractBaseCode {
         // OUTPUT MESSAGE SUCCESSFULLY
     }
 
-    public void readDataLayout() {
-        // READ BY ID
-        // SEARCH DATA BY ID
-        // OUTPUT SCREEN AT ID
-    }
-
-    public void updataDataLayout() {
+    public void updataDataLayout(int i, HashMap hashMap) {
         // UPDATE BY ID
         // OUTPUT PRODUCT INFORMATION
         // OUTPUT OPTIONS
@@ -122,6 +116,14 @@ public class BaseCode extends AbstractBaseCode {
         // TO SAVE OR NOT
         // OUTPUT MESSAGE
     }
+
+    public void readDataLayout() {
+        // READ BY ID
+        // SEARCH DATA BY ID
+        // OUTPUT SCREEN AT ID
+    }
+
+
 
     public void deleteDataLayout() {
         // DELETE BY ID
