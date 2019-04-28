@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 class BaseCode implements DisplayLayout, CoreProcess {
 
     public BaseCode() {
@@ -111,13 +113,7 @@ class BaseCode implements DisplayLayout, CoreProcess {
         // OUTPUT MESSAGE SUCCESSFULLY
     }
 
-    public void readDataLayout() {
-        // READ BY ID
-        // SEARCH DATA BY ID
-        // OUTPUT SCREEN AT ID
-    }
-
-    public void updataDataLayout() {
+    public void updataDataLayout(int i, HashMap hashMap) {
         // UPDATE BY ID
         // OUTPUT PRODUCT INFORMATION
         // OUTPUT OPTIONS
@@ -127,6 +123,14 @@ class BaseCode implements DisplayLayout, CoreProcess {
         // TO SAVE OR NOT
         // OUTPUT MESSAGE
     }
+
+    public void readDataLayout() {
+        // READ BY ID
+        // SEARCH DATA BY ID
+        // OUTPUT SCREEN AT ID
+    }
+
+
 
     public void deleteDataLayout() {
         // DELETE BY ID

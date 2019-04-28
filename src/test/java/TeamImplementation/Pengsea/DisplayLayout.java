@@ -20,7 +20,7 @@ public class DisplayLayout implements PengseaTask {
     public void outputHelpLayout() {
         String[] st = {
                 "1.Press *:Display all record of product.",
-                "2.Press W: Add new Class.Product",
+                "2.Press W: Add new Product",
                 "Press w ->#proname-unitprice-qty: sortcut for add new product",
                 "3. Press r: Read contents",
                 "Press r#productId: shortCUt for read product by Id",
@@ -31,7 +31,7 @@ public class DisplayLayout implements PengseaTask {
                 "7. Press p : Display Previous page",
                 "8. Press n: Display Next Page",
                 "9. Press l : Display Last Page",
-                "10. Press s : Search Class.Product by name",
+                "10. Press s : Search Product by name",
                 "11. Press sa : To save record to file",
                 "12. Press ba : Backup data",
                 "13. Press re : To restore data",
