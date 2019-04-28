@@ -1,7 +1,14 @@
 package TeamImplementation.Monita;
 
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.System.currentTimeMillis;
+
 public class OutputLoadingScreen implements Runnable {
     private final String OUTPUT_STRING = "Please Wait, Loading.......";
+    private final long Start_Time= currentTimeMillis();
+
+
 
     public void run() {
 
@@ -17,6 +24,7 @@ public class OutputLoadingScreen implements Runnable {
     }
 
     public static void startThread() {
+
         OutputLoadingScreen outputLoadingOnScreen = new OutputLoadingScreen();
         Thread thread = new Thread(outputLoadingOnScreen);
         thread.start();
@@ -28,4 +36,5 @@ public class OutputLoadingScreen implements Runnable {
         System.out.println();
         System.out.println("Current Time Loading : ");
     }
+
 }
