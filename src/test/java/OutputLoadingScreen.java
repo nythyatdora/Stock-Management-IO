@@ -1,5 +1,3 @@
-package TeamImplementation.Monita;
-
 public class OutputLoadingScreen implements Runnable {
     private final String OUTPUT_STRING = "Please Wait, Loading.......";
 
@@ -16,7 +14,7 @@ public class OutputLoadingScreen implements Runnable {
         }
     }
 
-    public static void startThread() {
+    public void startThread() {
         OutputLoadingScreen outputLoadingOnScreen = new OutputLoadingScreen();
         Thread thread = new Thread(outputLoadingOnScreen);
         thread.start();

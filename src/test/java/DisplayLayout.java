@@ -1,7 +1,21 @@
-import TeamImplementation.Dora.DoraTask;
-import TeamImplementation.Kimlinh.KimlinhTask;
-import TeamImplementation.Monita.MonitaTask;
-import TeamImplementation.Navy.NavyTask;
-import TeamImplementation.Pengsea.PengseaTask;
+public interface DisplayLayout {
+    void outputWelcomeLayout();
+    void outputLogoLayout();
+    void outputLoadingLayout();
+    void outputMainLayout();
+    void inputCommandLayout();
 
-public interface DisplayLayout extends MonitaTask, PengseaTask, KimlinhTask, NavyTask, DoraTask {}
+    void outputProductData();
+    void displayTableData();
+    void writeDataLayout();
+    void readDataLayout();
+    void searchDataLayout();
+    void deleteDataLayout();
+    void updataDataLayout();
+
+    void outputHelpLayout();
+
+    void outputInvalidInputLayout();
+    void gotoDataLayout();
+    void setRowLayout();
+}

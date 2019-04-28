@@ -1,7 +1,6 @@
-class BaseCode implements DisplayLayout, CoreProcess {
-
-    public BaseCode() {
-
+public class BaseCode extends AbstractBaseCode {
+    public void regexSearch() {
+        // search like query
     }
 
     public void saveDataToFile() {
@@ -51,7 +50,6 @@ class BaseCode implements DisplayLayout, CoreProcess {
         // READ_PRODUCT_ID
         // UPDATE_ALL
         // UPDATE_...
-        //
     }
 
     public void exitProgram() {
@@ -74,12 +72,12 @@ class BaseCode implements DisplayLayout, CoreProcess {
         // OUTPUT LOADING SCREEN
     }
 
-    public void outputMainLayout() {
-        // OUTPUT MAIN TABLE
+    public void outputInvalidInputLayout() {
+        // OUTPUT INVALID LAYOUT
     }
 
-    public void inputCommandLayout() {
-        // GET USER INPUT
+    public void outputMainLayout() {
+        // OUTPUT MAIN TABLE
     }
 
     public void outputHelpLayout() {
@@ -103,11 +101,8 @@ class BaseCode implements DisplayLayout, CoreProcess {
         // INPUT PRODUCT PRICE
         // INPUT PRODUCT QUANTITY
         // INPUT IMPORT DATE (IMPLICITLY)
-
         // OUTPUT INPUTED PRODUCT INFORMATION
-
         // TO SAVE OR NOT
-
         // OUTPUT MESSAGE SUCCESSFULLY
     }
 
@@ -143,13 +138,13 @@ class BaseCode implements DisplayLayout, CoreProcess {
         // TOTAL RECORD
     }
 
-    public void gotoDataScreen() {
+    public void gotoDataLayout() {
         // INPUT PAGE
         // DISPLAY TABLE
         // AT SPECIFIC PAGE
     }
 
-    public void setRowScreen() {
+    public void setRowLayout() {
         // INPUT SET ROW (HOW MANY ROW TO DISPLAY)
         // OUTPUT MESSAGE
     }

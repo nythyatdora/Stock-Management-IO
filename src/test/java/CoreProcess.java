@@ -1,4 +1,6 @@
 public interface CoreProcess {
+    void regexSearch();
+
     void saveDataToFile();
     void backUpDataToFile();
     void restoreDataToFile();

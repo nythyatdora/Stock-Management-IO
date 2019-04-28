@@ -1,5 +1,3 @@
-package Class;
-
 public class ConfigureSetting {
     public int currentRowSetup;
     public int currentRowStart;
