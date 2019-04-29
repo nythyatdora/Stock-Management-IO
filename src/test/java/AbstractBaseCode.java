@@ -3,10 +3,17 @@ import de.vandermeer.asciithemes.TA_GridThemes;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
-public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption {
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
     private ConfigureSetting setting;
 
-    public AbstractBaseCode() {
+    AbstractBaseCode() {
         setting = new ConfigureSetting();
         // READ DATA FROM setting.bak
         // IF FILE NOT EXIST
@@ -15,8 +22,63 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         //      READ FROM FILE TO this.setting
     }
 
-    public void saveDataToFile() {
+    public ArrayList<Product> readDataFromFile() {
+        String str;
+        String temp = "";
+        BufferedReader bufferedReader;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(FileLocation.DEFAULT_FILE_NAME));
 
+            str = bufferedReader.readLine();
+            while (str != null) {
+                str = bufferedReader.readLine();
+                temp = temp.concat(str);
+            }
+
+            bufferedReader.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        StringTokenizer stringTokenizer = new StringTokenizer(temp, "+");
+        ArrayList<String> arr = new ArrayList<String>();
+
+        while (stringTokenizer.hasMoreTokens()) {
+            arr.add(stringTokenizer.nextToken());
+        }
+
+        ArrayList<Product> obj = new ArrayList<Product>();
+
+        for (String anArr1 : arr) {
+            String a[] = anArr1.split("#");
+            obj.add(new Product(Integer.parseInt(a[0]), a[1], Double.parseDouble(a[2]), Integer.parseInt(a[3]), a[4]));
+        }
+        return obj;
+    }
+
+    public void saveDataToFile() {
+        long startTime;
+        long endTime;
+        long duration;
+
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
+
+            startTime = System.currentTimeMillis();
+            for (int i = 1; i <= 100; ++i) {
+                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).toString());
+            }
+            endTime = System.currentTimeMillis();
+
+            duration = endTime - startTime;
+            System.out.println(duration);
+
+            bufferedWriter.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void backUpDataToFile() {
@@ -28,7 +90,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void moveToFirstPage() {
-        // displayTableData(setting.currentRowStart, length_setup_row, collection)
+        // displayTableData(setting.rowStart, length_setup_row, collection)
     }
 
     public void moveToLastPage() {
@@ -36,14 +98,14 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void moveToPreviousRow() {
-        // set --setting.currentRowStart;
-        // displayTableData(setting.currentRowStart, setting.rowDisplayLimit, collection)
+        // set --setting.rowStart;
+        // displayTableData(setting.rowStart, setting.rowDisplayLimit, collection)
         // calculate page
     }
 
     public void moveToNextRow() {
-        // set ++setting.currentRowStart;
-        // displayTableData(setting.currentRowStart, setting.rowDisplayLimit, collection)
+        // set ++setting.rowStart;
+        // displayTableData(setting.rowStart, setting.rowDisplayLimit, collection)
         // calculate page
     }
 
@@ -92,16 +154,23 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputLoadingLayout() {
-        OutputLoadingScreen.startThread();
+        OutputLoadingScreen outputLoadingScreen = new OutputLoadingScreen();
+        outputLoadingScreen.startThread();
     }
 
     public void outputMainLayout() {
         AsciiTable mainLayout = new AsciiTable();
+
         mainLayout.addRule();
-        mainLayout.addRow("Display", "Write", "Read", "Update", "Delete", "First", "Previous", "Next");
+        mainLayout.addRow("[D|d]\tDisplay","[W|w]\tWrite","[R|r]\tRead","[U|u]\tUpdate","[D|d]\tDelete","[F|f]\tFirst","[P|p]\tPrevious","[N|n]\tNext");
         mainLayout.addRule();
-        mainLayout.addRow("Last", "Goto", "Set Row", "Save", "Back up", "Restore", "Help", "Exit");
+        mainLayout.addRow("[L|l]\tLast","[G|g]\tGoto","[O|o]\tSet Row","[V|v]\tSave","[C|c]\tBack up","[T|t]\tRestore","[H|h]\tHelp","[E|e]\tExit");
         mainLayout.addRule();
+
+        mainLayout.getContext().setWidth(160);
+        mainLayout.setTextAlignment(TextAlignment.CENTER);
+        mainLayout.getContext().setGrid(U8_Grids.borderDouble());
+
         System.out.println(mainLayout.render());
     }
 
@@ -109,24 +178,24 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         AsciiTable table = new AsciiTable();
 
         table.addRule();
-        table.addRow("ID", ":" + product.getProductID());
+        table.addRow("ID", ": " + product.getProductID());
         table.addRule();
-        table.addRow("Name", ":" + product.getProductName());
+        table.addRow("Product Name", ": " + product.getProductName());
         table.addRule();
-        table.addRow("Unit price", ":" + product.getUnitPrice());
+        table.addRow("Unit Price", ": " + product.getUnitPrice());
         table.addRule();
-        table.addRow("Qty", ":" + product.getQuantity());
+        table.addRow("Quantity", ": " + product.getQuantity());
         table.addRule();
-        table.addRow("Imported Date", ":" + product.getImportDate());
+        table.addRow("Import Date", ": " + product.getImportDate());
         table.addRule();
 
         table.setPaddingRight(1);
         table.setPaddingLeft(1);
         table.setTextAlignment(TextAlignment.LEFT);
         table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        table.getContext().setGrid(U8_Grids.borderDoubleLight());
+        table.getContext().setGrid(U8_Grids.borderDouble());
 
-        System.out.println(table.render(50));
+        System.out.println(table.render(60));
     }
 
     public void displayTableData(Product[] products) {
@@ -375,11 +444,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     public void outputHelpLayout() {
         String[] st = {
-                "1.             Press\t*:Display all record of product.",
-                "2.             Press\tW: Add new Class.Product",
-                "               Press\tw ->#proname-unitprice-qty: shortcut for add new product",
-                "3.             Press\tr: Read contents",
-                "               Press\tr#proId: shortcut for read product by Id",
+                "1.     Press\t*:Display all record of product.",
+                "2.     Press\tW: Add new Class.Product",
+                "       Press\tw ->#proname-unitprice-qty: shortcut for add new product",
+                "3.     Press\tr: Read contents",
+                "       Press\tr#proId: shortcut for read product by Id",
                 "4.     Press\tu : Update Data",
                 "5.     Press\td: Delete Data",
                 "       Press\td#proId : TestExample.Shortcut for delete product by Id",

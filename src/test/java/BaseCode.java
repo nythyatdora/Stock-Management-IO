@@ -4,7 +4,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - save data to file
      *  - output message
      */
-    public void saveDataToFile() {}
+    public void saveDataToFile() { super.saveDataToFile(); }
 
     /**
      *  process:
@@ -12,7 +12,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - to back up or not
      *  - output message
      */
-    public void backUpDataToFile() {}
+    public void backUpDataToFile() { super.backUpDataToFile(); }
 
     /**
      *  process
@@ -21,7 +21,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - to restore or not
      *  - output message
      */
-    public void restoreDataToFile() {}
+    public void restoreDataToFile() { super.restoreDataToFile(); }
 
     /**
      *  process:
@@ -29,7 +29,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - first page display
      *  - show pagination
      */
-    public void moveToFirstPage() {}
+    public void moveToFirstPage() { super.moveToFirstPage(); }
 
     /**
      *  process:
@@ -37,7 +37,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - last page display
      *  - show pagination
      */
-    public void moveToLastPage() {}
+    public void moveToLastPage() { super.moveToLastPage(); }
 
     /**
      *  process:
@@ -45,7 +45,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - move -1 page
      *  - show pagination
      */
-    public void moveToPreviousRow() {}
+    public void moveToPreviousRow() { super.moveToPreviousRow(); }
 
     /**
      *  process:
@@ -53,8 +53,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - move + 1 page
      *  - show pagination
      */
-    public void moveToNextRow() {}
-
+    public void moveToNextRow() { super.moveToNextRow(); }
 
     /**
      *  process:
@@ -62,46 +61,45 @@ public class BaseCode extends AbstractBaseCode {
      */
     public void shortcutCommand() {}
 
-
     /**
      *  process:
      *  - output message
      *  - write data into log file
      *  - exit program
      */
-    public void exitProgram() {}
+    public void exitProgram() { super.exitProgram(); }
 
     /**
      *  process:
      *  - output welcome layout
      */
-    public void outputWelcomeLayout() {}
+    public void outputWelcomeLayout() { super.outputWelcomeLayout(); }
 
     /**
      *  process:
      *  - output logo
      *  - output group logo
      */
-    public void outputLogoLayout() {}
+    public void outputLogoLayout() { super.outputLogoLayout(); }
 
     /**
      *  process:
      *  - output loading screen
      *  - read file to collection
      */
-    public void outputLoadingLayout() {}
+    public void outputLoadingLayout() { super.outputLoadingLayout(); }
 
     /**
      *  process:
      *  - output main table
      */
-    public void outputMainLayout() {}
+    public void outputMainLayout() { super.outputMainLayout(); }
 
     /**
      *  process:
      *  - output help layout
      */
-    public void outputHelpLayout() {}
+    public void outputHelpLayout() { super.outputHelpLayout(); }
 
     /**
      *  process:
@@ -114,7 +112,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - to save data or not
      *  - output message
      */
-    public void writeDataLayout() {}
+    public void writeDataLayout() { super.writeDataLayout(); }
 
     /**
      *  process:
@@ -127,7 +125,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - to save or not
      *  - output message
      */
-    public void updataDataLayout() {}
+    public void updataDataLayout() { super.updataDataLayout(); }
 
     /**
      *  process:
@@ -135,7 +133,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - search by id
      *  - display product data
      */
-    public void readDataLayout() {}
+    public void readDataLayout() { super.readDataLayout(); }
 
     /**
      *  process:
@@ -144,7 +142,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - to delete or not
      *  - output message
      */
-    public void deleteDataLayout() {}
+    public void deleteDataLayout() { super.deleteDataLayout(); }
 
     /**
      *  process:
@@ -154,19 +152,19 @@ public class BaseCode extends AbstractBaseCode {
      *  - display search result table
      *  - display pagination with total record
      */
-    public void searchDataLayout() {}
+    public void searchDataLayout() { super.searchDataLayout(); }
 
     /**
      *  process:
      *  - input page
      *  - display table at page
      */
-    public void gotoDataLayout() {}
+    public void gotoDataLayout() { super.gotoDataLayout(); }
 
     /**
      *  process:
      *  - input row
      *  - output message
      */
-    public void setRowLayout() {}
+    public void setRowLayout() { super.setRowLayout(); }
 }
