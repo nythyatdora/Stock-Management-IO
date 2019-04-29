@@ -1,5 +1,8 @@
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_LongestLine;
 import de.vandermeer.asciithemes.TA_GridThemes;
+import de.vandermeer.asciithemes.a7.A7_Grids;
+import de.vandermeer.asciithemes.a8.A8_Grids;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
@@ -232,46 +235,46 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputHelpLayout() {
-        String[] st = {
-                "1.             Press\t*:Display all record of product.",
-                "2.             Press\tW: Add new Class.Product",
-                "               Press\tw ->#proname-unitprice-qty: shortcut for add new product",
-                "3.             Press\tr: Read contents",
-                "               Press\tr#proId: shortcut for read product by Id",
-                "4.     Press\tu : Update Data",
-                "5.     Press\td: Delete Data",
-                "       Press\td#proId : Shortcut for delete product by Id",
-                "6.     Press\tf : Display first page",
-                "7.     Press\tp : Display Previous page",
-                "8.     Press\tn: Display Next Page",
-                "9.     Press\tl : Display Last Page",
-                "10.    Press\ts : Search Class.Product by name",
-                "11.    Press\tsa : To save record to file",
-                "12.    Press\tba : Backup data",
-                "13.    Press\tre : To restore data",
-                "14.    Press\th : To Help",
-        };
 
-        AsciiTable ac = new AsciiTable();
-        ac.addRule();
-        for (String te : st) {
-            ac.addRow("" + te).setPaddingLeft(3);
-        }
-        ac.addRule();
-        System.out.println(ac.render());
+        AsciiTable at = new AsciiTable();
+        at.addRule();
+        at.addRow("1.", "Press","* : Display all record of product").setPaddingLeftRight(2);
+        at.addRow("2.", "Press","W : Add new product").setPaddingLeftRight(2);
+        at.addRow("",   "Press","W ->#proname-unitprice-qty : shortcut for add new product").setPaddingLeftRight(2);
+        at.addRow("3.", "Press","r : read Content any content").setPaddingLeftRight(2);
+        at.addRow("",   "Press","r#proId shortcut for read product by Id").setPaddingLeftRight(2);
+        at.addRow("4.", "Press","u : Update Data").setPaddingLeftRight(2);
+        at.addRow("5.", "Press","d : Delete Data").setPaddingLeftRight(2);
+        at.addRow("",   "Press","d#proId shortcut for delete product by Id").setPaddingLeftRight(2);
+        at.addRow("6.", "Press","f : Display First Page").setPaddingLeftRight(2);
+        at.addRow("7.", "Press","p : Display Previous Page").setPaddingLeftRight(2);
+        at.addRow("8.", "Press","n : Display Next Page").setPaddingLeftRight(2);
+        at.addRow("9.", "Press","l : Display Last Page").setPaddingLeftRight(2);
+        at.addRow("10.", "Press","n : Search product by name").setPaddingLeftRight(2);
+        at.addRow("11.", "Press","sa : save record to file").setPaddingLeftRight(2);
+        at.addRow("12.", "Press","ba : Backup Data").setPaddingLeftRight(2);
+        at.addRow("13.", "Press","re : Restore data").setPaddingLeftRight(2);
+        at.addRow("14.", "Press","h : Help").setPaddingLeftRight(2);
+
+        at.addRule();
+        CWC_LongestLine cwc = new CWC_LongestLine();
+        at.getRenderer().setCWC(cwc);
+        at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        at.getContext().setGrid(A7_Grids.minusBarPlusEquals());
+        System.out.println(at.render());
     }
 
     public void outputMessageLayout(String message) {
-        AsciiTable dialog = new AsciiTable();
         // DIALOG
-        dialog.addRule();
-        dialog.addRow(message);
-        dialog.addRule();
+        AsciiTable at = new AsciiTable();
+        at.addRule();
+        at.addRow(message);
+        at.addRule();
 
-        dialog.setTextAlignment(TextAlignment.CENTER);
-        dialog.getContext().setGridTheme(TA_GridThemes.TOPBOTTOM);
-        dialog.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        System.out.println(dialog.render(50));
+        at.getContext().setWidth(30);
+        at.setTextAlignment(TextAlignment.CENTER);
+        at.getContext().setGrid(A8_Grids.lineDoubleBlocks());
+        System.out.println(at.render());
     }
 
     public void outputInvalidInputLayout() {

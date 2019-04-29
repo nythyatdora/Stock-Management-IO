@@ -1,4 +1,7 @@
 public class BaseCode extends AbstractBaseCode {
+
+
+
     public void saveDataToFile() {
         // OUTPUT "DATA IS ADDING..."
         // SAVE DATA INTO FILE
@@ -144,7 +147,7 @@ public class BaseCode extends AbstractBaseCode {
 
     public void setRowLayout() {
         // INPUT SET ROW (HOW MANY ROW TO DISPLAY)
-        // OUTPUT MESSAGE
+        // OUTPUT ESSAGE
     }
 
     public boolean findProductByName() {
@@ -156,6 +159,6 @@ public class BaseCode extends AbstractBaseCode {
     public int displayProductByName() {
         // FIND PRODUCT BY ID
         // RETURN TRUE IF FOUND
-        return false;
+        return displayProductByName();
     }
 }
