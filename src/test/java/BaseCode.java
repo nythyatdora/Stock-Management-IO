@@ -98,38 +98,10 @@ public class BaseCode extends AbstractBaseCode {
         // DRAW TABLE
         // DISPLAY ROW FROM START_ROW TO LENGTH_ROW
         // CURRENT PAGE
-     }
 
 
-    public void displayTableData(ArrayList<Product> list) {
-        AsciiTable row = new AsciiTable();
-        AsciiTable page = new AsciiTable();
-        row.addRule();
-        row.addRow("ID", "Title", "Unit Price","Qty", "Date");
-        row.addRule();
-
-        for (Product product : list) {
-            for (int i = 1; i < 5; i++) {
-                row.addRule();
-                row.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(), product.getQuantity(), product.getImportDate());
-            }
-        }
-        row.addRule();
-
-        row.setTextAlignment(TextAlignment.CENTER);
-        row.getContext().setGrid(U8_Grids.borderDouble());
-        System.out.println(row.render());
-
-//        page.addRule();
-//        page.addRow("Page:1/3000000 ", " \t\t   ", " Total Record:300000");
-//        page.addRule();
-//
-//        page.setTextAlignment(TextAlignment.CENTER);
-//        page.getContext().setGrid(U8_Grids.borderDoubleLight());
-//
-//        page.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-//        System.out.println(page.render());
     }
+
 
 
     public void writeDataLayout() {
@@ -212,15 +184,6 @@ public class BaseCode extends AbstractBaseCode {
         return false;
     }
 
-    public static void main(String[] args) {
-        BaseCode bs = new BaseCode();
-        ArrayList <Product>arrayList = new ArrayList<Product>();
+    
 
-        for (int i=1;i<=2000;i++){
-            arrayList.add(new Product(i,"Angkor",212,12,"21,2,1,32"));
-        }
-
-
-        bs.displayTableData(arrayList);
-    }
 }
