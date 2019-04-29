@@ -1,4 +1,4 @@
-package Monita;
+package Pagination;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +9,12 @@ public class Thread_Calculate_Time_Processing {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
         methodCalculateTime();
-
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         System.out.println(duration);
     }
 
-    protected static void methodCalculateTime() {
+    private static void methodCalculateTime() {
         List<String> list = new ArrayList<String>();
         list.add("Hello");
         for (int i = 0; i <= 10000000; i++) {
@@ -28,7 +27,4 @@ public class Thread_Calculate_Time_Processing {
 
         }
     }
-
-
-
 }
