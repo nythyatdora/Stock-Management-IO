@@ -33,6 +33,15 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
+    public void setImportDate(String importDate) {
+        this.importDate = importDate;
+    }
+
+
     public int getProductID() {
         return productID;
     }
