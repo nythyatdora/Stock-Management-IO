@@ -1,3 +1,11 @@
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciithemes.TA_GridThemes;
+import de.vandermeer.asciithemes.u8.U8_Grids;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class BaseCode extends AbstractBaseCode {
     public void saveDataToFile() {
         // OUTPUT "DATA IS ADDING..."
@@ -92,6 +100,36 @@ public class BaseCode extends AbstractBaseCode {
 
 
     }
+
+
+    public void displayTableData(HashMap map) {
+        AsciiTable row = new AsciiTable();
+        AsciiTable page = new AsciiTable();
+        row.addRule();
+        row.addRow("ID", "Title", "Author", "Date");
+        row.addRule();
+
+ 
+        row.addRule();
+        row.addRow("5000", "java", "john", "12323");
+
+
+
+        row.setTextAlignment(TextAlignment.CENTER);
+        row.getContext().setGrid(U8_Grids.borderDouble());
+        System.out.println(row.render());
+
+        page.addRule();
+        page.addRow("Page:1/3000000 ", " \t\t   ", " Total Record:300000");
+        page.addRule();
+
+        page.setTextAlignment(TextAlignment.CENTER);
+        page.getContext().setGrid(U8_Grids.borderDoubleLight());
+
+        page.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        System.out.println(page.render());
+    }
+
 
     public void writeDataLayout() {
         // INPUT PRODUCT ID
