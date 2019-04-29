@@ -89,6 +89,8 @@ public class BaseCode extends AbstractBaseCode {
         // DRAW TABLE
         // DISPLAY ROW FROM START_ROW TO LENGTH_ROW
         // CURRENT PAGE
+
+
     }
 
     public void writeDataLayout() {
