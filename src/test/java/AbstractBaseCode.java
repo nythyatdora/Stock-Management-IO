@@ -382,7 +382,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                 "               Press\tr#proId: shortcut for read product by Id",
                 "4.     Press\tu : Update Data",
                 "5.     Press\td: Delete Data",
-                "       Press\td#proId : Shortcut for delete product by Id",
+                "       Press\td#proId : TestExample.Shortcut for delete product by Id",
                 "6.     Press\tf : Display first page",
                 "7.     Press\tp : Display Previous page",
                 "8.     Press\tn: Display Next Page",
@@ -435,21 +435,19 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         TextFieldConsole.readIntegerType("Enter Row for Display : ");
     }
 
-    public int displayProductByName() {
-        return 0;
-    }
+    public boolean findProductByID(int productID) { return false; }
 
     public boolean findProductByName(String productName) {
         return false;
     }
 
-    public Product retreiveProductByID(int productID) {
-        return null;
-    }
+    public Product retreiveProductByID(int productID) { return null; }
 
-    public int displayProductByName(String productName) {
-        return 0;
-    }
+    public int displayProductByID(int productID) { return 0; }
+
+    public int displayProductByName(String productName) { return 0; }
+
+    public boolean deleteProductByID(int productID) { return false; }
 
     public boolean updateProductData(int productID) {
         return false;
