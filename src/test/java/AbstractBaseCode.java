@@ -181,24 +181,24 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         AsciiTable table = new AsciiTable();
 
         table.addRule();
-        table.addRow("ID", ": " + product.getProductID());
-        table.addRule();
-        table.addRow("Product Name", ": " + product.getProductName());
-        table.addRule();
-        table.addRow("Unit Price", ": " + product.getUnitPrice());
-        table.addRule();
-        table.addRow("Quantity", ": " + product.getQuantity());
-        table.addRule();
-        table.addRow("Import Date", ": " + product.getImportDate());
+        table.addRow("ID", " : " + + product.getProductID());
+
+        table.addRow("Name", " : " + product.getProductName());
+
+        table.addRow("Unit price", " : " + product.getUnitPrice());
+
+        table.addRow("Qty", " : " + product.getQuantity());
+
+        table.addRow("Imported Date", " : " + product.getImportDate());
         table.addRule();
 
-        table.setPaddingRight(1);
+        table.setPaddingRight(3);
         table.setPaddingLeft(1);
-        table.setTextAlignment(TextAlignment.LEFT);
+        CWC_LongestLine cwc = new CWC_LongestLine();
+        table.getRenderer().setCWC(cwc);
         table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
         table.getContext().setGrid(U8_Grids.borderDouble());
-
-        System.out.println(table.render(60));
+        System.out.println(table.render());
     }
 
     public void displayTableData(Product[] products) {
@@ -466,12 +466,12 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         at.addRow("12.", "Press","ba : Backup Data").setPaddingLeftRight(2);
         at.addRow("13.", "Press","re : Restore data").setPaddingLeftRight(2);
         at.addRow("14.", "Press","h : Help").setPaddingLeftRight(2);
-
         at.addRule();
+
         CWC_LongestLine cwc = new CWC_LongestLine();
         at.getRenderer().setCWC(cwc);
         at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        at.getContext().setGrid(A7_Grids.minusBarPlusEquals());
+        at.getContext().setGrid(U8_Grids.borderDouble());
         System.out.println(at.render());
     }
 
@@ -482,7 +482,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         at.addRow(message);
         at.addRule();
 
-        at.getContext().setWidth(30);
+        at.setPaddingLeftRight(3);
+        CWC_LongestLine cwc = new CWC_LongestLine(); //for auto resize
+        at.getRenderer().setCWC(cwc);
         at.setTextAlignment(TextAlignment.CENTER);
         at.getContext().setGrid(A8_Grids.lineDoubleBlocks());
         System.out.println(at.render());
