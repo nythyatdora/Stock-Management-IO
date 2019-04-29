@@ -171,47 +171,47 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     }
 
-    public void readDataLayout() {
-        int productID;
-        boolean isFound;
-        int searchResult;
+//    public void readDataLayout() {
+//        int productID;
+//        boolean isFound;
+//        int searchResult;
+//
+//        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
+//        isFound = findProductByID(productID);
+//
+//        switch (isFound) {
+//            case true:
+//                searchResult = displayProductByID(productID);
+//                break;
+//
+//            case false:
+//                outputMessageLayout("");
+//                break;
+//        }
+//
+//        System.out.println("Product Found for [" + productID + "] : " + searchResult);
+//    }
 
-        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
-        isFound = findProductByID(productID);
-
-        switch (isFound) {
-            case true:
-                searchResult = displayProductByID(productID);
-                break;
-
-            case false:
-                outputMessageLayout("");
-                break;
-        }
-
-        System.out.println("Product Found for [" + productID + "] : " + searchResult);
-    }
-
-    public void searchDataLayout() {
-        String productName;
-        boolean isFound;
-        int searchResult;
-
-        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
-        isFound = findProductByName(productName);
-
-        switch (isFound) {
-            case true:
-                searchResult = displayProductByName(productName);
-                break;
-
-            case false:
-                outputMessageLayout("");
-                break;
-        }
-
-        System.out.println("Product Found for [" + productName + "] : " + searchResult);
-    }
+//    public void searchDataLayout() {
+//        String productName;
+//        boolean isFound;
+//        int searchResult;
+//
+//        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
+//        isFound = findProductByName(productName);
+//
+//        switch (isFound) {
+//            case true:
+//                searchResult = displayProductByName(productName);
+//                break;
+//
+//            case false:
+//                outputMessageLayout("");
+//                break;
+//        }
+//
+//        System.out.println("Product Found for [" + productName + "] : " + searchResult);
+//    }
 
     public void deleteDataLayout() {
         int productID;
@@ -244,11 +244,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     break;
             }
 
-            if (!hasDeleted) {
-                outputMessageLayout("");
-            } else {
-                outputMessageLayout("Product was removed");
-            }
+//            if (!hasDeleted) {
+//                outputMessageLayout("");
+//            } else {
+//                outputMessageLayout("Product was removed");
+//            }
         }
     }
 
