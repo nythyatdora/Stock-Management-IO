@@ -173,59 +173,59 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     public void readDataLayout() {}
 
-    public void searchDataLayout() {
-        String productName;
-        boolean isFound;
-        int searchResult;
+//    public void searchDataLayout() {
+//        String productName;
+//        boolean isFound;
+//        int searchResult;
+//
+//        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
+//        isFound = findProductByName();
+//
+//        switch (isFound) {
+//            case true:
+//                searchResult = displayProductByName();
+//                break;
+//
+//            case false:
+//                outputMessageLayout("");
+//                break;
+//        }
+//
+//        System.out.println("Product Found for [" + productName + "] : " + searchResult);
+//    }
 
-        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
-        isFound = findProductByName();
-
-        switch (isFound) {
-            case true:
-                searchResult = displayProductByName();
-                break;
-
-            case false:
-                outputMessageLayout("");
-                break;
-        }
-
-        System.out.println("Product Found for [" + productName + "] : " + searchResult);
-    }
-
-    public void deleteDataLayout() {
-        TextFieldConsole inputfield = new TextFieldConsole();
-        int productID;
-        char choice;
-        int searchResult;
-        boolean hasDeleted;
-
-        productID = inputfield.readIntegerType("Input the ID of Product : ");
-        searchResult = findProductByID(productID);
-        displayProductByID(productID);
-
-        System.out.println("Product Found for [" + productID + "] : " + searchResult);
-
-        choice = inputfield.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
-        switch(choice) {
-            case 'Y':
-            case 'y':
-                hasDeleted = deleteProductByID();
-                break;
-
-            case 'N':
-            case 'n':
-                break;
-        }
-
-        if(!hasDeleted) {
-            outputMessage("");
-        }
-        else {
-            outputMessage("Product was removed");
-        }
-    }
+//    public void deleteDataLayout() {
+//        TextFieldConsole inputfield = new TextFieldConsole();
+//        int productID;
+//        char choice;
+//        int searchResult;
+//        boolean hasDeleted;
+//
+//        productID = inputfield.readIntegerType("Input the ID of Product : ");
+//        searchResult = findProductByID(productID);
+//        displayProductByID(productID);
+//
+//        System.out.println("Product Found for [" + productID + "] : " + searchResult);
+//
+//        choice = inputfield.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
+//        switch(choice) {
+//            case 'Y':
+//            case 'y':
+//                hasDeleted = deleteProductByID();
+//                break;
+//
+//            case 'N':
+//            case 'n':
+//                break;
+//        }
+//
+//        if(!hasDeleted) {
+//            outputMessage("");
+//        }
+//        else {
+//            outputMessage("Product was removed");
+//        }
+//    }
 
     public void updataDataLayout() {
 

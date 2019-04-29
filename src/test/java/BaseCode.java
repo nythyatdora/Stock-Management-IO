@@ -153,9 +153,9 @@ public class BaseCode extends AbstractBaseCode {
         return false;
     }
 
-    public int displayProductByName() {
-        // FIND PRODUCT BY ID
-        // RETURN TRUE IF FOUND
-        return false;
-    }
+//    public int displayProductByName() {
+//        // FIND PRODUCT BY ID
+//        // RETURN TRUE IF FOUND
+//        return false;
+//    }
 }
