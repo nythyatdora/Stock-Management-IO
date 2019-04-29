@@ -1,12 +1,12 @@
-package TeamImplementation.Monita;
+package TestExample;
 
 public class Shortcut {
-    private static String INPUT_TO_READ = "r#proId";
-    private static String INPUT_TO_DELETE = "d#proId";
-    private static String INPUT_TO_WRITE = "w ->#proname-unitprice-qty";
-
 
     public static void main(String[] args) {
+        String INPUT_TO_READ = "r#proId";
+        String INPUT_TO_DELETE = "d#proId";
+        String INPUT_TO_WRITE = "w ->#proname-unitprice-qty";
+
         String[] read = INPUT_TO_READ.split("#");
         for (String r : read) {
             System.out.println(r);

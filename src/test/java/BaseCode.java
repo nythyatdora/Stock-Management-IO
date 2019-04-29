@@ -1,189 +1,170 @@
-import de.vandermeer.asciitable.AsciiTable;
-import de.vandermeer.asciithemes.TA_GridThemes;
-import de.vandermeer.asciithemes.u8.U8_Grids;
-import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class BaseCode extends AbstractBaseCode {
-    public void saveDataToFile() {
-        // OUTPUT "DATA IS ADDING..."
-        // SAVE DATA INTO FILE
-        // OUTPUT MESSAGE
-    }
+    /**
+     *  process:
+     *  - save data to file
+     *  - output message
+     */
+    public void saveDataToFile() { super.saveDataToFile(); }
 
-    public void backUpDataToFile() {
-        // CREATE BACKUP FILE
-        // TO BACKUP OR NOT
-        // OUTPUT MESSAGE
-    }
+    /**
+     *  process:
+     *  - create backup file
+     *  - to back up or not
+     *  - output message
+     */
+    public void backUpDataToFile() { super.backUpDataToFile(); }
 
-    public void restoreDataToFile() {
-        // OUTPUT BACKUP FILE
-        // SELECT FILE
-        // TO RESTORE OR NOT
-        // OUTPUT MESSAGE
-    }
+    /**
+     *  process
+     *  - output backup file
+     *  - select file
+     *  - to restore or not
+     *  - output message
+     */
+    public void restoreDataToFile() { super.restoreDataToFile(); }
 
-    public void moveToFirstPage() {
-        // DISPLAY TABLE
-        // WITH SET ROWS AT FIRST PAGE
-        // SHOW PAGE NUMBER
-    }
+    /**
+     *  process:
+     *  - display table
+     *  - first page display
+     *  - show pagination
+     */
+    public void moveToFirstPage() { super.moveToFirstPage(); }
 
-    public void moveToLastPage() {
-        // DISPLAY TABLE
-        // WITH SET ROWS AT LAST PAGE
-        // SHOW PAGE NUMBER
-    }
+    /**
+     *  process:
+     *  - display table
+     *  - last page display
+     *  - show pagination
+     */
+    public void moveToLastPage() { super.moveToLastPage(); }
 
-    public void moveToPreviousRow() {
-        // DISPLAY TABLE
-        // MOVE -1 PAGE
-        // SHOW PAGE NUMBER
-    }
+    /**
+     *  process:
+     *  - display table
+     *  - move -1 page
+     *  - show pagination
+     */
+    public void moveToPreviousRow() { super.moveToPreviousRow(); }
 
-    public void moveToNextRow() {
-        // DISPLAY TABLE
-        // MOVE +1 PAGE
-        // SHOW PAGE NUMBER
-    }
+    /**
+     *  process:
+     *  - display table
+     *  - move + 1 page
+     *  - show pagination
+     */
+    public void moveToNextRow() { super.moveToNextRow(); }
 
-    /*
-        public void shortcutCommand() {
-            // READ_PRODUCT_ID
-            // UPDATE_ALL
-            // UPDATE_...
-        }
-    */
+    /**
+     *  process:
+     *  - (working on it)
+     */
+    public void shortcutCommand() {}
 
-    public void exitProgram() {
-        // TO SAVE WRITE/UPDATE/DELETE RECORD OR NOT
-        // OUTPUT MESSAGE
-        // WRITE DATA INTO LOG FILE
-        // EXIT PROGRAM
-    }
+    /**
+     *  process:
+     *  - output message
+     *  - write data into log file
+     *  - exit program
+     */
+    public void exitProgram() { super.exitProgram(); }
 
-    public void outputWelcomeLayout() {
-        // OUTPUT WELCOME
-    }
+    /**
+     *  process:
+     *  - output welcome layout
+     */
+    public void outputWelcomeLayout() { super.outputWelcomeLayout(); }
 
-    public void outputLogoLayout() {
-        // OUTPUT LOGO
-        // TEAM LOGO
-    }
+    /**
+     *  process:
+     *  - output logo
+     *  - output group logo
+     */
+    public void outputLogoLayout() { super.outputLogoLayout(); }
 
-    public void outputLoadingLayout() {
-        // OUTPUT LOADING SCREEN
-    }
+    /**
+     *  process:
+     *  - output loading screen
+     *  - read file to collection
+     */
+    public void outputLoadingLayout() { super.outputLoadingLayout(); }
 
-    public void outputInvalidInputLayout() {
-        // OUTPUT INVALID LAYOUT
-    }
+    /**
+     *  process:
+     *  - output main table
+     */
+    public void outputMainLayout() { super.outputMainLayout(); }
 
-    public void outputMainLayout() {
-        // OUTPUT MAIN TABLE
-    }
+    /**
+     *  process:
+     *  - output help layout
+     */
+    public void outputHelpLayout() { super.outputHelpLayout(); }
 
-    public void outputHelpLayout() {
-        // OUTPUT SHORTCUT
-        // PROGRAM DESCRIPTION
-    }
+    /**
+     *  process:
+     *  - input product id
+     *  - input product name
+     *  - input product price
+     *  - input product quantity
+     *  - input product import-date (explicitly)
+     *  - display product data
+     *  - to save data or not
+     *  - output message
+     */
+    public void writeDataLayout() { super.writeDataLayout(); }
 
-    public void outputProductData() {
-        // DISPLAY PRODUCT INFORMATION
-    }
+    /**
+     *  process:
+     *  - update by id
+     *  - output product information
+     *  - output option
+     *  - select option
+     *  - input option
+     *  - display product data
+     *  - to save or not
+     *  - output message
+     */
+    public void updataDataLayout() { super.updataDataLayout(); }
 
-    public void displayTableData() {
-        // DRAW TABLE
-        // DISPLAY ROW FROM START_ROW TO LENGTH_ROW
-        // CURRENT PAGE
+    /**
+     *  process:
+     *  - input id
+     *  - search by id
+     *  - display product data
+     */
+    public void readDataLayout() { super.readDataLayout(); }
 
+    /**
+     *  process:
+     *  - delete by id
+     *  - display product data
+     *  - to delete or not
+     *  - output message
+     */
+    public void deleteDataLayout() { super.deleteDataLayout(); }
 
-    }
+    /**
+     *  process:
+     *  - input name
+     *  - regular expression search
+     *  - output search result count or message
+     *  - display search result table
+     *  - display pagination with total record
+     */
+    public void searchDataLayout() { super.searchDataLayout(); }
 
+    /**
+     *  process:
+     *  - input page
+     *  - display table at page
+     */
+    public void gotoDataLayout() { super.gotoDataLayout(); }
 
-
-    public void writeDataLayout() {
-        // INPUT PRODUCT ID
-        // INPUT PRODUCT NAME
-        // INPUT PRODUCT PRICE
-        // INPUT PRODUCT QUANTITY
-        // INPUT IMPORT DATE (IMPLICITLY)
-        // OUTPUT INPUTED PRODUCT INFORMATION
-        // TO SAVE OR NOT
-        // OUTPUT MESSAGE SUCCESSFULLY
-    }
-
-    public void updataDataLayout() {
-        // UPDATE BY ID
-        // OUTPUT PRODUCT INFORMATION
-        // OUTPUT OPTIONS
-        // SELECT OPTIONS
-        // INPUT OPTIONS
-        // OUTPUT FINAL INFORMATION
-        // TO SAVE OR NOT
-        // OUTPUT MESSAGE
-    }
-
-    public void readDataLayout() {
-        // READ BY ID
-        // SEARCH DATA BY ID
-        // OUTPUT SCREEN AT ID
-    }
-
-    public void deleteDataLayout() {
-        // DELETE BY ID
-        // OUTPUT PRODUCT INFORMATION OR MESSAGE
-        // TO DELETE OR NOT
-        // OUTPUT MESSAGE
-    }
-
-    public void searchDataLayout() {
-        // SEARCH BY NAME (REGEX EDITION)
-        // OUTPUT SEARCH RESULT COUNT OR MESSAGE
-        // DISPLAY TABLE
-        // DISPLAY PAGE NUMBER
-        // TOTAL RECORD
-    }
-
-    public void gotoDataLayout() {
-        // INPUT PAGE
-        // DISPLAY TABLE
-        // AT SPECIFIC PAGE
-    }
-
-    public void setRowLayout() {
-        // INPUT SET ROW (HOW MANY ROW TO DISPLAY)
-        // OUTPUT MESSAGE
-    }
-
-    public boolean findProductByName() {
-        // FIND PRODUCT BY ID
-        // RETURN TRUE IF FOUND
-        return false;
-    }
-
-    public int displayProductByName() {
-        // FIND PRODUCT BY ID
-        // RETURN TRUE IF FOUND
-        return 0;
-    }
-
-    public boolean findProductByID(int productID) {
-        return false;
-    }
-
-    public int displayProductByID(int productID) {
-        return 0;
-    }
-
-    public boolean deleteProductByID(int productID) {
-        return false;
-    }
-
-    
-
+    /**
+     *  process:
+     *  - input row
+     *  - output message
+     */
+    public void setRowLayout() { super.setRowLayout(); }
 }

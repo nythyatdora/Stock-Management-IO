@@ -14,7 +14,7 @@ public class Tester implements InputCommand {
 
             switch (inputCommand) {
                 case DISPLAY_TABLE:
-                    baseCode.displayTableData();
+                    // baseCode.displayTableData();
                     break;
 
                 case WRITE_PRODUCT_UPPER:
