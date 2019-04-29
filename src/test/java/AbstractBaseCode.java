@@ -1,7 +1,6 @@
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
 import de.vandermeer.asciithemes.TA_GridThemes;
-import de.vandermeer.asciithemes.a7.A7_Grids;
 import de.vandermeer.asciithemes.a8.A8_Grids;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
@@ -494,8 +493,19 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     }
 
-    public void outputInvalidInputLayout() {
+    public void outputInvalidInputLayout(String message) {
+        // DIALOG
+        AsciiTable table = new AsciiTable();
+        table.addRule();
+        table.addRow(message);
+        table.addRule();
 
+        table.setPaddingLeftRight(3);
+        CWC_LongestLine cwc = new CWC_LongestLine(); //for auto resize
+        table.getRenderer().setCWC(cwc);
+        table.setTextAlignment(TextAlignment.CENTER);
+        table.getContext().setGridTheme(TA_GridThemes.HORIZONTAL);
+        System.out.println(table.render());
     }
 
     public void gotoDataLayout() {

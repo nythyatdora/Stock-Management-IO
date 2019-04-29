@@ -15,7 +15,7 @@ public interface DisplayLayout {
     void deleteDataLayout();
     void updataDataLayout();
 
-    void outputInvalidInputLayout();
+    void outputInvalidInputLayout(String message);
     void gotoDataLayout();
     void setRowLayout();
 }

@@ -1,6 +1,8 @@
 public class OutputLoadingScreen implements Runnable {
-    public boolean isLoading = true;
     private final int SLEEP_TIME = 500;
+
+    public boolean isLoading = true;
+    private long loadingTime;
 
     public void run() {
         final String LOADING_STRING = "Loading";
@@ -40,11 +42,19 @@ public class OutputLoadingScreen implements Runnable {
         }
 
         System.out.println();
-        System.out.println("Current Time Loading : ");
+        System.out.println("Current Time Loading : " + loadingTime);
     }
 
     public static void main(String[] args) {
         OutputLoadingScreen outputLoadingScreen = new OutputLoadingScreen();
         outputLoadingScreen.startThread();
+    }
+
+    public long getLoadingTime() {
+        return loadingTime;
+    }
+
+    public void setLoadingTime(long loadingTime) {
+        this.loadingTime = loadingTime;
     }
 }
