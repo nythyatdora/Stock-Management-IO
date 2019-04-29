@@ -10,7 +10,7 @@ public class Tester implements InputCommand {
         do {
             baseCode.outputMainLayout();
 
-            char inputCommand = baseCode.inputCommandLayout();
+            char inputCommand = TextFieldConsole.readCharType("Command : ");
 
             switch (inputCommand) {
                 case DISPLAY_TABLE:

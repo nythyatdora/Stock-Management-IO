@@ -1,6 +1,6 @@
 package TeamImplementation.Monita;
 
-public class ShortCut {
+public class Shortcut {
     private static String INPUT_TO_READ = "r#proId";
     private static String INPUT_TO_DELETE = "d#proId";
     private static String INPUT_TO_WRITE = "w ->#proname-unitprice-qty";

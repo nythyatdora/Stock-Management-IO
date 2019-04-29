@@ -1,5 +1,5 @@
 public class ConfigureSetting {
-    public int currentRowSetup;
+    public int rowDisplayLimit;
     public int currentRowStart;
     public int currentRowEnd;
 

@@ -3,17 +3,16 @@ public interface DisplayLayout {
     void outputLogoLayout();
     void outputLoadingLayout();
     void outputMainLayout();
-    void inputCommandLayout();
+    void outputHelpLayout();
+    void outputMessageLayout(String message);
 
-    void outputProductData();
-    void displayTableData();
+    void outputProductData(Product product);
+    void displayTableData(Product[] products);
     void writeDataLayout();
     void readDataLayout();
     void searchDataLayout();
     void deleteDataLayout();
     void updataDataLayout();
-
-    void outputHelpLayout();
 
     void outputInvalidInputLayout();
     void gotoDataLayout();

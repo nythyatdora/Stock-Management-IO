@@ -1,8 +1,4 @@
 public class BaseCode extends AbstractBaseCode {
-    public void regexSearch() {
-        // search like query
-    }
-
     public void saveDataToFile() {
         // OUTPUT "DATA IS ADDING..."
         // SAVE DATA INTO FILE
@@ -106,7 +102,7 @@ public class BaseCode extends AbstractBaseCode {
         // OUTPUT MESSAGE SUCCESSFULLY
     }
 
-    public void updataDataLayout(int i, HashMap hashMap) {
+    public void updataDataLayout() {
         // UPDATE BY ID
         // OUTPUT PRODUCT INFORMATION
         // OUTPUT OPTIONS
@@ -149,5 +145,17 @@ public class BaseCode extends AbstractBaseCode {
     public void setRowLayout() {
         // INPUT SET ROW (HOW MANY ROW TO DISPLAY)
         // OUTPUT MESSAGE
+    }
+
+    public boolean findProductByName() {
+        // FIND PRODUCT BY ID
+        // RETURN TRUE IF FOUND
+        return false;
+    }
+
+    public int displayProductByName() {
+        // FIND PRODUCT BY ID
+        // RETURN TRUE IF FOUND
+        return false;
     }
 }

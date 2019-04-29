@@ -3,12 +3,19 @@ import de.vandermeer.asciithemes.TA_GridThemes;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
-public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
+public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate {
+    private ConfigureSetting setting;
 
-    public void regexSearch() {
-
+    public AbstractBaseCode() {
+        setting = new ConfigureSetting();
+        // READ DATA FROM setting.bak
+        // IF FILE NOT EXIST
+        //      CREATE DEFAULT SETTING
+        // ELESE
+        //      READ FROM FILE TO this.setting
     }
 
     public void saveDataToFile() {
@@ -24,23 +31,23 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
     }
 
     public void moveToFirstPage() {
-
+        // displayTableData(setting.currentRowStart, length_setup_row, collection)
     }
 
     public void moveToLastPage() {
-
+        // displayTableData(length_collection - length_setup_row, length_setup_row, collection)
     }
 
     public void moveToPreviousRow() {
-
+        // set --setting.currentRowStart;
+        // displayTableData(setting.currentRowStart, setting.rowDisplayLimit, collection)
+        // calculate page
     }
 
     public void moveToNextRow() {
-
-    }
-
-    public void shortcutCommand() {
-
+        // set ++setting.currentRowStart;
+        // displayTableData(setting.currentRowStart, setting.rowDisplayLimit, collection)
+        // calculate page
     }
 
     public void exitProgram() {
@@ -88,105 +95,90 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
     }
 
     public void outputLoadingLayout() {
-        OutputLoadingScreen outputLoadingScreen = new OutputLoadingScreen();
-        outputLoadingScreen.startThread();
+        OutputLoadingScreen.startThread();
     }
 
     public void outputMainLayout() {
-        AsciiTable ac = new AsciiTable();
-        ac.addRule();
-        ac.addRow("*)Display", "W)rite", "R)ead", "U)pdate", "D)elete", "F)irst", "P)rivious", "N)ext");
-        ac.addRule();
-        ac.addRow("L)ast", "G)o to", "S)et row", "Sa)ve", "B)ack up", "Re)store", "H)elp", "E)xit");
-        ac.addRule();
-        System.out.println(ac.render());
+        AsciiTable mainLayout = new AsciiTable();
+        mainLayout.addRule();
+        mainLayout.addRow("Display", "Write", "Read", "Update", "Delete", "First", "Previous", "Next");
+        mainLayout.addRule();
+        mainLayout.addRow("Last", "Goto", "Set Row", "Save", "Back up", "Restore", "Help", "Exit");
+        mainLayout.addRule();
+        System.out.println(mainLayout.render());
     }
 
-    public void inputCommandLayout() {
-        Inputfield inputField = new Inputfield();
-        char cmd;
-        cmd = inputField.readCharType("Command : ");
+    public void outputProductData(Product product) {
+        AsciiTable table = new AsciiTable();
+        table.addRule();
+        table.addRow("ID", ":" + product.getProductID());
+        table.addRule();
+        table.addRow("Name", ":" + product.getProductName());
+        table.addRule();
+        table.addRow("Unit price", ":" + product.getUnitPrice());
+        table.addRule();
+        table.addRow("Qty", ":" + product.getQuantity());
+        table.addRule();
+        table.addRow("Imported Date", ":" + product.getImportDate());
+        table.addRule();
+        table.setPaddingRight(1);
+        table.setPaddingLeft(1);
+        table.setTextAlignment(TextAlignment.LEFT);
+        table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        table.getContext().setGrid(U8_Grids.borderDoubleLight());
+
+        System.out.println(table.render(50));
     }
 
-    public void outputProductData() {
-        Scanner sc = new Scanner(System.in);
-        AsciiTable at = new AsciiTable();
-        AsciiTable msg= new AsciiTable();
-        at.addRule();
-        at.addRow("ID",":"+"10000000");
-        at.addRule();
-        at.addRow("Name",":"+"Coca Cola");
-        at.addRule();
-        at.addRow( "Unit price",":"+"2.0");
-        at.addRule();
-        at.addRow("Qty",":"+90);
-        at.addRule();
-        at.addRow("Imported Date",":"+"24-04-2019");
-        at.addRule();
-        at.setPaddingRight(1);
-        at.setPaddingLeft(1);
-        at.setTextAlignment(TextAlignment.LEFT);
-        at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        at.getContext().setGrid(U8_Grids.borderDoubleLight());
+    public void displayTableData(Product[] products) {
+        AsciiTable table = new AsciiTable();
+        AsciiTable pagination = new AsciiTable();
 
-        System.out.println(at.render(50));
+        // TABLE HEADER
+        table.addRule();
+        table.addRow("ID", "NAME", "UNIT PRICE", "QTY", "IMPORT DATE");
+        table.addRule();
 
-        System.out.print("Are you sure want to update this record? [Y/y] or [N/n]");
-        sc.next();
+        // TABLE BODY
+        // IMPLEMENT CURRENT PAGE
+        // DISPLAY FROM X TO Y
+        // GO TO X PAGE
+        for (Product product: products) {
+            table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
+                    product.getQuantity() , product.getImportDate());
+            table.addRule();
+        }
 
-        msg.addRule();
-        msg.addRow("Product was update");
-        msg.addRule();
-        msg.setTextAlignment(TextAlignment.CENTER);
-        msg.getContext().setGridTheme(TA_GridThemes.TOPBOTTOM);
-        msg.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        System.out.println(msg.render(50));
-    }
+        table.setTextAlignment(TextAlignment.CENTER);
+        table.getContext().setGrid(U8_Grids.borderDouble());
+        System.out.println(table.render());
 
-    public void displayTableData() {
-        AsciiTable row = new AsciiTable();
-        AsciiTable page = new AsciiTable();
-        row.addRule();
-        row.addRow("ID", "Title", "Author", "Date");
-        row.addRule();
-        row.addRow("5000", "java", "john", "12323");
-        row.addRule();
-        row.addRow("5000", "java", "john", "12323");
-        row.addRule();
-        row.addRow("5000", "java", "john", "12323");
-        row.addRule();
-        row.addRow("5000", "java", "john", "12323");
-        row.addRule();
-        row.setTextAlignment(TextAlignment.CENTER);
-        row.getContext().setGrid(U8_Grids.borderDouble());
-        System.out.println(row.render());
+        // PAGINATION
+        // FIND CURRENT PAGE
+        // CALCULATE TOTAL RECORDS
+        pagination.addRule();
+        pagination.addRow("Page: 1/3000000 ", " \t\t   ", " Total Record:300000");
+        pagination.addRule();
 
-        page.addRule();
-        page.addRow("Page:1/3000000 ", " \t\t   ", " Total Record:300000");
-        page.addRule();
+        pagination.setTextAlignment(TextAlignment.CENTER);
+        pagination.getContext().setGrid(U8_Grids.borderDoubleLight());
 
-        page.setTextAlignment(TextAlignment.CENTER);
-        page.getContext().setGrid(U8_Grids.borderDoubleLight());
-
-        page.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        System.out.println(page.render());
+        pagination.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        System.out.println(pagination.render());
     }
 
     public void writeDataLayout() {
 
     }
 
-    public void readDataLayout() {
-
-    }
+    public void readDataLayout() {}
 
     public void searchDataLayout() {
-        Inputfield inputfield = new Inputfield();
         String productName;
         boolean isFound;
         int searchResult;
 
-        productName = inputfield.readStringType("Input the Name of Product : ");
+        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
         isFound = findProductByName();
 
         switch (isFound) {
@@ -195,7 +187,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
                 break;
 
             case false:
-                outputMessage("");
+                outputMessageLayout("");
                 break;
         }
 
@@ -203,7 +195,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
     }
 
     public void deleteDataLayout() {
-        Inputfield inputfield = new Inputfield();
+        TextFieldConsole inputfield = new TextFieldConsole();
         int productID;
         char choice;
         int searchResult;
@@ -241,23 +233,23 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
 
     public void outputHelpLayout() {
         String[] st = {
-                "1.Press *:Display all record of product.",
-                "2.Press W: Add new Product",
-                "Press w ->#proname-unitprice-qty: sortcut for add new product",
-                "3. Press r: Read contents",
-                "Press r#productId: shortCUt for read product by Id",
-                "4. Press u : Update Data",
-                "5. Press d: Delete Data",
-                "   Press d#proId : shortcut for delete product by id",
-                "6. Press f : Display first page",
-                "7. Press p : Display Previous page",
-                "8. Press n: Display Next Page",
-                "9. Press l : Display Last Page",
-                "10. Press s : Search Product by name",
-                "11. Press sa : To save record to file",
-                "12. Press ba : Backup data",
-                "13. Press re : To restore data",
-                "14. Press h : To Help",
+                "1.             Press\t*:Display all record of product.",
+                "2.             Press\tW: Add new Class.Product",
+                "               Press\tw ->#proname-unitprice-qty: shortcut for add new product",
+                "3.             Press\tr: Read contents",
+                "               Press\tr#proId: shortcut for read product by Id",
+                "4.     Press\tu : Update Data",
+                "5.     Press\td: Delete Data",
+                "       Press\td#proId : Shortcut for delete product by Id",
+                "6.     Press\tf : Display first page",
+                "7.     Press\tp : Display Previous page",
+                "8.     Press\tn: Display Next Page",
+                "9.     Press\tl : Display Last Page",
+                "10.    Press\ts : Search Class.Product by name",
+                "11.    Press\tsa : To save record to file",
+                "12.    Press\tba : Backup data",
+                "13.    Press\tre : To restore data",
+                "14.    Press\th : To Help",
         };
 
         AsciiTable ac = new AsciiTable();
@@ -269,15 +261,43 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess {
         System.out.println(ac.render());
     }
 
+    public void outputMessageLayout(String message) {
+        AsciiTable dialog = new AsciiTable();
+        // DIALOG
+        dialog.addRule();
+        dialog.addRow(message);
+        dialog.addRule();
+
+        dialog.setTextAlignment(TextAlignment.CENTER);
+        dialog.getContext().setGridTheme(TA_GridThemes.TOPBOTTOM);
+        dialog.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        System.out.println(dialog.render(50));
+    }
+
     public void outputInvalidInputLayout() {
 
     }
 
     public void gotoDataLayout() {
-        System.out.println("Go to Page : ");
+        int page;
+        page = TextFieldConsole.readIntegerType("Go to Page : ");
+        // displayTableData(from, to, collection);
+        // assign value for later use
     }
 
     public void setRowLayout() {
-        System.out.println("Please Enter Row for Display : ")
+        TextFieldConsole.readIntegerType("Enter Row for Display : ");
+    }
+
+    public boolean findProductByID() {
+        return false;
+    }
+
+    public boolean findProductByName() {
+        return false;
+    }
+
+    public int displayProductByName() {
+        return 0;
     }
 }

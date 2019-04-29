@@ -1,6 +1,4 @@
 public interface CoreProcess {
-    void regexSearch();
-
     void saveDataToFile();
     void backUpDataToFile();
     void restoreDataToFile();
@@ -9,8 +7,6 @@ public interface CoreProcess {
     void moveToLastPage();
     void moveToPreviousRow();
     void moveToNextRow();
-
-    void shortcutCommand();
 
     void exitProgram();
 }
