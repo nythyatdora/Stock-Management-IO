@@ -5,6 +5,7 @@ public interface DisplayLayout {
     void outputMainLayout();
     void outputHelpLayout();
     void outputMessageLayout(String message);
+    void outputUpdateOptionLayout();
 
     void outputProductData(Product product);
     void displayTableData(Product[] products);

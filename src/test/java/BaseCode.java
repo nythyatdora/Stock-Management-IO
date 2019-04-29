@@ -156,6 +156,18 @@ public class BaseCode extends AbstractBaseCode {
     public int displayProductByName() {
         // FIND PRODUCT BY ID
         // RETURN TRUE IF FOUND
+        return 0;
+    }
+
+    public boolean findProductByID(int productID) {
+        return false;
+    }
+
+    public int displayProductByID(int productID) {
+        return 0;
+    }
+
+    public boolean deleteProductByID(int productID) {
         return false;
     }
 }

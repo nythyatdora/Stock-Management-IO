@@ -6,7 +6,7 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate {
+public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption {
     private ConfigureSetting setting;
 
     public AbstractBaseCode() {
@@ -171,7 +171,26 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     }
 
-    public void readDataLayout() {}
+    public void readDataLayout() {
+        int productID;
+        boolean isFound;
+        int searchResult;
+
+        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
+        isFound = findProductByID(productID);
+
+        switch (isFound) {
+            case true:
+                searchResult = displayProductByID(productID);
+                break;
+
+            case false:
+                outputMessageLayout("");
+                break;
+        }
+
+        System.out.println("Product Found for [" + productID + "] : " + searchResult);
+    }
 
     public void searchDataLayout() {
         String productName;
@@ -179,11 +198,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         int searchResult;
 
         productName = TextFieldConsole.readStringType("Input the Name of Product : ");
-        isFound = findProductByName();
+        isFound = findProductByName(productName);
 
         switch (isFound) {
             case true:
-                searchResult = displayProductByName();
+                searchResult = displayProductByName(productName);
                 break;
 
             case false:
@@ -195,40 +214,78 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void deleteDataLayout() {
-        TextFieldConsole inputfield = new TextFieldConsole();
         int productID;
         char choice;
+        boolean isFound;
         int searchResult;
         boolean hasDeleted;
 
-        productID = inputfield.readIntegerType("Input the ID of Product : ");
-        searchResult = findProductByID(productID);
-        displayProductByID(productID);
+        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
+        isFound = findProductByID(productID);
 
-        System.out.println("Product Found for [" + productID + "] : " + searchResult);
-
-        choice = inputfield.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
-        switch(choice) {
-            case 'Y':
-            case 'y':
-                hasDeleted = deleteProductByID();
-                break;
-
-            case 'N':
-            case 'n':
-                break;
-        }
-
-        if(!hasDeleted) {
-            outputMessage("");
+        if(!isFound) {
+            outputMessageLayout("");
         }
         else {
-            outputMessage("Product was removed");
+            searchResult = displayProductByID(productID);
+
+            System.out.println("Product Found for [" + productID + "] : " + searchResult);
+
+            choice = TextFieldConsole.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
+            switch (choice) {
+                case 'Y':
+                case 'y':
+                    hasDeleted = deleteProductByID(productID);
+                    break;
+
+                case 'N':
+                case 'n':
+                    outputMessageLayout("");
+                    break;
+            }
+
+            if (!hasDeleted) {
+                outputMessageLayout("");
+            } else {
+                outputMessageLayout("Product was removed");
+            }
         }
     }
 
     public void updataDataLayout() {
+        int productID;
+        char choice;
+        boolean isFound;
+        int searchResult;
+        boolean hasUpdated;
 
+        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
+        isFound = findProductByID(productID);
+
+        if(!isFound) {
+            outputMessageLayout("");
+        }
+        else {
+            searchResult = displayProductByID(productID);
+
+            System.out.println("Product Found for [" + productID + "] : " + searchResult);
+
+            outputUpdateOptionLayout();
+            choice = TextFieldConsole.readCharType("What do you want to update : ");
+
+            switch (choice) {
+                case UPDATE_ALL:
+                    break;
+                case UPDATE_NAME:
+                    break;
+                case UPDATE_UNIT_PRICE:
+                    break;
+                case UPDATE_QUANTITY:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public void outputHelpLayout() {
@@ -274,6 +331,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         System.out.println(dialog.render(50));
     }
 
+    public void outputUpdateOptionLayout() {
+
+    }
+
     public void outputInvalidInputLayout() {
 
     }
@@ -289,15 +350,15 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         TextFieldConsole.readIntegerType("Enter Row for Display : ");
     }
 
-    public boolean findProductByID() {
-        return false;
-    }
-
-    public boolean findProductByName() {
-        return false;
-    }
-
     public int displayProductByName() {
+        return 0;
+    }
+
+    public boolean findProductByName(String productName) {
+        return false;
+    }
+
+    public int displayProductByName(String productName) {
         return 0;
     }
 }
