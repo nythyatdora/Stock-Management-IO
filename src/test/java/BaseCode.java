@@ -51,11 +51,13 @@ public class BaseCode extends AbstractBaseCode {
         // SHOW PAGE NUMBER
     }
 
-    public void shortcutCommand() {
-        // READ_PRODUCT_ID
-        // UPDATE_ALL
-        // UPDATE_...
-    }
+    /*
+        public void shortcutCommand() {
+            // READ_PRODUCT_ID
+            // UPDATE_ALL
+            // UPDATE_...
+        }
+    */
 
     public void exitProgram() {
         // TO SAVE WRITE/UPDATE/DELETE RECORD OR NOT
@@ -131,8 +133,6 @@ public class BaseCode extends AbstractBaseCode {
         // SEARCH DATA BY ID
         // OUTPUT SCREEN AT ID
     }
-
-
 
     public void deleteDataLayout() {
         // DELETE BY ID

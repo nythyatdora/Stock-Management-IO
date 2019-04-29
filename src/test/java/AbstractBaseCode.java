@@ -3,9 +3,6 @@ import de.vandermeer.asciithemes.TA_GridThemes;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
-import java.util.HashMap;
-import java.util.Scanner;
-
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption {
     private ConfigureSetting setting;
 
@@ -110,6 +107,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     public void outputProductData(Product product) {
         AsciiTable table = new AsciiTable();
+
         table.addRule();
         table.addRow("ID", ":" + product.getProductID());
         table.addRule();
@@ -121,6 +119,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.addRule();
         table.addRow("Imported Date", ":" + product.getImportDate());
         table.addRule();
+
         table.setPaddingRight(1);
         table.setPaddingLeft(1);
         table.setTextAlignment(TextAlignment.LEFT);
@@ -171,56 +170,48 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     }
 
-//    public void readDataLayout() {
-//        int productID;
-//        boolean isFound;
-//        int searchResult;
-//
-//        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
-//        isFound = findProductByID(productID);
-//
-//        switch (isFound) {
-//            case true:
-//                searchResult = displayProductByID(productID);
-//                break;
-//
-//            case false:
-//                outputMessageLayout("");
-//                break;
-//        }
-//
-//        System.out.println("Product Found for [" + productID + "] : " + searchResult);
-//    }
+    public void readDataLayout() {
+        int productID;
+        boolean isFound;
 
-//    public void searchDataLayout() {
-//        String productName;
-//        boolean isFound;
-//        int searchResult;
-//
-//        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
-//        isFound = findProductByName(productName);
-//
-//        switch (isFound) {
-//            case true:
-//                searchResult = displayProductByName(productName);
-//                break;
-//
-//            case false:
-//                outputMessageLayout("");
-//                break;
-//        }
-//
-//        System.out.println("Product Found for [" + productName + "] : " + searchResult);
-//    }
+        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
+        isFound = findProductByID(productID);
+
+        if(!isFound) {
+            outputMessageLayout("Product not found!");
+        }
+        else {
+            displayProductByID(productID);
+        }
+    }
+
+    public void searchDataLayout() {
+        String productName;
+        boolean isFound;
+        int searchResult = -1;
+
+        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
+        isFound = findProductByName(productName);
+
+        if(!isFound) {
+            outputMessageLayout("");
+        }
+        else {
+            searchResult = displayProductByName(productName);
+        }
+
+        System.out.println("Product Found for [" + productName + "] : " + searchResult);
+    }
 
     public void deleteDataLayout() {
         int productID;
         char choice;
         boolean isFound;
         int searchResult;
-        boolean hasDeleted;
+        boolean hasDeleted = false;
+        boolean toContinue = true;
 
-        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
+        productID = TextFieldConsole.readIntegerType("Input the ID of Product to Delete : ");
         isFound = findProductByID(productID);
 
         if(!isFound) {
@@ -231,60 +222,154 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
             System.out.println("Product Found for [" + productID + "] : " + searchResult);
 
-            choice = TextFieldConsole.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
-            switch (choice) {
-                case 'Y':
-                case 'y':
-                    hasDeleted = deleteProductByID(productID);
-                    break;
+            do {
+                choice = TextFieldConsole.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
+                switch (choice) {
+                    case 'Y':
+                    case 'y':
+                        hasDeleted = deleteProductByID(productID);
+                        break;
 
-                case 'N':
-                case 'n':
-                    outputMessageLayout("");
-                    break;
+                    case 'N':
+                    case 'n':
+                        outputMessageLayout("");
+                        toContinue = false;
+                        break;
+                }
             }
+            while (toContinue);
 
-//            if (!hasDeleted) {
-//                outputMessageLayout("");
-//            } else {
-//                outputMessageLayout("Product was removed");
-//            }
+            if (!hasDeleted) {
+                outputMessageLayout("Process canceled!");
+            } else {
+                outputMessageLayout("Product was removed");
+            }
         }
     }
 
     public void updataDataLayout() {
         int productID;
         char choice;
+        char innerChoice;
+
         boolean isFound;
-        int searchResult;
-        boolean hasUpdated;
+        boolean hasUpdated = false;
+        boolean isContinue = true;
+
+        Product searchProduct;
 
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID);
 
         if(!isFound) {
-            outputMessageLayout("");
+            outputMessageLayout("Product not found!");
         }
         else {
-            searchResult = displayProductByID(productID);
+            searchProduct = retreiveProductByID(productID);
+            outputProductData(searchProduct);
 
-            System.out.println("Product Found for [" + productID + "] : " + searchResult);
+            do {
+                System.out.println("What do you want to update?");
+                outputUpdateOptionLayout();
+                choice = TextFieldConsole.readCharType("What do you want to update : ");
 
-            outputUpdateOptionLayout();
-            choice = TextFieldConsole.readCharType("What do you want to update : ");
+                switch (choice) {
+                    case UPDATE_ALL:
 
-            switch (choice) {
-                case UPDATE_ALL:
-                    break;
-                case UPDATE_NAME:
-                    break;
-                case UPDATE_UNIT_PRICE:
-                    break;
-                case UPDATE_QUANTITY:
-                    break;
-                default:
-                    break;
-            }
+                        do {
+                            outputProductData(searchProduct);
+                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+                            switch (innerChoice) {
+                                case 'Y':
+                                case 'y':
+                                    hasUpdated = updateProductData(productID);
+                                    isContinue = false;
+                                    break;
+
+                                case 'N':
+                                case 'n':
+                                    outputMessageLayout("Invalid input!");
+                                    break;
+                            }
+                        }
+                        while(isContinue);
+                        break;
+
+                    case UPDATE_NAME:
+                        do {
+                            outputProductData(searchProduct);
+                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+                            switch (innerChoice) {
+                                case 'Y':
+                                case 'y':
+                                    hasUpdated = updateProductName(productID);
+                                    isContinue = false;
+                                    break;
+
+                                case 'N':
+                                case 'n':
+                                    outputMessageLayout("Invalid input!");
+                                    break;
+                            }
+                        }
+                        while(isContinue);
+                        break;
+
+                    case UPDATE_UNIT_PRICE:
+                        do {
+                            outputProductData(searchProduct);
+                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+                            switch (innerChoice) {
+                                case 'Y':
+                                case 'y':
+                                    hasUpdated = updateProductUnitPrice(productID);
+                                    isContinue = false;
+                                    break;
+
+                                case 'N':
+                                case 'n':
+                                    outputMessageLayout("Invalid input!");
+                                    break;
+                            }
+                        }
+                        while(isContinue);
+                        break;
+
+                    case UPDATE_QUANTITY:
+                        do {
+                            outputProductData(searchProduct);
+                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+                            switch (innerChoice) {
+                                case 'Y':
+                                case 'y':
+                                    hasUpdated = updateProductQuantity(productID);
+                                    isContinue = false;
+                                    break;
+
+                                case 'N':
+                                case 'n':
+                                    outputMessageLayout("Invalid input!");
+                                    break;
+                            }
+                        }
+                        while(isContinue);
+                        break;
+
+                    case RETURN_TO_MAIN:
+                        isContinue = false;
+                        break;
+
+                    default:
+                        outputMessageLayout("Invalid Input!");
+                }
+            } while (isContinue);
+        }
+
+        if(!hasUpdated) {
+            outputMessageLayout("Update process canceled!");
+        }
+        else {
+            outputMessageLayout("Product was updated!");
         }
     }
 
@@ -358,7 +443,27 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         return false;
     }
 
+    public Product retreiveProductByID(int productID) {
+        return null;
+    }
+
     public int displayProductByName(String productName) {
         return 0;
+    }
+
+    public boolean updateProductData(int productID) {
+        return false;
+    }
+
+    public boolean updateProductName(int productID) {
+        return false;
+    }
+
+    public boolean updateProductQuantity(int productID) {
+        return false;
+    }
+
+    public boolean updateProductUnitPrice(int productID) {
+        return false;
     }
 }
