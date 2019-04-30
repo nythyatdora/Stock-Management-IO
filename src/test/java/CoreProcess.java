@@ -7,10 +7,10 @@ public interface CoreProcess {
     void backUpDataToFile();
     void restoreDataToFile();
 
-    void moveToFirstPage(int startRow, ArrayList<Product> products);
-    void moveToLastPage(int startRow, ArrayList<Product> products);
-    void moveToPreviousRow(int startRow, ArrayList<Product> products);
-    void moveToNextRow(int startRow, ArrayList<Product> products);
+    void moveToFirstPage(int rowSetup, ArrayList<Product> products);
+    void moveToLastPage(int rowSetup, ArrayList<Product> products);
+    void moveToPreviousPage(int rowSetup, ArrayList<Product> products);
+    void moveToNextPage(int rowSetup, ArrayList<Product> products);
 
     void exitProgram();
 }

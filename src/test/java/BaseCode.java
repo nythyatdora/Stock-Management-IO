@@ -1,4 +1,10 @@
+import java.util.ArrayList;
+
 public class BaseCode extends AbstractBaseCode {
+
+    private static ConfigureSetting configureSetting = new ConfigureSetting();
+    private ArrayList<Product> productArrayList;
+
     /**
      *  process:
      *  - save data to file
@@ -29,7 +35,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - first page display
      *  - show pagination
      */
-    public void moveToFirstPage() { super.moveToFirstPage(); }
+    public void moveToFirstPage(int rowSetup, ArrayList<Product> products) { super.moveToFirstPage(configureSetting.rowSetup, productArrayList); }
 
     /**
      *  process:
@@ -37,7 +43,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - last page display
      *  - show pagination
      */
-    public void moveToLastPage() { super.moveToLastPage(); }
+    public void moveToLastPage(int rowSetup, ArrayList<Product> products) { super.moveToLastPage(configureSetting.rowSetup, productArrayList); }
 
     /**
      *  process:
@@ -45,7 +51,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - move -1 page
      *  - show pagination
      */
-    public void moveToPreviousRow() { super.moveToPreviousRow(); }
+    public void moveToPreviousPage(int rowSetup, ArrayList<Product> products) { super.moveToPreviousPage(configureSetting.rowSetup, productArrayList); }
 
     /**
      *  process:
@@ -53,7 +59,7 @@ public class BaseCode extends AbstractBaseCode {
      *  - move + 1 page
      *  - show pagination
      */
-    public void moveToNextRow() { super.moveToNextRow(); }
+    public void moveToNextPage(int rowSetup, ArrayList<Product> products) { super.moveToNextPage(configureSetting.rowSetup, productArrayList); }
 
     /**
      *  process:

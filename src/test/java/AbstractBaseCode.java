@@ -1,4 +1,3 @@
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
 import de.vandermeer.asciithemes.TA_GridThemes;
@@ -12,7 +11,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
     private static ConfigureSetting setting;
@@ -22,7 +24,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 //         READ DATA FROM setting.bak
 //         IF FILE NOT EXIST
 //              CREATE DEFAULT SETTING
-//         ELESE
+//         ELSE
 //              READ FROM FILE TO this.setting
     }
 
@@ -93,48 +95,46 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     }
 
-    public void moveToFirstPage(int startRow, ArrayList<Product> products) {
-        displayTableData(startRow, 1, products);
-        setting.currentPage = 1;
+    public void moveToFirstPage(int rowSetup, ArrayList<Product> products) {
+        displayTableData(rowSetup, 1, products);
+        setting.rowSetup = 1;
     }
 
-    public void moveToLastPage(int startRow, ArrayList<Product> products) {
-        int lastPage = products.size() / startRow;
-        int temp = products.size() % startRow;
+    public void moveToLastPage(int rowSetup, ArrayList<Product> products) {
+        int lastPage = products.size() / rowSetup;
+        int temp = products.size() % rowSetup;
 
         if (temp != 0) {
             lastPage++;
         }
 
-        setting.currentPage = lastPage;
-        displayTableData(startRow, setting.currentPage, products);
+        setting.rowSetup = lastPage;
+        displayTableData(rowSetup, setting.rowSetup, products);
     }
 
-    public void moveToPreviousRow(int startRow, ArrayList<Product> products) {
-        int lastPage = products.size() / startRow;
-        int temp = products.size() % startRow;
+    public void moveToPreviousPage(int rowSetup, ArrayList<Product> products) {
+        int lastPage = products.size() / rowSetup;
+        int temp = products.size() % rowSetup;
         if (temp != 0) {
             lastPage++;
         }
-        if (setting.currentPage == 0) {
-            setting.currentPage = lastPage;
+        if (setting.rowSetup == 0) {
+            setting.rowSetup = lastPage;
         }
-        displayTableData(startRow, setting.currentPage--, products);
+        displayTableData(rowSetup, setting.rowSetup--, products);
     }
 
-    public void moveToNextRow(int startRow, ArrayList<Product> products) {
-        int lastPage = products.size() / startRow;
-        int temp = products.size() % startRow;
+    public void moveToNextPage(int rowSetup, ArrayList<Product> products) {
+        int lastPage = products.size() / rowSetup;
+        int temp = products.size() % rowSetup;
         if (temp != 0) {
             lastPage++;
         }
 
-        if (setting.currentPage == lastPage) {
-            setting.currentPage = 0;
+        if (setting.rowSetup == lastPage) {
+            setting.rowSetup = 0;
         }
-
-        setting.currentPage++;
-        displayTableData(startRow, setting.currentPage, products);
+        displayTableData(rowSetup, setting.rowSetup++, products);
     }
 
     public void exitProgram() {
@@ -375,7 +375,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         int productID;
         char choice;
         boolean isFound;
-        int searchResult;
         boolean hasDeleted = false;
         boolean toContinue = true;
 
@@ -388,7 +387,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             outputMessageLayout("Product Not Found!");
         }
         else {
-            searchResult = displayProductByID(productID, hashMap);
+            displayProductByID(productID, hashMap);
 
             System.out.println("Product Found for [" + productID + "] : " + searchResult);
 
@@ -547,12 +546,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputHelpLayout() {
-
         AsciiTable at = new AsciiTable();
         at.addRule();
         at.addRow("1.", "Press","* : Display all record of product").setPaddingLeftRight(2);
         at.addRow("2.", "Press","W : Add new product").setPaddingLeftRight(2);
-        at.addRow("",   "Press","W ->#proname-unitprice-qty : shortcut for add new product").setPaddingLeftRight(2);
+        at.addRow("",   "Press","W ->#proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
         at.addRow("3.", "Press","r : read Content any content").setPaddingLeftRight(2);
         at.addRow("",   "Press","r#proId shortcut for read product by Id").setPaddingLeftRight(2);
         at.addRow("4.", "Press","u : Update Data").setPaddingLeftRight(2);
@@ -584,7 +582,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         at.addRule();
 
         at.setPaddingLeftRight(3);
-        CWC_LongestLine cwc = new CWC_LongestLine(); //for auto resize
+        CWC_LongestLine cwc = new CWC_LongestLine(); // for auto resize
         at.getRenderer().setCWC(cwc);
         at.setTextAlignment(TextAlignment.CENTER);
         at.getContext().setGrid(A8_Grids.lineDoubleBlocks());
@@ -632,22 +630,32 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         return hashMap.containsKey(productID);
     }
 
-    public boolean findProductByName(String productName, HashMap hashMap) {
-        return false;
+    public boolean findProductByName(String productName, HashMap<String, Product> hashMap) {
+        return hashMap.containsKey(productName);
     }
 
-    public boolean insertNewProduct(Product product, HashMap hashMap) {
-        // CONTINUE FROM HERE
+    public boolean insertNewProduct(Product product, HashMap<Integer, Product> hashMap) {
         hashMap.put(product.getProductID(), product);
+        return true;
     }
 
-    public Product retreiveProductByID(int productID, HashMap hashMap) { return null; }
+    public Product retreiveProductByID(int productID, HashMap<Integer, Product> hashMap) {
+        return hashMap.get(productID);
+    }
 
-    public int displayProductByID(int productID, HashMap hashMap) { return 0; }
+    public void displayProductByID(int productID, HashMap<Integer, Product> hashMap) {
+        Product productToOutput = hashMap.get(productID);
+        outputProductData(productToOutput);
+    }
 
-    public int displayProductByName(String productName, HashMap hashMap) { return 0; }
+    public int displayProductByName(String productName, HashMap<String, Product> hashMap) {
+        return 0;
+    }
 
-    public boolean deleteProductByID(int productID, HashMap hashMap) { return false; }
+    public boolean deleteProductByID(int productID, HashMap<Integer, Product> hashMap) {
+        hashMap.remove(productID);
+        return true;
+    }
 
     public boolean updateProductData(Product product) {
         char choice;
@@ -671,10 +679,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                 case 'N':
                 case 'n':
+                    outputMessageLayout("Process Canceled!");
                     return false;
 
                 default:
-                    outputInvalidInputLayout("INVALID INPUT!");
+                    outputInvalidInputLayout("Invalid Input!");
             }
         } while (true);
     }
@@ -683,7 +692,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         char choice;
         String productName;
 
-        productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
 
         do {
             choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
@@ -695,10 +704,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                 case 'N':
                 case 'n':
+                    outputMessageLayout("Process Canceled!");
                     return false;
 
                 default:
-                    outputInvalidInputLayout("INVALID INPUT!");
+                    outputInvalidInputLayout("Invalid Input!");
             }
         } while (true);
     }
@@ -743,10 +753,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                 case 'N':
                 case 'n':
+                    outputMessageLayout("Process Canceled!");
                     return false;
 
                 default:
-                    outputInvalidInputLayout("INVALID INPUT!");
+                    outputInvalidInputLayout("Invalid Input!");
             }
         } while (true);
     }

@@ -1,6 +1,5 @@
 public class ConfigureSetting {
-    public int currentPage;
-
+    public int rowSetup;
     public int currentID;
 
     public boolean hasSavedBeforeClose;
