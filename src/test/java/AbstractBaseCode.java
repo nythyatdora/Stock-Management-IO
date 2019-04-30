@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
-    private ConfigureSetting setting;
+    private static ConfigureSetting setting;
 
     AbstractBaseCode() {
         setting = new ConfigureSetting();
@@ -93,24 +93,48 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     }
 
-    public void moveToFirstPage() {
-        // displayTableData(setting.rowStart, length_setup_row, collection)
+    public void moveToFirstPage(int startRow, ArrayList<Product> products) {
+        displayTableData(startRow, 1, products);
+        setting.currentPage = 1;
     }
 
-    public void moveToLastPage() {
-        // displayTableData(length_collection - length_setup_row, length_setup_row, collection)
+    public void moveToLastPage(int startRow, ArrayList<Product> products) {
+        int lastPage = products.size() / startRow;
+        int temp = products.size() % startRow;
+
+        if (temp != 0) {
+            lastPage++;
+        }
+
+        setting.currentPage = lastPage;
+        displayTableData(startRow, setting.currentPage, products);
     }
 
-    public void moveToPreviousRow() {
-        // set --setting.rowStart;
-        // displayTableData(setting.rowStart, setting.rowDisplayLimit, collection)
-        // calculate page
+    public void moveToPreviousRow(int startRow, ArrayList<Product> products) {
+        int lastPage = products.size() / startRow;
+        int temp = products.size() % startRow;
+        if (temp != 0) {
+            lastPage++;
+        }
+        if (setting.currentPage == 0) {
+            setting.currentPage = lastPage;
+        }
+        displayTableData(startRow, setting.currentPage--, products);
     }
 
-    public void moveToNextRow() {
-        // set ++setting.rowStart;
-        // displayTableData(setting.rowStart, setting.rowDisplayLimit, collection)
-        // calculate page
+    public void moveToNextRow(int startRow, ArrayList<Product> products) {
+        int lastPage = products.size() / startRow;
+        int temp = products.size() % startRow;
+        if (temp != 0) {
+            lastPage++;
+        }
+
+        if (setting.currentPage == lastPage) {
+            setting.currentPage = 0;
+        }
+
+        setting.currentPage++;
+        displayTableData(startRow, setting.currentPage, products);
     }
 
     public void exitProgram() {
@@ -202,37 +226,59 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         System.out.println(table.render());
     }
 
-    public void displayTableData(Product[] products) {
+    public void displayTableData(int startRow, int viewPage, ArrayList<Product> products) {
+        if (startRow <= 0 || viewPage <= 0) {
+            // System.out.println("Can not input less than 0");
+            return;
+        }
         AsciiTable table = new AsciiTable();
         AsciiTable pagination = new AsciiTable();
 
-        // TABLE HEADER
+        long lastPage = products.size() / startRow;
+        long temp = products.size() % startRow;
+
+        if (temp != 0) {
+            lastPage++;
+        }
+
+        if (viewPage > lastPage) {
+            // System.out.println("This viewPage is not found!");
+            return;
+        }
+
         table.addRule();
         table.addRow("ID", "NAME", "UNIT PRICE", "QTY", "IMPORT DATE");
         table.addRule();
 
-        // TABLE BODY
-        // IMPLEMENT CURRENT PAGE
-        // DISPLAY FROM X TO Y
-        // GO TO X PAGE
-        for (Product product: products) {
-            table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
-                    product.getQuantity() , product.getImportDate());
-            table.addRule();
+        if (lastPage == viewPage) {
+            for (int i = (viewPage - 1) * startRow; i < products.size(); i++) {
+                Product product = products.get(i);
+
+                table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
+                        product.getQuantity(), product.getImportDate());
+                table.addRule();
+            }
+        }
+        else {
+            int t = viewPage * startRow;
+            for (int j = t - startRow; j < t; j++) {
+                Product product = products.get(j);
+
+                table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
+                        product.getQuantity(), product.getImportDate());
+                table.addRule();
+            }
         }
 
-        table.setTextAlignment(TextAlignment.CENTER);
+        table.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
         table.getContext().setGrid(U8_Grids.borderDouble());
         System.out.println(table.render());
 
-        // PAGINATION
-        // FIND CURRENT PAGE
-        // CALCULATE TOTAL RECORDS
         pagination.addRule();
-        pagination.addRow("Page: 1/3000000 ", " \t\t   ", " Total Record:300000");
+        pagination.addRow("viewPage:" + viewPage + "/" + lastPage, " \t\t   ", " Total Record:" + products.size());
         pagination.addRule();
 
-        pagination.setTextAlignment(TextAlignment.CENTER);
+        pagination.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
         pagination.getContext().setGrid(U8_Grids.borderDoubleLight());
 
         pagination.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
@@ -240,6 +286,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void writeDataLayout() {
+        // ArrayList
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
 

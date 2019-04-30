@@ -1,8 +1,7 @@
 public class ConfigureSetting {
-    public int rowDisplayLimit;
-    public int currentRowPostion;
-    public int rowStart;
-    public int rowEnd;
+    public int currentPage;
+
+    public int currentID;
 
     public boolean hasSavedBeforeClose;
     public String recoveryFileName;

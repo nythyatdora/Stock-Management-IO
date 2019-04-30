@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public interface DisplayLayout {
     void outputWelcomeLayout();
     void outputLogoLayout();
@@ -8,7 +10,7 @@ public interface DisplayLayout {
     void outputUpdateOptionLayout();
 
     void outputProductData(Product product);
-    void displayTableData(Product[] products);
+    void displayTableData(int startRow, int viewPage, ArrayList<Product> products);
     void writeDataLayout();
     void readDataLayout();
     void searchDataLayout();
