@@ -98,7 +98,7 @@ public class Tester implements InputCommand {
                     break;
 
                 default:
-                    baseCode.outputInvalidInputLayout();
+                    baseCode.outputInvalidInputLayout("");
                     break;
             }
         } while (true);

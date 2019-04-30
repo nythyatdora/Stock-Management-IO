@@ -1,12 +1,14 @@
+import java.util.HashMap;
 
 public interface DataManipulate {
-    boolean findProductByID(int productID);
-    boolean findProductByName(String productName);
+    boolean findProductByID(int productID, HashMap<Integer, Product> hashMap);
+    boolean findProductByName(String productName, HashMap<String, Product> hashMap);
 
-    Product retreiveProductByID(int productID);
+    boolean insertNewProduct(Product product, HashMap<Integer, Product> hashMap);
+    Product retreiveProductByID(int productID, HashMap<Integer, Product> hashMap);
 
-    int displayProductByID(int productID);
-    int displayProductByName(String productName);
+    void displayProductByID(int productID, HashMap<Integer, Product> hashMap);
+    int displayProductByName(String productName, HashMap<String, Product> hashMap);
 
-    boolean deleteProductByID(int productID);
+    boolean deleteProductByID(int productID, HashMap<Integer, Product> hashMap);
 }
