@@ -5,16 +5,15 @@ import de.vandermeer.asciithemes.a8.A8_Grids;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
     private static ConfigureSetting setting;
@@ -88,10 +87,94 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void backUpDataToFile() {
+        FileInputStream instream = null;
+        FileOutputStream outstream = null;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM,dd-mm:ss");
+        Date date = new Date();
+        String filename = dateFormat.format(date) + ".txt";
+        System.out.println(filename);
+        try {
+            File infile = new File("mytext1.txt");
+            File outfile = new File("src/Backup/" + filename);
+
+            instream = new FileInputStream(infile);
+            outstream = new FileOutputStream(outfile);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+            /*copying the contents from input stream to
+             * output stream using read and write methods
+             */
+            while ((length = instream.read(buffer)) > 0) {
+                outstream.write(buffer, 0, length);
+            }
+
+            //Closing the input/output file streams
+            instream.close();
+            outstream.close();
+
+            System.out.println("Backup successfully!!");
+
+        } catch (Exception ioe) {
+            ioe.printStackTrace();
+        }
+
 
     }
 
     public void restoreDataToFile() {
+        FileInputStream instream = null;
+        FileOutputStream outstream = null;
+        List<String> result=null;
+        Scanner scanner = new Scanner(System.in);
+        String nameOfFile;
+        int numberOfFile=1;
+        try {
+
+            try (Stream<Path> walk = Files.walk(Paths.get("src/Backup"))) {
+
+                result = walk.filter(Files::isRegularFile)
+                        .map(x -> x.toString()).collect(Collectors.toList());
+
+                for (String listOfFile : result){
+                    System.out.println(numberOfFile+")"+listOfFile);
+                    numberOfFile++;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //validate here....
+            System.out.print("Which files you want to restore...:");
+            int indexOfFile = scanner.nextInt();
+
+            nameOfFile = result.get(indexOfFile-1);
+
+            File infile = new File(nameOfFile);
+            File outfile = new File("mytext1.txt");
+
+            instream = new FileInputStream(infile);
+            outstream = new FileOutputStream(outfile);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+            /*copying the contents from input stream to
+             * output stream using read and write methods
+             */
+            while ((length = instream.read(buffer)) > 0) {
+                outstream.write(buffer, 0, length);
+            }
+            //Closing the input/output file streams
+            instream.close();
+            outstream.close();
+            System.out.println("Restore successfully!!");
+
+        } catch (Exception ioe) {
+            ioe.printStackTrace();
+        }
+
 
     }
 
