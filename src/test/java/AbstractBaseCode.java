@@ -1,3 +1,4 @@
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
 import de.vandermeer.asciithemes.TA_GridThemes;
@@ -9,19 +10,20 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
     private ConfigureSetting setting;
 
     AbstractBaseCode() {
         setting = new ConfigureSetting();
-        // READ DATA FROM setting.bak
-        // IF FILE NOT EXIST
-        //      CREATE DEFAULT SETTING
-        // ELESE
-        //      READ FROM FILE TO this.setting
+//         READ DATA FROM setting.bak
+//         IF FILE NOT EXIST
+//              CREATE DEFAULT SETTING
+//         ELESE
+//              READ FROM FILE TO this.setting
     }
 
     public ArrayList<Product> readDataFromFile() {
@@ -238,21 +240,66 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void writeDataLayout() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = new Date();
 
+        HashMap<Integer, Product> hashMap;
+
+        char choice;
+        int id = hashMap.size() + 1; // wrong logic
+        boolean hasInserted = false;
+        boolean toContinue = true;
+        Product insertProduct;
+
+        System.out.println("[NEW] Product ID : " + id);
+        String productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+        int productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
+        double productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+        String importDate = dateFormat.format(date);
+
+        insertProduct = new Product(id, productName, productUnitPrice, productQuantity, importDate);
+
+        do {
+            choice = TextFieldConsole.readCharType("Are you sure that you want to insert the product? [Y|y] or [N|n] : ");
+
+            switch (choice) {
+                case 'Y':
+                case 'y':
+                    hasInserted = insertNewProduct(insertProduct, hashMap);
+                    break;
+
+                case 'N':
+                case 'n':
+                    toContinue = false;
+                    break;
+
+                default:
+                    outputInvalidInputLayout("INVALID INPUT!");
+                    break;
+            }
+        } while(toContinue);
+
+        if(!hasInserted) {
+            outputMessageLayout("Process Canceled!");
+        }
+        else {
+            outputMessageLayout("Product was added!");
+        }
     }
 
     public void readDataLayout() {
         int productID;
         boolean isFound;
+        HashMap<Integer, Product> hashMap;
 
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
-        isFound = findProductByID(productID);
+        isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
             outputMessageLayout("Product not found!");
         }
         else {
-            displayProductByID(productID);
+            displayProductByID(productID, hashMap);
         }
     }
 
@@ -261,14 +308,16 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         boolean isFound;
         int searchResult = -1;
 
+        HashMap<Integer, Product> hashMap;
+
         productName = TextFieldConsole.readStringType("Input the Name of Product : ");
-        isFound = findProductByName(productName);
+        isFound = findProductByName(productName, hashMap);
 
         if(!isFound) {
-            outputMessageLayout("");
+            outputMessageLayout("Product Not Found!");
         }
         else {
-            searchResult = displayProductByName(productName);
+            searchResult = displayProductByName(productName, hashMap);
         }
 
         System.out.println("Product Found for [" + productName + "] : " + searchResult);
@@ -282,14 +331,16 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         boolean hasDeleted = false;
         boolean toContinue = true;
 
+        HashMap<Integer, Product> hashMap;
+
         productID = TextFieldConsole.readIntegerType("Input the ID of Product to Delete : ");
-        isFound = findProductByID(productID);
+        isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
-            outputMessageLayout("");
+            outputMessageLayout("Product Not Found!");
         }
         else {
-            searchResult = displayProductByID(productID);
+            searchResult = displayProductByID(productID, hashMap);
 
             System.out.println("Product Found for [" + productID + "] : " + searchResult);
 
@@ -298,12 +349,12 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                 switch (choice) {
                     case 'Y':
                     case 'y':
-                        hasDeleted = deleteProductByID(productID);
+                        hasDeleted = deleteProductByID(productID, hashMap);
                         break;
 
                     case 'N':
                     case 'n':
-                        outputMessageLayout("");
+                        outputMessageLayout("Process Canceled!");
                         toContinue = false;
                         break;
                 }
@@ -329,14 +380,16 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
         Product searchProduct;
 
+        HashMap<Integer, Product> hashMap;
+
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
-        isFound = findProductByID(productID);
+        isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
             outputMessageLayout("Product not found!");
         }
         else {
-            searchProduct = retreiveProductByID(productID);
+            searchProduct = retreiveProductByID(productID, hashMap);
             outputProductData(searchProduct);
 
             do {
@@ -353,7 +406,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                             switch (innerChoice) {
                                 case 'Y':
                                 case 'y':
-                                    hasUpdated = updateProductData(productID);
+                                    hasUpdated = updateProductData(searchProduct);
                                     isContinue = false;
                                     break;
 
@@ -373,7 +426,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                             switch (innerChoice) {
                                 case 'Y':
                                 case 'y':
-                                    hasUpdated = updateProductName(productID);
+                                    hasUpdated = updateProductName(searchProduct);
                                     isContinue = false;
                                     break;
 
@@ -393,7 +446,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                             switch (innerChoice) {
                                 case 'Y':
                                 case 'y':
-                                    hasUpdated = updateProductUnitPrice(productID);
+                                    hasUpdated = updateProductUnitPrice(searchProduct);
                                     isContinue = false;
                                     break;
 
@@ -413,7 +466,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                             switch (innerChoice) {
                                 case 'Y':
                                 case 'y':
-                                    hasUpdated = updateProductQuantity(productID);
+                                    hasUpdated = updateProductQuantity(searchProduct);
                                     isContinue = false;
                                     break;
 
@@ -440,6 +493,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             outputMessageLayout("Update process canceled!");
         }
         else {
+            hashMap.put(searchProduct.getProductID(), searchProduct);
             outputMessageLayout("Product was updated!");
         }
     }
@@ -490,7 +544,14 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputUpdateOptionLayout() {
+        AsciiTable table = new AsciiTable();
 
+        table.addRule();
+        table.addRow("[1] - All", "[2] - Name", "[3] - Quantity", "[4] - Unit Price", "[5] - Back to Menu");
+        table.addRule();
+        table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        table.setTextAlignment(TextAlignment.CENTER);
+        System.out.println(table.render());
     }
 
     public void outputInvalidInputLayout(String message) {
@@ -519,33 +580,126 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         TextFieldConsole.readIntegerType("Enter Row for Display : ");
     }
 
-    public boolean findProductByID(int productID) { return false; }
+    public boolean findProductByID(int productID, HashMap hashMap) {
+        return hashMap.containsKey(productID);
+    }
 
-    public boolean findProductByName(String productName) {
+    public boolean findProductByName(String productName, HashMap hashMap) {
         return false;
     }
 
-    public Product retreiveProductByID(int productID) { return null; }
-
-    public int displayProductByID(int productID) { return 0; }
-
-    public int displayProductByName(String productName) { return 0; }
-
-    public boolean deleteProductByID(int productID) { return false; }
-
-    public boolean updateProductData(int productID) {
-        return false;
+    public boolean insertNewProduct(Product product, HashMap hashMap) {
+        // CONTINUE FROM HERE
+        hashMap.put(product.getProductID(), product);
     }
 
-    public boolean updateProductName(int productID) {
-        return false;
+    public Product retreiveProductByID(int productID, HashMap hashMap) { return null; }
+
+    public int displayProductByID(int productID, HashMap hashMap) { return 0; }
+
+    public int displayProductByName(String productName, HashMap hashMap) { return 0; }
+
+    public boolean deleteProductByID(int productID, HashMap hashMap) { return false; }
+
+    public boolean updateProductData(Product product) {
+        char choice;
+        String productName;
+        int productQuantity;
+        double productUnitPrice;
+
+        productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+        productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
+        productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+
+        do {
+            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+            switch (choice) {
+                case 'Y':
+                case 'y':
+                    product.setProductName(productName);
+                    product.setQuantity(productQuantity);
+                    product.setUnitPrice(productUnitPrice);
+                    return true;
+
+                case 'N':
+                case 'n':
+                    return false;
+
+                default:
+                    outputInvalidInputLayout("INVALID INPUT!");
+            }
+        } while (true);
     }
 
-    public boolean updateProductQuantity(int productID) {
-        return false;
+    public boolean updateProductName(Product product) {
+        char choice;
+        String productName;
+
+        productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+
+        do {
+            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+            switch (choice) {
+                case 'Y':
+                case 'y':
+                    product.setProductName(productName);
+                    return true;
+
+                case 'N':
+                case 'n':
+                    return false;
+
+                default:
+                    outputInvalidInputLayout("INVALID INPUT!");
+            }
+        } while (true);
     }
 
-    public boolean updateProductUnitPrice(int productID) {
-        return false;
+    public boolean updateProductQuantity(Product product) {
+        char choice;
+        int productQuantity;
+
+        productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
+
+        do {
+            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+            switch (choice) {
+                case 'Y':
+                case 'y':
+                    product.setQuantity(productQuantity);
+                    return true;
+
+                case 'N':
+                case 'n':
+                    return false;
+
+                default:
+                    outputInvalidInputLayout("INVALID INPUT!");
+            }
+        } while (true);
+    }
+
+    public boolean updateProductUnitPrice(Product product) {
+        char choice;
+        double productUnitPrice;
+
+        productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+
+        do {
+            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+            switch (choice) {
+                case 'Y':
+                case 'y':
+                    product.setUnitPrice(productUnitPrice);
+                    return true;
+
+                case 'N':
+                case 'n':
+                    return false;
+
+                default:
+                    outputInvalidInputLayout("INVALID INPUT!");
+            }
+        } while (true);
     }
 }
