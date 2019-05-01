@@ -12,11 +12,6 @@ public class ConfigureSetting implements Serializable {
     public String recoveryFileName;
     public String currentWriteName;
 
-    public String currentCollectionFile = "";
-    public String backupFilePrefix = "file_backup-";
-    public String backupFileLocation = "./meta/recovery/";
-    public String extensionFileData = ".bak";
-
     public static boolean isFileExist() {
         File tempFile = new File(FileLocation.SETTING_FILE_NAME);
         return tempFile.exists();
@@ -58,19 +53,18 @@ public class ConfigureSetting implements Serializable {
         return temp;
     }
 
-    private String currentDate() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM,dd-mm:ss");
+    private static String currentDate() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
         Date date = new Date();
         return dateFormat.format(date);
     }
 
-    public String getBackupFileName() {
-        return this.backupFileLocation + this.backupFilePrefix + currentDate() + this.extensionFileData;
+    public static String getBackupFileName() {
+        return FileLocation.BACKUP_FILE_LOCATION + FileLocation.BACKUP_FILE_PREFIX + currentDate() + FileLocation.EXTENSION_FILE_DATA;
     }
 
     public static void main(String[] args) {
-        ConfigureSetting setting = new ConfigureSetting();
-        setting.writeToConfigureFile(new ConfigureSetting());
+        ConfigureSetting.writeToConfigureFile(new ConfigureSetting());
     }
 }
 
