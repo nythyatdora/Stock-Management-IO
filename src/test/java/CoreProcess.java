@@ -1,16 +1,15 @@
 import java.util.ArrayList;
 
 public interface CoreProcess {
-    ArrayList<Product> readDataFromFile();
+    ArrayList<Product> readDataFromFileProcess();
+    void saveDataToFileProcess();
 
-    void saveDataToFile();
-    void backUpDataToFile();
-    void restoreDataToFile();
+    void moveToFirstProcess(int rowSetup, ArrayList<Product> products);
+    void moveToLastPageProcess(int rowSetup, ArrayList<Product> products);
+    void moveToPreviousPageProcess(int rowSetup, ArrayList<Product> products);
+    void moveToNextPageProcess(int rowSetup, ArrayList<Product> products);
 
-    void moveToFirstPage(int rowSetup, ArrayList<Product> products);
-    void moveToLastPage(int rowSetup, ArrayList<Product> products);
-    void moveToPreviousPage(int rowSetup, ArrayList<Product> products);
-    void moveToNextPage(int rowSetup, ArrayList<Product> products);
+    void setRowProcess();
 
-    void exitProgram();
+    void gotoDataProcess();
 }

@@ -7,7 +7,7 @@ public class Product {
 
     public Product() {
         this.productID = -1;
-        this.productName = "";
+        this.productName = "isNull";
         this.unitPrice = -1;
         this.quantity = -1;
         this.importDate = "DD-MM-YY";
@@ -65,9 +65,5 @@ public class Product {
     @Override
     public String toString() {
         return "Product ID:"+productID+" "+"Product Name:"+productName+" "+"Product Quantity:"+quantity+" "+"Unit Price"+unitPrice+" "+"Import Date:"+importDate;
-    }
-
-    public static void main(String[] args) {
-
     }
 }

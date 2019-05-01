@@ -6,18 +6,31 @@ public interface DisplayLayout {
     void outputLoadingLayout();
     void outputMainLayout();
     void outputHelpLayout();
-    void outputMessageLayout(String message);
-    void outputUpdateOptionLayout();
+    void outputTableDataLayout();
 
     void outputProductData(Product product);
     void displayTableData(int startRow, int viewPage, ArrayList<Product> products);
+
     void writeDataLayout();
     void readDataLayout();
     void searchDataLayout();
     void deleteDataLayout();
     void updataDataLayout();
 
-    void outputInvalidInputLayout(String message);
+    void saveDataToFileLayout();
+    void backUpDataToFileLayout();
+    void restoreDataToFileLayout();
+
+    void moveToFirstPageLayout();
+    void moveToLastPageLayout();
+    void moveToPreviousPageLayout();
+    void moveToNextPageLayout();
     void gotoDataLayout();
     void setRowLayout();
+
+    void exitProgramLayout();
+
+    void outputMessageLayout(String message);
+    void outputInvalidInputLayout(String message);
+    void outputUpdateOptionLayout();
 }
