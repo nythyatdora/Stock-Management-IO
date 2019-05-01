@@ -1,6 +1,6 @@
 public class ConfigureSetting {
-    public int rowSetup;
-    public int currentPage;
+    public int rowSetup=4;
+    public int currentPage=3;
     public int currentID;
     public boolean hasSavedBeforeClose;
     public String recoveryFileName;

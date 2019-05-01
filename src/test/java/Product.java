@@ -61,7 +61,9 @@ public class Product {
             // WRITE INTO FILE
         }
     }
-
+public String ToString(){
+    return productID +"#"+productName+"#"+unitPrice+"#"+quantity+"#"+importDate;
+}
     @Override
     public String toString() {
         return "Product ID:"+productID+" "+"Product Name:"+productName+" "+"Product Quantity:"+quantity+" "+"Unit Price"+unitPrice+" "+"Import Date:"+importDate;

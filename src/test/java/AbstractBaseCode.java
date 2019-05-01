@@ -87,7 +87,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         mainLayout.addRow("[L|l]\tLast","[G|g]\tGoto","[O|o]\tSet Row","[V|v]\tSave","[C|c]\tBack up","[T|t]\tRestore","[H|h]\tHelp","[E|e]\tExit");
         mainLayout.addRule();
 
-        mainLayout.getContext().setWidth(160);
+       mainLayout.getContext().setWidth(160);
         mainLayout.setTextAlignment(TextAlignment.CENTER);
         mainLayout.getContext().setGrid(U8_Grids.borderDouble());
 
@@ -416,7 +416,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void gotoDataLayout() {
-        gotoDataProcess();
+        gotoDataProcess(setting.rowSetup, listOfProducts);
     }
 
     public void exitProgramLayout() {
@@ -479,8 +479,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
             str = bufferedReader.readLine();
             while (str != null) {
-                str = bufferedReader.readLine();
                 temp = temp.concat(str);
+                str = bufferedReader.readLine();
             }
 
             bufferedReader.close();
@@ -515,7 +515,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
             startTime = System.currentTimeMillis();
             for (int i = 1; i <= 100; ++i) {
-                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).toString());
+                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
             }
             endTime = System.currentTimeMillis();
 
@@ -528,7 +528,24 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             e.printStackTrace();
         }
     }
+//    public void saveDataToFile() {
+//        try {
+//
+//            BufferedWriter out = new BufferedWriter(new FileWriter("mytext1.txt"));
+//            long l = System.currentTimeMillis();
+//
+//            for (int i = 1; i <= 100; ++i) {
+//                out.append("+" + (new Product(i, "ca", 12.5, 5, "12/23")).ToString());
+//            }
+//
+//            long s = System.currentTimeMillis();
+//            System.out.println(s - l);
+//            out.close();
+//        } catch (Exception var6) {
+//            var6.printStackTrace();
+//        }
 
+//    }
     public void moveToFirstProcess(int rowSetup, ArrayList<Product> products) {
         displayTableData(rowSetup, 1, products);
         setting.rowSetup = 1;
@@ -542,8 +559,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             lastPage++;
         }
 
-        setting.rowSetup = lastPage;
-        displayTableData(rowSetup, setting.rowSetup, products);
+        setting.currentPage = lastPage;
+        displayTableData(rowSetup,setting.currentPage, products);
     }
 
     public void moveToPreviousPageProcess(int rowSetup, ArrayList<Product> products) {
@@ -565,18 +582,22 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             lastPage++;
         }
 
-        if (setting.rowSetup == lastPage) {
-            setting.rowSetup = 0;
+        if (setting.currentPage == lastPage) {
+            setting.currentPage = 0;
         }
-        displayTableData(rowSetup, setting.rowSetup++, products);
+        displayTableData(rowSetup, setting.currentPage++, products);
     }
 
     public void setRowProcess() {
         setting.rowSetup = TextFieldConsole.readIntegerType("Enter Row for Display : ");
     }
 
-    public void gotoDataProcess() {
+    public void gotoDataProcess(int rowSetup, ArrayList<Product> products) {
         setting.currentPage = TextFieldConsole.readIntegerType("Go to Page : ");
+        Scanner sc=new Scanner(System.in);
+        setting.rowSetup=sc.nextInt();
+        displayTableData(rowSetup, setting.rowSetup, products);
+
     }
 
     public void outputProductData(Product product) {
@@ -604,6 +625,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void displayTableData(int startRow, int viewPage, ArrayList<Product> products) {
+        if(startRow==0){startRow=4;}
         if (startRow <= 0 || viewPage <= 0) {
             // System.out.println("Can not input less than 0");
             return;

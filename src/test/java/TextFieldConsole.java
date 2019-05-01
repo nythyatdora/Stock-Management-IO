@@ -55,9 +55,7 @@ public class TextFieldConsole {
         catch (RuntimeException e) {
             c = '\0';
         }
-        finally {
-            scan.close();
-        }
+
 
         return c;
     }
@@ -80,9 +78,9 @@ public class TextFieldConsole {
     }
 
     public static void main(String[] args) {
-//        char c;
-//        c = TextFieldConsole.readCharType("Input char : ");
-//        System.out.println("c : " + c);
+        char c;
+        c = TextFieldConsole.readCharType("Input char : ");
+        System.out.println("c : " + c);
 
 //        int i;
 //        i = TextFieldConsole.readIntegerType("Input i : ");
@@ -92,8 +90,8 @@ public class TextFieldConsole {
 //        s = TextFieldConsole.readStringType("Input s : ");
 //        System.out.println("s : " + s);
 
-        double d;
-        d = TextFieldConsole.readDoubleType("Input d : ");
-        System.out.println("d : " + d);
+//        double d;
+//        d = TextFieldConsole.readDoubleType("Input d : ");
+//        System.out.println("d : " + d);
     }
 }

@@ -11,5 +11,5 @@ public interface CoreProcess {
 
     void setRowProcess();
 
-    void gotoDataProcess();
+    void gotoDataProcess(int rowSetup, ArrayList<Product> products);
 }

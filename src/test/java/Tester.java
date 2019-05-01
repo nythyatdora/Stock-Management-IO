@@ -1,11 +1,13 @@
+import java.util.Scanner;
 
 public class Tester implements InputCommand {
     public static void main(String[] args) {
+        Scanner scanner= new Scanner(System.in);
         BaseCode baseCode = new BaseCode();
-
+        baseCode.saveDataToFileProcess();
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
-        baseCode.outputLoadingLayout();
+        // baseCode.outputLoadingLayout();
 
         do {
             baseCode.outputMainLayout();
@@ -98,9 +100,10 @@ public class Tester implements InputCommand {
                     break;
 
                 default:
-                    baseCode.outputInvalidInputLayout("");
+                    baseCode.outputInvalidInputLayout("asdfad");
                     break;
             }
+
         } while (true);
     }
 }
