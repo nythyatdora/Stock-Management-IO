@@ -4,7 +4,7 @@ public class Tester implements InputCommand {
     public static void main(String[] args) {
         Scanner scanner= new Scanner(System.in);
         BaseCode baseCode = new BaseCode();
-        baseCode.saveDataToFileProcess();
+
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
         // baseCode.outputLoadingLayout();

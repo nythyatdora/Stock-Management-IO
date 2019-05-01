@@ -450,6 +450,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputTableDataLayout() {
+//        setting.currentPage=1;
         displayTableData(setting.rowSetup, setting.currentPage, listOfProducts);
     }
 
@@ -504,23 +505,39 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         return obj;
     }
+public void write1Mobject(){
+    long startTime;
+    long endTime;
+    long duration;
 
-    public void saveDataToFileProcess() {
-        long startTime;
-        long endTime;
-        long duration;
+    try {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
+
+        startTime = System.currentTimeMillis();
+        for (int i = 1; i <= 100; ++i) {
+            bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
+        }
+        endTime = System.currentTimeMillis();
+
+        duration = endTime - startTime;
+        System.out.println(duration);
+
+        bufferedWriter.close();
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+    public void saveDataToFileProcess(ArrayList<Product> objTowriteToArray) {
 
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
 
-            startTime = System.currentTimeMillis();
-            for (int i = 1; i <= 100; ++i) {
+
+            for (int i = 0; i < objTowriteToArray.size(); ++i) {
+                bufferedWriter.append("+"+objTowriteToArray);
                 bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
             }
-            endTime = System.currentTimeMillis();
-
-            duration = endTime - startTime;
-            System.out.println(duration);
 
             bufferedWriter.close();
         }
@@ -548,7 +565,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 //    }
     public void moveToFirstProcess(int rowSetup, ArrayList<Product> products) {
         displayTableData(rowSetup, 1, products);
-        setting.rowSetup = 1;
+        setting.currentPage = 1;
     }
 
     public void moveToLastPageProcess(int rowSetup, ArrayList<Product> products) {
@@ -569,15 +586,18 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if (temp != 0) {
             lastPage++;
         }
-        if (setting.rowSetup == 0) {
-            setting.rowSetup = lastPage;
+        if (setting.currentPage == 0) {
+            setting.currentPage = lastPage;
         }
-        displayTableData(rowSetup, setting.rowSetup--, products);
+        System.out.println(setting.currentPage);
+        setting.currentPage--;
+        displayTableData(rowSetup, setting.currentPage, products);
     }
 
     public void moveToNextPageProcess(int rowSetup, ArrayList<Product> products) {
         int lastPage = products.size() / rowSetup;
         int temp = products.size() % rowSetup;
+
         if (temp != 0) {
             lastPage++;
         }
@@ -585,7 +605,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if (setting.currentPage == lastPage) {
             setting.currentPage = 0;
         }
-        displayTableData(rowSetup, setting.currentPage++, products);
+        setting.currentPage++;
+        displayTableData(rowSetup, setting.currentPage, products);
     }
 
     public void setRowProcess() {
@@ -594,9 +615,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     public void gotoDataProcess(int rowSetup, ArrayList<Product> products) {
         setting.currentPage = TextFieldConsole.readIntegerType("Go to Page : ");
-        Scanner sc=new Scanner(System.in);
-        setting.rowSetup=sc.nextInt();
-        displayTableData(rowSetup, setting.rowSetup, products);
+
+        displayTableData(setting.rowSetup, setting.currentPage, products);
 
     }
 
@@ -624,17 +644,17 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         System.out.println(table.render());
     }
 
-    public void displayTableData(int startRow, int viewPage, ArrayList<Product> products) {
-        if(startRow==0){startRow=4;}
-        if (startRow <= 0 || viewPage <= 0) {
-            // System.out.println("Can not input less than 0");
+    public void displayTableData(int rowSetup, int viewPage, ArrayList<Product> products) {
+
+        if (rowSetup <= 0 || viewPage <= 0) {
+             System.out.println("Can not input less than 0");
             return;
         }
         AsciiTable table = new AsciiTable();
         AsciiTable pagination = new AsciiTable();
 
-        long lastPage = products.size() / startRow;
-        long temp = products.size() % startRow;
+        long lastPage = products.size() / rowSetup;
+        long temp = products.size() % rowSetup;
 
         if (temp != 0) {
             lastPage++;
@@ -650,7 +670,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.addRule();
 
         if (lastPage == viewPage) {
-            for (int i = (viewPage - 1) * startRow; i < products.size(); i++) {
+            for (int i = (viewPage - 1) * rowSetup; i < products.size(); i++) {
                 Product product = products.get(i);
 
                 table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
@@ -659,8 +679,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             }
         }
         else {
-            int t = viewPage * startRow;
-            for (int j = t - startRow; j < t; j++) {
+            int t = viewPage * rowSetup;
+            for (int j = t - rowSetup; j < t; j++) {
                 Product product = products.get(j);
 
                 table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),

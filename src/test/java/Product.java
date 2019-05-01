@@ -57,15 +57,17 @@ public class Product {
         Product product = new Product(1, "Coca Cola", 2.50, 10, "12-12-2019");
 
         final int TEN_MILLION_RECORDS = 10000000;
-        for(int i=0; i<TEN_MILLION_RECORDS; i++) {
+        for (int i = 0; i < TEN_MILLION_RECORDS; i++) {
             // WRITE INTO FILE
         }
     }
-public String ToString(){
-    return productID +"#"+productName+"#"+unitPrice+"#"+quantity+"#"+importDate;
-}
+
+    public String ToString() {
+        return productID + "#" + productName + "#" + unitPrice + "#" + quantity + "#" + importDate;
+    }
+
     @Override
     public String toString() {
-        return "Product ID:"+productID+" "+"Product Name:"+productName+" "+"Product Quantity:"+quantity+" "+"Unit Price"+unitPrice+" "+"Import Date:"+importDate;
+        return "Product ID:" + productID + " " + "Product Name:" + productName + " " + "Product Quantity:" + quantity + " " + "Unit Price" + unitPrice + " " + "Import Date:" + importDate;
     }
 }

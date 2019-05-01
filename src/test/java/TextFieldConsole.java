@@ -16,9 +16,7 @@ public class TextFieldConsole {
         catch (RuntimeException e) {
             i = -1;
         }
-        finally {
-            scan.close();
-        }
+
 
         return i;
     }
@@ -70,9 +68,7 @@ public class TextFieldConsole {
         catch (RuntimeException e) {
             str = "\0";
         }
-        finally {
-            scan.close();
-        }
+
 
         return str;
     }
