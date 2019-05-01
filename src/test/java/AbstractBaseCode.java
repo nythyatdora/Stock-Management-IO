@@ -170,6 +170,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void readDataLayout() {
         int productID;
         boolean isFound;
+
         HashMap<Integer, Product> hashMap = new HashMap<>();
         MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
@@ -177,7 +178,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
-            outputMessageLayout("Product not found!");
+            outputInvalidInputLayout("Product not found!");
         }
         else {
             displayProductByID(productID, hashMap);
@@ -196,7 +197,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         isFound = findProductByName(productName, hashMap);
 
         if(!isFound) {
-            outputMessageLayout("Product Not Found!");
+            outputInvalidInputLayout("Product Not Found!" );
         }
         else {
             searchResult = displayProductByName(productName, hashMap);
@@ -219,7 +220,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
-            outputMessageLayout("Product Not Found!");
+            outputInvalidInputLayout("Product Not Found!");
         }
         else {
             displayProductByID(productID, hashMap);
@@ -242,8 +243,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             while (toContinue);
 
             if (!hasDeleted) {
-                outputMessageLayout("Process canceled!");
+                outputMessageLayout("Process Canceled!");
             } else {
+
                 outputMessageLayout("Product was removed");
             }
         }
@@ -267,7 +269,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
-            outputMessageLayout("Product not found!");
+            outputInvalidInputLayout("Product Not Found!");
         }
         else {
             searchProduct = retreiveProductByID(productID, hashMap);
@@ -293,7 +295,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                                 case 'N':
                                 case 'n':
-                                    outputMessageLayout("Invalid input!");
+                                    outputInvalidInputLayout("Invalid input!");
                                     break;
                             }
                         }
@@ -313,7 +315,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                                 case 'N':
                                 case 'n':
-                                    outputMessageLayout("Invalid input!");
+                                    outputInvalidInputLayout("Invalid input!");
                                     break;
                             }
                         }
@@ -333,7 +335,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                                 case 'N':
                                 case 'n':
-                                    outputMessageLayout("Invalid input!");
+                                    outputInvalidInputLayout("Invalid input!");
                                     break;
                             }
                         }
@@ -353,7 +355,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                                 case 'N':
                                 case 'n':
-                                    outputMessageLayout("Invalid input!");
+                                    outputInvalidInputLayout("Invalid input!");
                                     break;
                             }
                         }
@@ -365,7 +367,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         break;
 
                     default:
-                        outputMessageLayout("Invalid Input!");
+                        outputInvalidInputLayout("Invalid input!");
+
                 }
             } while (isContinue);
         }
@@ -375,6 +378,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         else {
             outputMessageLayout("Product was updated!");
+
         }
     }
 
@@ -431,6 +435,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputMessageLayout(String message) {
+
+        String ANSI_RESET = "\u001B[0m";
+        String GREEN_BOLD = "\033[1;32m";
+
         // DIALOG
         AsciiTable at = new AsciiTable();
         at.addRule();
@@ -442,7 +450,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         at.getRenderer().setCWC(cwc);
         at.setTextAlignment(TextAlignment.CENTER);
         at.getContext().setGrid(A8_Grids.lineDoubleBlocks());
+        System.out.println(GREEN_BOLD);
         System.out.println(at.render());
+        System.out.println(ANSI_RESET);
     }
 
     public void outputUpdateOptionLayout() {
@@ -461,6 +471,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputInvalidInputLayout(String message) {
+        String ANSI_RED = "\u001B[31;1m";
+        String ANSI_RESET = "\u001B[0m";
+
         // DIALOG
         AsciiTable table = new AsciiTable();
         table.addRule();
@@ -472,7 +485,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.getRenderer().setCWC(cwc);
         table.setTextAlignment(TextAlignment.CENTER);
         table.getContext().setGridTheme(TA_GridThemes.HORIZONTAL);
+        System.out.print(ANSI_RED);
         System.out.println(table.render());
+        System.out.println(ANSI_RESET);
     }
     // END LAYOUT
 
@@ -818,7 +833,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public boolean updateProductName(Product product) {
         char choice;
         String productName;
-
         productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
 
         do {
@@ -843,7 +857,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public boolean updateProductQuantity(Product product) {
         char choice;
         int productQuantity;
-
         productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
 
         do {
@@ -867,7 +880,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public boolean updateProductUnitPrice(Product product) {
         char choice;
         double productUnitPrice;
-
         productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
 
         do {
