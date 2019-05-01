@@ -179,6 +179,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             outputMessageErrorLayout("Process Canceled!");
         }
         else {
+            setting.currentID++;
             outputMessageLayout("Product with ID : " + id + " was added successfully!");
         }
     }
@@ -665,12 +666,13 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if (temp != 0) {
             lastPage++;
         }
+
+        setting.currentPage--;
+
         if (setting.currentPage == 0) {
             setting.currentPage = lastPage;
         }
 
-        System.out.println(setting.currentPage);
-        setting.currentPage--;
         displayTableData(rowSetup, setting.currentPage, products);
     }
 
@@ -686,7 +688,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if (setting.currentPage == lastPage) {
             setting.currentPage = 0;
         }
+
         setting.currentPage++;
+
         displayTableData(rowSetup, setting.currentPage, products);
     }
 
@@ -730,9 +734,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     @Override
     public void displayTableData(int rowSetup, int viewPage, ArrayList<Product> products) {
         if (rowSetup <= 0 || viewPage <= 0) {
-            outputMessageErrorLayout("Input Value Less Than 0!");
+            // outputMessageErrorLayout("Input Value Less Than 0!");
             return;
         }
+
         AsciiTable table = new AsciiTable();
         AsciiTable pagination = new AsciiTable();
 
@@ -744,7 +749,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
 
         if (viewPage > lastPage) {
-            outputMessageErrorLayout("View Page Bigger Than Total Page!");
+            // outputMessageErrorLayout("View Page Bigger Than Total Page!");
             return;
         }
 
