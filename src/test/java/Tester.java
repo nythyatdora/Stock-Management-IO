@@ -1,11 +1,13 @@
+import java.util.Scanner;
 
 public class Tester implements InputCommand {
     public static void main(String[] args) {
+        Scanner scanner= new Scanner(System.in);
         BaseCode baseCode = new BaseCode();
 
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
-        baseCode.outputLoadingLayout();
+        // baseCode.outputLoadingLayout();
 
         do {
             baseCode.outputMainLayout();
@@ -14,7 +16,7 @@ public class Tester implements InputCommand {
 
             switch (inputCommand) {
                 case DISPLAY_TABLE:
-                    // baseCode.displayTableData();
+                    baseCode.outputTableDataLayout();
                     break;
 
                 case WRITE_PRODUCT_UPPER:
@@ -39,22 +41,22 @@ public class Tester implements InputCommand {
 
                 case FIRST_PAGE_UPPER:
                 case FIRST_PAGE_LOWER:
-                    baseCode.moveToFirstPage();
+                    baseCode.moveToFirstPageLayout();
                     break;
 
                 case MOVE_PREVIOUS_UPPER:
                 case MOVE_PREVIOUS_LOWER:
-                    baseCode.moveToPreviousRow();
+                    baseCode.moveToPreviousPageLayout();
                     break;
 
                 case MOVE_NEXT_UPPER:
                 case MOVE_NEXT_LOWER:
-                    baseCode.moveToNextRow();
+                    baseCode.moveToNextPageLayout();
                     break;
 
                 case LAST_PAGE_UPPER:
                 case LAST_PAGE_LOWER:
-                    baseCode.moveToLastPage();
+                    baseCode.moveToLastPageLayout();
                     break;
 
                 case SEARCH_PRODUCT_UPPER:
@@ -74,17 +76,17 @@ public class Tester implements InputCommand {
 
                 case SAVE_FILE_UPPER:
                 case SAVE_FILE_LOWER:
-                    baseCode.saveDataToFile();
+                    baseCode.saveDataToFileLayout();
                     break;
 
                 case BACKUP_FILE_UPPER:
                 case BACKUP_FILE_LOWER:
-                    baseCode.backUpDataToFile();
+                    baseCode.backupDataToFileLayout();
                     break;
 
                 case RESTORE_FILE_UPPER:
                 case RESTORE_FILE_LOWER:
-                    baseCode.restoreDataToFile();
+                    baseCode.restoreDataToFileLayout();
                     break;
 
                 case HELP_LAYOUT_UPPER:
@@ -98,9 +100,10 @@ public class Tester implements InputCommand {
                     break;
 
                 default:
-                    baseCode.outputInvalidInputLayout("");
+                    baseCode.outputInvalidInputLayout("asdfad");
                     break;
             }
+
         } while (true);
     }
 }

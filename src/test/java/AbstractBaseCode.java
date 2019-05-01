@@ -4,6 +4,7 @@ import de.vandermeer.asciithemes.TA_GridThemes;
 import de.vandermeer.asciithemes.a8.A8_Grids;
 import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
+import org.apache.commons.collections4.MapUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -16,214 +17,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
+
     private static ConfigureSetting setting;
+    private static ArrayList<Product> listOfProducts;
 
     AbstractBaseCode() {
-        setting = new ConfigureSetting();
-//         READ DATA FROM setting.bak
-//         IF FILE NOT EXIST
-//              CREATE DEFAULT SETTING
-//         ELSE
-//              READ FROM FILE TO this.setting
+         setting = new ConfigureSetting().readFromConfigureFile();
+         listOfProducts = readDataFromFileProcess();
     }
 
-    public ArrayList<Product> readDataFromFile() {
-        String str;
-        String temp = "";
-        BufferedReader bufferedReader;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(FileLocation.DEFAULT_FILE_NAME));
-
-            str = bufferedReader.readLine();
-            while (str != null) {
-                str = bufferedReader.readLine();
-                temp = temp.concat(str);
-            }
-
-            bufferedReader.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        StringTokenizer stringTokenizer = new StringTokenizer(temp, "+");
-        ArrayList<String> arr = new ArrayList<String>();
-
-        while (stringTokenizer.hasMoreTokens()) {
-            arr.add(stringTokenizer.nextToken());
-        }
-
-        ArrayList<Product> obj = new ArrayList<Product>();
-
-        for (String anArr1 : arr) {
-            String a[] = anArr1.split("#");
-            obj.add(new Product(Integer.parseInt(a[0]), a[1], Double.parseDouble(a[2]), Integer.parseInt(a[3]), a[4]));
-        }
-        return obj;
-    }
-
-    public void saveDataToFile() {
-        long startTime;
-        long endTime;
-        long duration;
-
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
-
-            startTime = System.currentTimeMillis();
-            for (int i = 1; i <= 100; ++i) {
-                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).toString());
-            }
-            endTime = System.currentTimeMillis();
-
-            duration = endTime - startTime;
-            System.out.println(duration);
-
-            bufferedWriter.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void backUpDataToFile() {
-        FileInputStream instream = null;
-        FileOutputStream outstream = null;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM,dd-mm:ss");
-        Date date = new Date();
-        String filename = dateFormat.format(date) + ".txt";
-        System.out.println(filename);
-        try {
-            File infile = new File("mytext1.txt");
-            File outfile = new File("src/Backup/" + filename);
-
-            instream = new FileInputStream(infile);
-            outstream = new FileOutputStream(outfile);
-
-            byte[] buffer = new byte[1024];
-
-            int length;
-            /*copying the contents from input stream to
-             * output stream using read and write methods
-             */
-            while ((length = instream.read(buffer)) > 0) {
-                outstream.write(buffer, 0, length);
-            }
-
-            //Closing the input/output file streams
-            instream.close();
-            outstream.close();
-
-            System.out.println("Backup successfully!!");
-
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
-        }
-
-
-    }
-
-    public void restoreDataToFile() {
-        FileInputStream instream = null;
-        FileOutputStream outstream = null;
-        List<String> result=null;
-        Scanner scanner = new Scanner(System.in);
-        String nameOfFile;
-        int numberOfFile=1;
-        try {
-
-            try (Stream<Path> walk = Files.walk(Paths.get("src/Backup"))) {
-
-                result = walk.filter(Files::isRegularFile)
-                        .map(x -> x.toString()).collect(Collectors.toList());
-
-                for (String listOfFile : result){
-                    System.out.println(numberOfFile+")"+listOfFile);
-                    numberOfFile++;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //validate here....
-            System.out.print("Which files you want to restore...:");
-            int indexOfFile = scanner.nextInt();
-
-            nameOfFile = result.get(indexOfFile-1);
-
-            File infile = new File(nameOfFile);
-            File outfile = new File("mytext1.txt");
-
-            instream = new FileInputStream(infile);
-            outstream = new FileOutputStream(outfile);
-
-            byte[] buffer = new byte[1024];
-
-            int length;
-            /*copying the contents from input stream to
-             * output stream using read and write methods
-             */
-            while ((length = instream.read(buffer)) > 0) {
-                outstream.write(buffer, 0, length);
-            }
-            //Closing the input/output file streams
-            instream.close();
-            outstream.close();
-            System.out.println("Restore successfully!!");
-
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
-        }
-
-
-    }
-
-    public void moveToFirstPage(int rowSetup, ArrayList<Product> products) {
-        displayTableData(rowSetup, 1, products);
-        setting.rowSetup = 1;
-    }
-
-    public void moveToLastPage(int rowSetup, ArrayList<Product> products) {
-        int lastPage = products.size() / rowSetup;
-        int temp = products.size() % rowSetup;
-
-        if (temp != 0) {
-            lastPage++;
-        }
-
-        setting.rowSetup = lastPage;
-        displayTableData(rowSetup, setting.rowSetup, products);
-    }
-
-    public void moveToPreviousPage(int rowSetup, ArrayList<Product> products) {
-        int lastPage = products.size() / rowSetup;
-        int temp = products.size() % rowSetup;
-        if (temp != 0) {
-            lastPage++;
-        }
-        if (setting.rowSetup == 0) {
-            setting.rowSetup = lastPage;
-        }
-        displayTableData(rowSetup, setting.rowSetup--, products);
-    }
-
-    public void moveToNextPage(int rowSetup, ArrayList<Product> products) {
-        int lastPage = products.size() / rowSetup;
-        int temp = products.size() % rowSetup;
-        if (temp != 0) {
-            lastPage++;
-        }
-
-        if (setting.rowSetup == lastPage) {
-            setting.rowSetup = 0;
-        }
-        displayTableData(rowSetup, setting.rowSetup++, products);
-    }
-
-    public void exitProgram() {
-
-    }
-
+    // LAYOUT
     public void outputWelcomeLayout() {
         String[] stockText = {
                 "                      _____  _                _      __  __                                                            _    ",
@@ -278,106 +81,51 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         mainLayout.addRow("[L|l]\tLast","[G|g]\tGoto","[O|o]\tSet Row","[V|v]\tSave","[C|c]\tBack up","[T|t]\tRestore","[H|h]\tHelp","[E|e]\tExit");
         mainLayout.addRule();
 
-        mainLayout.getContext().setWidth(160);
+       mainLayout.getContext().setWidth(160);
         mainLayout.setTextAlignment(TextAlignment.CENTER);
         mainLayout.getContext().setGrid(U8_Grids.borderDouble());
 
         System.out.println(mainLayout.render());
     }
 
-    public void outputProductData(Product product) {
-        AsciiTable table = new AsciiTable();
+    public void outputHelpLayout() {
+        AsciiTable at = new AsciiTable();
+        at.addRule();
+        at.addRow("1.", "Press","* : Display all record of product").setPaddingLeftRight(2);
+        at.addRow("2.", "Press","W : Add new product").setPaddingLeftRight(2);
+        at.addRow("",   "Press","W ->#proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
+        at.addRow("3.", "Press","r : read Content any content").setPaddingLeftRight(2);
+        at.addRow("",   "Press","r#proId shortcut for read product by Id").setPaddingLeftRight(2);
+        at.addRow("4.", "Press","u : Update Data").setPaddingLeftRight(2);
+        at.addRow("5.", "Press","d : Delete Data").setPaddingLeftRight(2);
+        at.addRow("",   "Press","d#proId shortcut for delete product by Id").setPaddingLeftRight(2);
+        at.addRow("6.", "Press","f : Display First Page").setPaddingLeftRight(2);
+        at.addRow("7.", "Press","p : Display Previous Page").setPaddingLeftRight(2);
+        at.addRow("8.", "Press","n : Display Next Page").setPaddingLeftRight(2);
+        at.addRow("9.", "Press","l : Display Last Page").setPaddingLeftRight(2);
+        at.addRow("10.", "Press","n : Search product by name").setPaddingLeftRight(2);
+        at.addRow("11.", "Press","sa : save record to file").setPaddingLeftRight(2);
+        at.addRow("12.", "Press","ba : Backup Data").setPaddingLeftRight(2);
+        at.addRow("13.", "Press","re : Restore data").setPaddingLeftRight(2);
+        at.addRow("14.", "Press","h : Help").setPaddingLeftRight(2);
+        at.addRule();
 
-        table.addRule();
-        table.addRow("ID", " : " + + product.getProductID());
-
-        table.addRow("Name", " : " + product.getProductName());
-
-        table.addRow("Unit price", " : " + product.getUnitPrice());
-
-        table.addRow("Qty", " : " + product.getQuantity());
-
-        table.addRow("Imported Date", " : " + product.getImportDate());
-        table.addRule();
-
-        table.setPaddingRight(3);
-        table.setPaddingLeft(1);
         CWC_LongestLine cwc = new CWC_LongestLine();
-        table.getRenderer().setCWC(cwc);
-        table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        table.getContext().setGrid(U8_Grids.borderDouble());
-        System.out.println(table.render());
-    }
-
-    public void displayTableData(int startRow, int viewPage, ArrayList<Product> products) {
-        if (startRow <= 0 || viewPage <= 0) {
-            // System.out.println("Can not input less than 0");
-            return;
-        }
-        AsciiTable table = new AsciiTable();
-        AsciiTable pagination = new AsciiTable();
-
-        long lastPage = products.size() / startRow;
-        long temp = products.size() % startRow;
-
-        if (temp != 0) {
-            lastPage++;
-        }
-
-        if (viewPage > lastPage) {
-            // System.out.println("This viewPage is not found!");
-            return;
-        }
-
-        table.addRule();
-        table.addRow("ID", "NAME", "UNIT PRICE", "QTY", "IMPORT DATE");
-        table.addRule();
-
-        if (lastPage == viewPage) {
-            for (int i = (viewPage - 1) * startRow; i < products.size(); i++) {
-                Product product = products.get(i);
-
-                table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
-                        product.getQuantity(), product.getImportDate());
-                table.addRule();
-            }
-        }
-        else {
-            int t = viewPage * startRow;
-            for (int j = t - startRow; j < t; j++) {
-                Product product = products.get(j);
-
-                table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
-                        product.getQuantity(), product.getImportDate());
-                table.addRule();
-            }
-        }
-
-        table.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
-        table.getContext().setGrid(U8_Grids.borderDouble());
-        System.out.println(table.render());
-
-        pagination.addRule();
-        pagination.addRow("viewPage:" + viewPage + "/" + lastPage, " \t\t   ", " Total Record:" + products.size());
-        pagination.addRule();
-
-        pagination.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
-        pagination.getContext().setGrid(U8_Grids.borderDoubleLight());
-
-        pagination.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        System.out.println(pagination.render());
+        at.getRenderer().setCWC(cwc);
+        at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        at.getContext().setGrid(U8_Grids.borderDouble());
+        System.out.println(at.render());
     }
 
     public void writeDataLayout() {
-        // ArrayList
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
 
-        HashMap<Integer, Product> hashMap;
+        LinkedHashMap<Integer, Product> hashMap = new LinkedHashMap<>();
+        MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
         char choice;
-        int id = hashMap.size() + 1; // wrong logic
+        int id = setting.currentID + 1;
         boolean hasInserted = false;
         boolean toContinue = true;
         Product insertProduct;
@@ -421,7 +169,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void readDataLayout() {
         int productID;
         boolean isFound;
-        HashMap<Integer, Product> hashMap;
+        HashMap<Integer, Product> hashMap = new HashMap<>();
+        MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
@@ -439,7 +188,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         boolean isFound;
         int searchResult = -1;
 
-        HashMap<Integer, Product> hashMap;
+        HashMap<String, Product> hashMap = new HashMap<>();
+        MapUtils.populateMap(hashMap, listOfProducts, Product::getProductName);
 
         productName = TextFieldConsole.readStringType("Input the Name of Product : ");
         isFound = findProductByName(productName, hashMap);
@@ -461,7 +211,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         boolean hasDeleted = false;
         boolean toContinue = true;
 
-        HashMap<Integer, Product> hashMap;
+        HashMap<Integer, Product> hashMap = new HashMap<>();
+        MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
         productID = TextFieldConsole.readIntegerType("Input the ID of Product to Delete : ");
         isFound = findProductByID(productID, hashMap);
@@ -471,8 +222,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         else {
             displayProductByID(productID, hashMap);
-
-            System.out.println("Product Found for [" + productID + "] : " + searchResult);
 
             do {
                 choice = TextFieldConsole.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
@@ -510,7 +259,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
         Product searchProduct;
 
-        HashMap<Integer, Product> hashMap;
+        HashMap<Integer, Product> hashMap = new HashMap<>();
+        MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
@@ -623,38 +373,60 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             outputMessageLayout("Update process canceled!");
         }
         else {
-            hashMap.put(searchProduct.getProductID(), searchProduct);
             outputMessageLayout("Product was updated!");
         }
     }
 
-    public void outputHelpLayout() {
-        AsciiTable at = new AsciiTable();
-        at.addRule();
-        at.addRow("1.", "Press","* : Display all record of product").setPaddingLeftRight(2);
-        at.addRow("2.", "Press","W : Add new product").setPaddingLeftRight(2);
-        at.addRow("",   "Press","W ->#proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
-        at.addRow("3.", "Press","r : read Content any content").setPaddingLeftRight(2);
-        at.addRow("",   "Press","r#proId shortcut for read product by Id").setPaddingLeftRight(2);
-        at.addRow("4.", "Press","u : Update Data").setPaddingLeftRight(2);
-        at.addRow("5.", "Press","d : Delete Data").setPaddingLeftRight(2);
-        at.addRow("",   "Press","d#proId shortcut for delete product by Id").setPaddingLeftRight(2);
-        at.addRow("6.", "Press","f : Display First Page").setPaddingLeftRight(2);
-        at.addRow("7.", "Press","p : Display Previous Page").setPaddingLeftRight(2);
-        at.addRow("8.", "Press","n : Display Next Page").setPaddingLeftRight(2);
-        at.addRow("9.", "Press","l : Display Last Page").setPaddingLeftRight(2);
-        at.addRow("10.", "Press","n : Search product by name").setPaddingLeftRight(2);
-        at.addRow("11.", "Press","sa : save record to file").setPaddingLeftRight(2);
-        at.addRow("12.", "Press","ba : Backup Data").setPaddingLeftRight(2);
-        at.addRow("13.", "Press","re : Restore data").setPaddingLeftRight(2);
-        at.addRow("14.", "Press","h : Help").setPaddingLeftRight(2);
-        at.addRule();
+    public void saveDataToFileLayout() {
+        saveDataToFileProcess();
+    }
 
-        CWC_LongestLine cwc = new CWC_LongestLine();
-        at.getRenderer().setCWC(cwc);
-        at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        at.getContext().setGrid(U8_Grids.borderDouble());
-        System.out.println(at.render());
+    public void backupDataToFileLayout() {
+        boolean isSuccessful = backupDataToFileProcess();
+        if(!isSuccessful) {
+            outputInvalidInputLayout("Process Failed!");
+        }
+        else {
+            outputMessageLayout("Backup Successfully!");
+        }
+    }
+
+    public void restoreDataToFileLayout() {
+        boolean isSuccessful = restoreDataToFileProcess();
+        if(!isSuccessful) {
+            outputInvalidInputLayout("Process Failed!");
+        }
+        else {
+            outputMessageLayout("Restore Successfully!");
+        }
+    }
+
+    public void moveToFirstPageLayout() {
+        moveToFirstProcess(setting.rowSetup, listOfProducts);
+    }
+
+    public void moveToPreviousPageLayout() {
+        moveToPreviousPageProcess(setting.rowSetup, listOfProducts);
+    }
+
+    public void moveToNextPageLayout() {
+        moveToNextPageProcess(setting.rowSetup, listOfProducts);
+    }
+
+    public void moveToLastPageLayout() {
+        moveToLastPageProcess(setting.rowSetup, listOfProducts);
+    }
+
+    public void setRowLayout() {
+        setRowProcess();
+    }
+
+    public void gotoDataLayout() {
+        gotoDataProcess(setting.rowSetup, listOfProducts);
+    }
+
+    public void exitProgramLayout() {
+
     }
 
     public void outputMessageLayout(String message) {
@@ -683,6 +455,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         System.out.println(table.render());
     }
 
+    public void outputTableDataLayout() {
+//        setting.currentPage=1;
+        displayTableData(setting.rowSetup, setting.currentPage, listOfProducts);
+    }
+
     public void outputInvalidInputLayout(String message) {
         // DIALOG
         AsciiTable table = new AsciiTable();
@@ -697,16 +474,316 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.getContext().setGridTheme(TA_GridThemes.HORIZONTAL);
         System.out.println(table.render());
     }
+    // END LAYOUT
 
-    public void gotoDataLayout() {
-        int page;
-        page = TextFieldConsole.readIntegerType("Go to Page : ");
-        // displayTableData(from, to, collection);
-        // assign value for later use
+    // PROCESS
+    public ArrayList<Product> readDataFromFileProcess() {
+        String str;
+        String temp = "";
+        BufferedReader bufferedReader;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(FileLocation.DEFAULT_FILE_NAME));
+
+            str = bufferedReader.readLine();
+            while (str != null) {
+                temp = temp.concat(str);
+                str = bufferedReader.readLine();
+            }
+
+            bufferedReader.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        StringTokenizer stringTokenizer = new StringTokenizer(temp, "+");
+        ArrayList<String> arr = new ArrayList<>();
+
+        while (stringTokenizer.hasMoreTokens()) {
+            arr.add(stringTokenizer.nextToken());
+        }
+
+        ArrayList<Product> obj = new ArrayList<>();
+
+        for (String anArr1 : arr) {
+            String a[] = anArr1.split("#");
+            obj.add(new Product(Integer.parseInt(a[0]), a[1], Double.parseDouble(a[2]), Integer.parseInt(a[3]), a[4]));
+        }
+        return obj;
+    }
+public void write1Mobject(){
+    long startTime;
+    long endTime;
+    long duration;
+
+    try {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
+
+        startTime = System.currentTimeMillis();
+        for (int i = 1; i <= 100; ++i) {
+            bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
+        }
+        endTime = System.currentTimeMillis();
+
+        duration = endTime - startTime;
+        System.out.println(duration);
+
+        bufferedWriter.close();
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+    public void saveDataToFileProcess(ArrayList<Product> objTowriteToArray) {
+
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
+
+
+            for (int i = 0; i < objTowriteToArray.size(); ++i) {
+                bufferedWriter.append("+"+objTowriteToArray);
+                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
+            }
+
+            bufferedWriter.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setRowLayout() {
-        TextFieldConsole.readIntegerType("Enter Row for Display : ");
+    @Override
+    public boolean backupDataToFileProcess() {
+        FileInputStream inputStream;
+        FileOutputStream outputStream;
+
+        try {
+            File currentCollectionFile = new File(setting.currentCollectionFile);
+            File backupCollectionFileWithLocation = new File(setting.getBackupFileName());
+
+            inputStream = new FileInputStream(currentCollectionFile);
+            outputStream = new FileOutputStream(backupCollectionFileWithLocation);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+
+            /*
+             * copying the contents from input stream to
+             * output stream using read and write methods
+             */
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            // Closing the input/output file streams
+            inputStream.close();
+            outputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean restoreDataToFileProcess() {
+        int numberOfFile = 1;
+        String fileToBackup;
+
+        List<String> result = null;
+        FileInputStream inputStream;
+        FileOutputStream outputStream;
+
+        try {
+
+            System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
+            try (Stream<Path> walk = Files.walk(Paths.get("src/Backup"))) {
+
+                result = walk.filter(Files::isRegularFile)
+                        .map(x -> x.toString()).collect(Collectors.toList());
+
+                for (String listOfFile : result){
+                    System.out.println(numberOfFile+")"+listOfFile);
+                    numberOfFile++;
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            int indexOfFile = TextFieldConsole.readIntegerType("Choose File for Backup : ");
+
+            fileToBackup = result.get(indexOfFile - 1);
+
+            File infile = new File(fileToBackup);
+            File outfile = new File(setting.currentCollectionFile);
+
+            inputStream = new FileInputStream(infile);
+            outputStream = new FileOutputStream(outfile);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+            /*
+            copying the contents from input stream to
+             * output stream using read and write methods
+             */
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            //Closing the input/output file streams
+            inputStream.close();
+            outputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public void moveToFirstProcess(int rowSetup, ArrayList<Product> products) {
+        displayTableData(rowSetup, 1, products);
+        setting.currentPage = 1;
+    }
+
+    public void moveToLastPageProcess(int rowSetup, ArrayList<Product> products) {
+        int lastPage = products.size() / rowSetup;
+        int temp = products.size() % rowSetup;
+
+        if (temp != 0) {
+            lastPage++;
+        }
+
+        setting.currentPage = lastPage;
+        displayTableData(rowSetup,setting.currentPage, products);
+    }
+
+    public void moveToPreviousPageProcess(int rowSetup, ArrayList<Product> products) {
+        int lastPage = products.size() / rowSetup;
+        int temp = products.size() % rowSetup;
+        if (temp != 0) {
+            lastPage++;
+        }
+        if (setting.currentPage == 0) {
+            setting.currentPage = lastPage;
+        }
+        System.out.println(setting.currentPage);
+        setting.currentPage--;
+        displayTableData(rowSetup, setting.currentPage, products);
+    }
+
+    public void moveToNextPageProcess(int rowSetup, ArrayList<Product> products) {
+        int lastPage = products.size() / rowSetup;
+        int temp = products.size() % rowSetup;
+
+        if (temp != 0) {
+            lastPage++;
+        }
+
+        if (setting.currentPage == lastPage) {
+            setting.currentPage = 0;
+        }
+        setting.currentPage++;
+        displayTableData(rowSetup, setting.currentPage, products);
+    }
+
+    public void setRowProcess() {
+        setting.rowSetup = TextFieldConsole.readIntegerType("Enter Row for Display : ");
+    }
+
+    public void gotoDataProcess(int rowSetup, ArrayList<Product> products) {
+        setting.currentPage = TextFieldConsole.readIntegerType("Go to Page : ");
+
+        displayTableData(setting.rowSetup, setting.currentPage, products);
+
+    }
+
+    public void outputProductData(Product product) {
+        AsciiTable table = new AsciiTable();
+
+        table.addRule();
+        table.addRow("ID", " : " + + product.getProductID());
+
+        table.addRow("Name", " : " + product.getProductName());
+
+        table.addRow("Unit price", " : " + product.getUnitPrice());
+
+        table.addRow("Qty", " : " + product.getQuantity());
+
+        table.addRow("Imported Date", " : " + product.getImportDate());
+        table.addRule();
+
+        table.setPaddingRight(3);
+        table.setPaddingLeft(1);
+        CWC_LongestLine cwc = new CWC_LongestLine();
+        table.getRenderer().setCWC(cwc);
+        table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        table.getContext().setGrid(U8_Grids.borderDouble());
+        System.out.println(table.render());
+    }
+
+    public void displayTableData(int rowSetup, int viewPage, ArrayList<Product> products) {
+
+        if (rowSetup <= 0 || viewPage <= 0) {
+             System.out.println("Can not input less than 0");
+            return;
+        }
+        AsciiTable table = new AsciiTable();
+        AsciiTable pagination = new AsciiTable();
+
+        long lastPage = products.size() / rowSetup;
+        long temp = products.size() % rowSetup;
+
+        if (temp != 0) {
+            lastPage++;
+        }
+
+        if (viewPage > lastPage) {
+            // System.out.println("This viewPage is not found!");
+            return;
+        }
+
+        table.addRule();
+        table.addRow("ID", "NAME", "UNIT PRICE", "QTY", "IMPORT DATE");
+        table.addRule();
+
+        if (lastPage == viewPage) {
+            for (int i = (viewPage - 1) * rowSetup; i < products.size(); i++) {
+                Product product = products.get(i);
+
+                table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
+                        product.getQuantity(), product.getImportDate());
+                table.addRule();
+            }
+        }
+        else {
+            int t = viewPage * rowSetup;
+            for (int j = t - rowSetup; j < t; j++) {
+                Product product = products.get(j);
+
+                table.addRow(product.getProductID(), product.getProductName(), product.getUnitPrice(),
+                        product.getQuantity(), product.getImportDate());
+                table.addRule();
+            }
+        }
+
+        table.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
+        table.getContext().setGrid(U8_Grids.borderDouble());
+        System.out.println(table.render());
+
+        pagination.addRule();
+        pagination.addRow("viewPage:" + viewPage + "/" + lastPage, " \t\t   ", " Total Record:" + products.size());
+        pagination.addRule();
+
+        pagination.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
+        pagination.getContext().setGrid(U8_Grids.borderDoubleLight());
+
+        pagination.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        System.out.println(pagination.render());
     }
 
     public boolean findProductByID(int productID, HashMap hashMap) {
@@ -843,5 +920,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     outputInvalidInputLayout("Invalid Input!");
             }
         } while (true);
+    }
+    // END PROCESS
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
     }
 }
