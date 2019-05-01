@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -179,6 +178,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             outputMessageErrorLayout("Process Canceled!");
         }
         else {
+            setting.currentID++;
+            ConfigureSetting.writeToConfigureFile(setting); // think again
+
+            listOfProducts = new ArrayList<>(hashMap.values());
             outputMessageLayout("Product with ID : " + id + " was added successfully!");
         }
     }
@@ -266,7 +269,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
             if (!hasDeleted) {
                 outputMessageErrorLayout("Process Canceled!");
-            } else {
+            }
+            else {
+                listOfProducts = new ArrayList<>(hashMap.values());
                 outputMessageLayout("Product with ID : " + productID + " was deleted successfully!");
             }
         }
@@ -393,6 +398,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             outputMessageErrorLayout("Process Canceled!");
         }
         else {
+            listOfProducts = new ArrayList<>(hashMap.values());
             outputMessageLayout("Product with ID : " + productID + " was updated successfully!");
         }
     }
@@ -464,7 +470,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         dialog.getRenderer().setCWC(cwc);
         dialog.setTextAlignment(TextAlignment.CENTER);
         dialog.getContext().setGrid(A8_Grids.lineDoubleBlocks());
-        System.out.println(GREEN_BOLD);
+        System.out.print(GREEN_BOLD);
         System.out.println(dialog.render());
         System.out.print(ANSI_RESET);
     }
@@ -543,7 +549,22 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     @Override
     public void saveDataToFileProcess() {
+        File file = new File(FileLocation.DEFAULT_FILE_NAME);
+        file.delete();
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
 
+            for (int i = 0; i < listOfProducts.size(); i++) {
+                bufferedWriter.append("+" + listOfProducts.get(i).ToString());
+            }
+
+            bufferedWriter.close();
+
+            outputMessageLayout("Save Data Successfully!");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -552,8 +573,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         FileOutputStream outputStream;
 
         try {
-            File currentCollectionFile = new File(setting.currentCollectionFile);
-            File backupCollectionFileWithLocation = new File(setting.getBackupFileName());
+            File currentCollectionFile = new File(FileLocation.DEFAULT_FILE_NAME);
+            File backupCollectionFileWithLocation = new File(ConfigureSetting.getBackupFileName());
 
             inputStream = new FileInputStream(currentCollectionFile);
             outputStream = new FileOutputStream(backupCollectionFileWithLocation);
@@ -611,7 +632,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             fileToBackup = result.get(indexOfFile - 1);
 
             File infile = new File(fileToBackup);
-            File outfile = new File(setting.currentCollectionFile);
+            File outfile = new File(FileLocation.DEFAULT_FILE_NAME);
 
             inputStream = new FileInputStream(infile);
             outputStream = new FileOutputStream(outfile);
@@ -665,12 +686,13 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if (temp != 0) {
             lastPage++;
         }
+
+        setting.currentPage--;
+
         if (setting.currentPage == 0) {
             setting.currentPage = lastPage;
         }
 
-        System.out.println(setting.currentPage);
-        setting.currentPage--;
         displayTableData(rowSetup, setting.currentPage, products);
     }
 
@@ -686,20 +708,38 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if (setting.currentPage == lastPage) {
             setting.currentPage = 0;
         }
+
         setting.currentPage++;
+
         displayTableData(rowSetup, setting.currentPage, products);
     }
 
     @Override
     public void setRowProcess() {
-        setting.rowSetup = TextFieldConsole.readIntegerType("Enter Row for Display : ");
+        int temp = TextFieldConsole.readIntegerType("Enter Row for Display : ");
+
+        if(temp >= 1 && temp <= 20) {
+            setting.rowSetup = temp;
+            ConfigureSetting.writeToConfigureFile(setting);
+            outputMessageLayout("SET " + temp + " ROWS PER PAGE");
+        }
+        else {
+            outputMessageErrorLayout("Row Out of Bound!");
+        }
     }
 
     @Override
     public void gotoDataProcess(int rowSetup, ArrayList<Product> products) {
-        setting.currentPage = TextFieldConsole.readIntegerType("Go to Page : ");
+        int lastPage = products.size() / rowSetup;
+        int temp = TextFieldConsole.readIntegerType("Go to Page : ");
 
-        displayTableData(setting.rowSetup, setting.currentPage, products);
+        if(temp >= 1 && temp <= lastPage) {
+            setting.currentPage = temp;
+            displayTableData(setting.rowSetup, setting.currentPage, products);
+        }
+        else {
+            outputMessageErrorLayout("Page Out of Bound!");
+        }
     }
 
     @Override
@@ -730,9 +770,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     @Override
     public void displayTableData(int rowSetup, int viewPage, ArrayList<Product> products) {
         if (rowSetup <= 0 || viewPage <= 0) {
-            outputMessageErrorLayout("Input Value Less Than 0!");
+            // outputMessageErrorLayout("Input Value Less Than 0!");
             return;
         }
+
         AsciiTable table = new AsciiTable();
         AsciiTable pagination = new AsciiTable();
 
@@ -744,7 +785,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
 
         if (viewPage > lastPage) {
-            outputMessageErrorLayout("View Page Bigger Than Total Page!");
+            // outputMessageErrorLayout("View Page Bigger Than Total Page!");
             return;
         }
 
@@ -833,8 +874,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
 
             startTime = System.currentTimeMillis();
-            for (int i = 1; i <= 100; ++i) {
+            for (int i = 1; i <= 10000; i++) {
                 bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
+                setting.currentID++;
             }
             endTime = System.currentTimeMillis();
 
@@ -842,6 +884,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             System.out.println(duration);
 
             bufferedWriter.close();
+
+            ConfigureSetting.writeToConfigureFile(setting);
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -12,7 +12,6 @@ public class Tester implements InputCommand {
             char inputCommand = TextFieldConsole.readCharType("Input Command : ");
             System.out.println();
 
-
             switch (inputCommand) {
                 case DISPLAY_TABLE:
                     baseCode.outputTableDataLayout();
