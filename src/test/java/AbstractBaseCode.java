@@ -6,13 +6,15 @@ import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import org.apache.commons.collections4.MapUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, DataManipulate, UpdateOption, FileLocation {
 
@@ -20,8 +22,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     private static ArrayList<Product> listOfProducts;
 
     AbstractBaseCode() {
-        setting = new ConfigureSetting().readFromConfigureFile();
-        listOfProducts = readDataFromFileProcess();
+         setting = new ConfigureSetting().readFromConfigureFile();
+         listOfProducts = readDataFromFileProcess();
     }
 
     // LAYOUT
@@ -379,12 +381,24 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         saveDataToFileProcess();
     }
 
-    public void backUpDataToFileLayout() {
-
+    public void backupDataToFileLayout() {
+        boolean isSuccessful = backupDataToFileProcess();
+        if(!isSuccessful) {
+            outputInvalidInputLayout("Process Failed!");
+        }
+        else {
+            outputMessageLayout("Backup Successfully!");
+        }
     }
 
     public void restoreDataToFileLayout() {
-
+        boolean isSuccessful = restoreDataToFileProcess();
+        if(!isSuccessful) {
+            outputInvalidInputLayout("Process Failed!");
+        }
+        else {
+            outputMessageLayout("Restore Successfully!");
+        }
     }
 
     public void moveToFirstPageLayout() {
@@ -519,6 +533,99 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean backupDataToFileProcess() {
+        FileInputStream inputStream;
+        FileOutputStream outputStream;
+
+        try {
+            File currentCollectionFile = new File(setting.currentCollectionFile);
+            File backupCollectionFileWithLocation = new File(setting.getBackupFileName());
+
+            inputStream = new FileInputStream(currentCollectionFile);
+            outputStream = new FileOutputStream(backupCollectionFileWithLocation);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+
+            /*
+             * copying the contents from input stream to
+             * output stream using read and write methods
+             */
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            // Closing the input/output file streams
+            inputStream.close();
+            outputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean restoreDataToFileProcess() {
+        int numberOfFile = 1;
+        String fileToBackup;
+
+        List<String> result = null;
+        FileInputStream inputStream;
+        FileOutputStream outputStream;
+
+        try {
+
+            System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
+            try (Stream<Path> walk = Files.walk(Paths.get("src/Backup"))) {
+
+                result = walk.filter(Files::isRegularFile)
+                        .map(x -> x.toString()).collect(Collectors.toList());
+
+                for (String listOfFile : result){
+                    System.out.println(numberOfFile+")"+listOfFile);
+                    numberOfFile++;
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            int indexOfFile = TextFieldConsole.readIntegerType("Choose File for Backup : ");
+
+            fileToBackup = result.get(indexOfFile - 1);
+
+            File infile = new File(fileToBackup);
+            File outfile = new File(setting.currentCollectionFile);
+
+            inputStream = new FileInputStream(infile);
+            outputStream = new FileOutputStream(outfile);
+
+            byte[] buffer = new byte[1024];
+
+            int length;
+            /*
+            copying the contents from input stream to
+             * output stream using read and write methods
+             */
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            //Closing the input/output file streams
+            inputStream.close();
+            outputStream.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public void moveToFirstProcess(int rowSetup, ArrayList<Product> products) {

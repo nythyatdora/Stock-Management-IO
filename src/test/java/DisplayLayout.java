@@ -18,7 +18,7 @@ public interface DisplayLayout {
     void updataDataLayout();
 
     void saveDataToFileLayout();
-    void backUpDataToFileLayout();
+    void backupDataToFileLayout();
     void restoreDataToFileLayout();
 
     void moveToFirstPageLayout();

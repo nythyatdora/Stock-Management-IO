@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public interface CoreProcess {
     ArrayList<Product> readDataFromFileProcess();
     void saveDataToFileProcess();
+    boolean backupDataToFileProcess();
+    boolean restoreDataToFileProcess();
 
     void moveToFirstProcess(int rowSetup, ArrayList<Product> products);
     void moveToLastPageProcess(int rowSetup, ArrayList<Product> products);

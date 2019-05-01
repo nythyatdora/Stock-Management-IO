@@ -1,4 +1,7 @@
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ConfigureSetting implements Serializable {
     public int rowSetup;
@@ -8,7 +11,11 @@ public class ConfigureSetting implements Serializable {
     public boolean hasSavedBeforeClose;
     public String recoveryFileName;
     public String currentWriteName;
-    public String currentReadName;
+
+    public String currentCollectionFile = "";
+    public String backupFilePrefix = "file_backup-";
+    public String backupFileLocation = "\\meta\\recovery\\";
+    public String extensionFileData = ".bin";
 
     public boolean writeToConfigureFile(ConfigureSetting setting) {
         try {
@@ -44,6 +51,16 @@ public class ConfigureSetting implements Serializable {
             return null;
         }
         return temp;
+    }
+
+    private String currentDate() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM,dd-mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public String getBackupFileName() {
+        return this.backupFileLocation + this.backupFilePrefix + currentDate() + this.extensionFileData;
     }
 }
 

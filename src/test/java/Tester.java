@@ -79,7 +79,7 @@ public class Tester implements InputCommand {
 
                 case BACKUP_FILE_UPPER:
                 case BACKUP_FILE_LOWER:
-                    baseCode.backUpDataToFileLayout();
+                    baseCode.backupDataToFileLayout();
                     break;
 
                 case RESTORE_FILE_UPPER:

@@ -137,8 +137,8 @@ public class BaseCode extends AbstractBaseCode {
      *  - output message
      */
     @Override
-    public void backUpDataToFileLayout() {
-        super.backUpDataToFileLayout();
+    public void backupDataToFileLayout() {
+        super.backupDataToFileLayout();
     }
 
     /**
