@@ -20,16 +20,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     private static ArrayList<Product> listOfProducts;
 
     AbstractBaseCode() {
-        setting = new ConfigureSetting();
+        setting = new ConfigureSetting().readFromConfigureFile();
         listOfProducts = readDataFromFileProcess();
-
-        /*
-             READ DATA FROM setting.bak
-             IF FILE NOT EXIST
-                  CREATE DEFAULT SETTING
-             ELSE
-                  READ FROM FILE TO this.setting
-         */
     }
 
     // LAYOUT
@@ -480,7 +472,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             str = bufferedReader.readLine();
             while (str != null) {
                 str = bufferedReader.readLine();
-                temp = temp.concat(str);
+                temp += str;
             }
 
             bufferedReader.close();
@@ -490,13 +482,13 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
 
         StringTokenizer stringTokenizer = new StringTokenizer(temp, "+");
-        ArrayList<String> arr = new ArrayList<String>();
+        ArrayList<String> arr = new ArrayList<>();
 
         while (stringTokenizer.hasMoreTokens()) {
             arr.add(stringTokenizer.nextToken());
         }
 
-        ArrayList<Product> obj = new ArrayList<Product>();
+        ArrayList<Product> obj = new ArrayList<>();
 
         for (String anArr1 : arr) {
             String a[] = anArr1.split("#");
@@ -798,4 +790,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         } while (true);
     }
     // END PROCESS
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
 }

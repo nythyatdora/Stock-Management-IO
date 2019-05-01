@@ -5,10 +5,4 @@ public class CommonMethodImplementation implements CommonMethodStructure {
             System.out.println(str);
         }
     }
-
-    public void printlnRowImp(String[] arr) {
-        for (String str: arr) {
-            // implement here
-        }
-    }
 }
