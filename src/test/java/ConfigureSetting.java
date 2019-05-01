@@ -1,11 +1,6 @@
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class ConfigureSetting implements Serializable {
-    public int rowSetup;
-    public int currentPage;
+public class ConfigureSetting {
+    public int rowSetup = 10;
+    public int currentPage = 1;
     public int currentID;
 
     public boolean hasSavedBeforeClose;
