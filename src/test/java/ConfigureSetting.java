@@ -17,6 +17,11 @@ public class ConfigureSetting implements Serializable {
     public String backupFileLocation = "./meta/recovery/";
     public String extensionFileData = ".bak";
 
+    public static boolean isFileExist() {
+        File tempFile = new File(FileLocation.SETTING_FILE_NAME);
+        return tempFile.exists();
+    }
+
     public static boolean writeToConfigureFile(ConfigureSetting setting) {
         try {
             FileOutputStream file = new FileOutputStream(FileLocation.SETTING_FILE_NAME);

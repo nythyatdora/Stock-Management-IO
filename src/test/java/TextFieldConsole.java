@@ -40,7 +40,6 @@ public class TextFieldConsole {
             c = '\0';
         }
 
-
         return c;
     }
 

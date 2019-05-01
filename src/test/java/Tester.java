@@ -7,9 +7,11 @@ public class Tester implements InputCommand {
         // baseCode.outputLoadingLayout();
 
         do {
+            System.out.println();
             baseCode.outputMainLayout();
+            char inputCommand = TextFieldConsole.readCharType("Input Command : ");
+            System.out.println();
 
-            char inputCommand = TextFieldConsole.readCharType("Command : ");
 
             switch (inputCommand) {
                 case DISPLAY_TABLE:
@@ -97,7 +99,7 @@ public class Tester implements InputCommand {
                     break;
 
                 default:
-                    baseCode.outputInvalidInputLayout("");
+                    baseCode.outputMessageErrorLayout("Invalid Input!");
                     break;
             }
 
