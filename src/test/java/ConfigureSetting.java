@@ -3,7 +3,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ConfigureSetting {
+public class ConfigureSetting implements Serializable {
     public int rowSetup = 10;
     public int currentPage = 1;
     public int currentID;
@@ -14,10 +14,10 @@ public class ConfigureSetting {
 
     public String currentCollectionFile = "";
     public String backupFilePrefix = "file_backup-";
-    public String backupFileLocation = "\\meta\\recovery\\";
-    public String extensionFileData = ".bin";
+    public String backupFileLocation = "./meta/recovery/";
+    public String extensionFileData = ".bak";
 
-    public boolean writeToConfigureFile(ConfigureSetting setting) {
+    public static boolean writeToConfigureFile(ConfigureSetting setting) {
         try {
             FileOutputStream file = new FileOutputStream(FileLocation.SETTING_FILE_NAME);
             ObjectOutputStream outStream = new ObjectOutputStream(file);
@@ -35,7 +35,7 @@ public class ConfigureSetting {
     }
 
 
-    public ConfigureSetting readFromConfigureFile() {
+    public static ConfigureSetting readFromConfigureFile() {
         ConfigureSetting temp;
 
         try {
@@ -61,6 +61,11 @@ public class ConfigureSetting {
 
     public String getBackupFileName() {
         return this.backupFileLocation + this.backupFilePrefix + currentDate() + this.extensionFileData;
+    }
+
+    public static void main(String[] args) {
+        ConfigureSetting setting = new ConfigureSetting();
+        setting.writeToConfigureFile(new ConfigureSetting());
     }
 }
 

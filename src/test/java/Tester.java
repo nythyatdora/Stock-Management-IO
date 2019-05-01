@@ -1,8 +1,5 @@
-import java.util.Scanner;
-
 public class Tester implements InputCommand {
     public static void main(String[] args) {
-        Scanner scanner= new Scanner(System.in);
         BaseCode baseCode = new BaseCode();
 
         baseCode.outputWelcomeLayout();
@@ -100,7 +97,7 @@ public class Tester implements InputCommand {
                     break;
 
                 default:
-                    baseCode.outputInvalidInputLayout("asdfad");
+                    baseCode.outputInvalidInputLayout("");
                     break;
             }
 

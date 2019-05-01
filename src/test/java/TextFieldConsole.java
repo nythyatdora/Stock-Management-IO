@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TextFieldConsole {
@@ -9,14 +8,9 @@ public class TextFieldConsole {
         System.out.print(placeholder);
         try {
             i = Integer.parseInt(scan.nextLine().split(" ")[0]);
-        }
-        catch (NumberFormatException e) {
+        } catch (RuntimeException e) {
             i = -1;
         }
-        catch (RuntimeException e) {
-            i = -1;
-        }
-
 
         return i;
     }
@@ -28,11 +22,7 @@ public class TextFieldConsole {
 
         try {
             d = Double.parseDouble(scan.nextLine().split(" ")[0]);
-        }
-        catch(InputMismatchException e) {
-            d = 0D;
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             d = 0D;
         }
 
@@ -46,11 +36,7 @@ public class TextFieldConsole {
 
         try {
             c = scan.nextLine().split(" ")[0].charAt(0);
-        }
-        catch (IndexOutOfBoundsException e) {
-            c = '\0';
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             c = '\0';
         }
 
@@ -69,22 +55,21 @@ public class TextFieldConsole {
             str = "\0";
         }
 
-
         return str;
     }
 
     public static void main(String[] args) {
-        char c;
-        c = TextFieldConsole.readCharType("Input char : ");
-        System.out.println("c : " + c);
+//        char c;
+//        c = TextFieldConsole.readCharType("Input char : ");
+//        System.out.println("c : " + c);
 
 //        int i;
 //        i = TextFieldConsole.readIntegerType("Input i : ");
 //        System.out.println("i : " + i);
 
-//        String s;
-//        s = TextFieldConsole.readStringType("Input s : ");
-//        System.out.println("s : " + s);
+        String s;
+        s = TextFieldConsole.readStringType("Input s : ");
+        System.out.println("s : " + s);
 
 //        double d;
 //        d = TextFieldConsole.readDoubleType("Input d : ");

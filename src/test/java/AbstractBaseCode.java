@@ -22,7 +22,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     private static ArrayList<Product> listOfProducts;
 
     AbstractBaseCode() {
-         setting = new ConfigureSetting().readFromConfigureFile();
+         setting = ConfigureSetting.readFromConfigureFile();
+
          listOfProducts = readDataFromFileProcess();
     }
 
@@ -76,7 +77,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         AsciiTable mainLayout = new AsciiTable();
 
         mainLayout.addRule();
-        mainLayout.addRow("[D|d]\tDisplay","[W|w]\tWrite","[R|r]\tRead","[U|u]\tUpdate","[D|d]\tDelete","[F|f]\tFirst","[P|p]\tPrevious","[N|n]\tNext");
+        mainLayout.addRow("[*]\tDisplay","[W|w]\tWrite","[R|r]\tRead","[U|u]\tUpdate","[D|d]\tDelete","[F|f]\tFirst","[P|p]\tPrevious","[N|n]\tNext");
         mainLayout.addRule();
         mainLayout.addRow("[L|l]\tLast","[G|g]\tGoto","[O|o]\tSet Row","[V|v]\tSave","[C|c]\tBack up","[T|t]\tRestore","[H|h]\tHelp","[E|e]\tExit");
         mainLayout.addRule();
@@ -437,7 +438,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         at.addRule();
 
         at.setPaddingLeftRight(3);
-        CWC_LongestLine cwc = new CWC_LongestLine(); // for auto resize
+        CWC_LongestLine cwc = new CWC_LongestLine();
         at.getRenderer().setCWC(cwc);
         at.setTextAlignment(TextAlignment.CENTER);
         at.getContext().setGrid(A8_Grids.lineDoubleBlocks());
@@ -456,7 +457,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputTableDataLayout() {
-//        setting.currentPage=1;
         displayTableData(setting.rowSetup, setting.currentPage, listOfProducts);
     }
 
@@ -468,7 +468,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.addRule();
 
         table.setPaddingLeftRight(3);
-        CWC_LongestLine cwc = new CWC_LongestLine(); //for auto resize
+        CWC_LongestLine cwc = new CWC_LongestLine();
         table.getRenderer().setCWC(cwc);
         table.setTextAlignment(TextAlignment.CENTER);
         table.getContext().setGridTheme(TA_GridThemes.HORIZONTAL);
@@ -511,45 +511,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         return obj;
     }
-public void write1Mobject(){
-    long startTime;
-    long endTime;
-    long duration;
 
-    try {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
+    @Override
+    public void saveDataToFileProcess() {
 
-        startTime = System.currentTimeMillis();
-        for (int i = 1; i <= 100; ++i) {
-            bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
-        }
-        endTime = System.currentTimeMillis();
-
-        duration = endTime - startTime;
-        System.out.println(duration);
-
-        bufferedWriter.close();
-    }
-    catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-    public void saveDataToFileProcess(ArrayList<Product> objTowriteToArray) {
-
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
-
-
-            for (int i = 0; i < objTowriteToArray.size(); ++i) {
-                bufferedWriter.append("+"+objTowriteToArray);
-                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
-            }
-
-            bufferedWriter.close();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -665,12 +630,14 @@ public void write1Mobject(){
     public void moveToPreviousPageProcess(int rowSetup, ArrayList<Product> products) {
         int lastPage = products.size() / rowSetup;
         int temp = products.size() % rowSetup;
+
         if (temp != 0) {
             lastPage++;
         }
         if (setting.currentPage == 0) {
             setting.currentPage = lastPage;
         }
+
         System.out.println(setting.currentPage);
         setting.currentPage--;
         displayTableData(rowSetup, setting.currentPage, products);
@@ -922,6 +889,30 @@ public void write1Mobject(){
         } while (true);
     }
     // END PROCESS
+
+    public void writeExampleRecords(){
+        long startTime;
+        long endTime;
+        long duration;
+
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
+
+            startTime = System.currentTimeMillis();
+            for (int i = 1; i <= 100; ++i) {
+                bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
+            }
+            endTime = System.currentTimeMillis();
+
+            duration = endTime - startTime;
+            System.out.println(duration);
+
+            bufferedWriter.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void finalize() throws Throwable {
