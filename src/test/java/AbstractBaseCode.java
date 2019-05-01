@@ -24,13 +24,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     AbstractBaseCode() {
         boolean isSettingExisted = ConfigureSetting.isFileExist();
 
-        System.out.println(isSettingExisted);
-
         if(!isSettingExisted)
             ConfigureSetting.writeToConfigureFile(new ConfigureSetting());
 
         setting = ConfigureSetting.readFromConfigureFile();
-        listOfProducts = readDataFromFileProcess();
+        // listOfProducts = readDataFromFileProcess();
     }
 
     // LAYOUT
@@ -77,8 +75,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputLoadingLayout() {
-        OutputLoadingScreen outputLoadingScreen = new OutputLoadingScreen();
-        outputLoadingScreen.startThread();
+//        OutputLoadingScreen outputLoadingScreen = new OutputLoadingScreen();
+//        outputLoadingScreen.startThread();
+        listOfProducts = readDataFromFileProcess();
     }
 
     public void outputMainLayout() {
@@ -100,23 +99,23 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void outputHelpLayout() {
         AsciiTable at = new AsciiTable();
         at.addRule();
-        at.addRow("1.", "Press","* : Display all record of product").setPaddingLeftRight(2);
-        at.addRow("2.", "Press","W : Add new product").setPaddingLeftRight(2);
-        at.addRow("",   "Press","W ->#proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
-        at.addRow("3.", "Press","r : read Content any content").setPaddingLeftRight(2);
-        at.addRow("",   "Press","r#proId shortcut for read product by Id").setPaddingLeftRight(2);
-        at.addRow("4.", "Press","u : Update Data").setPaddingLeftRight(2);
-        at.addRow("5.", "Press","d : Delete Data").setPaddingLeftRight(2);
-        at.addRow("",   "Press","d#proId shortcut for delete product by Id").setPaddingLeftRight(2);
-        at.addRow("6.", "Press","f : Display First Page").setPaddingLeftRight(2);
-        at.addRow("7.", "Press","p : Display Previous Page").setPaddingLeftRight(2);
-        at.addRow("8.", "Press","n : Display Next Page").setPaddingLeftRight(2);
-        at.addRow("9.", "Press","l : Display Last Page").setPaddingLeftRight(2);
-        at.addRow("10.", "Press","n : Search product by name").setPaddingLeftRight(2);
-        at.addRow("11.", "Press","sa : save record to file").setPaddingLeftRight(2);
-        at.addRow("12.", "Press","ba : Backup Data").setPaddingLeftRight(2);
-        at.addRow("13.", "Press","re : Restore data").setPaddingLeftRight(2);
-        at.addRow("14.", "Press","h : Help").setPaddingLeftRight(2);
+        at.addRow("1.", "Press","[*]    : Display all record of product").setPaddingLeftRight(2);
+        at.addRow("2.", "Press","[W|w]  : Add new product").setPaddingLeftRight(2);
+        at.addRow("",   "Press","[W|w] -> #proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
+        at.addRow("3.", "Press","[R|r]  : read Content any content").setPaddingLeftRight(2);
+        at.addRow("",   "Press","[R|r] -> #proId shortcut for read product by Id").setPaddingLeftRight(2);
+        at.addRow("4.", "Press","[U|u]  : Update Data").setPaddingLeftRight(2);
+        at.addRow("5.", "Press","[D|d]  : Delete Data").setPaddingLeftRight(2);
+        at.addRow("",   "Press","[D|d] -> #proId shortcut for delete product by Id").setPaddingLeftRight(2);
+        at.addRow("6.", "Press","[F|f]  : Display First Page").setPaddingLeftRight(2);
+        at.addRow("7.", "Press","[P|p]  : Display Previous Page").setPaddingLeftRight(2);
+        at.addRow("8.", "Press","[N|n]  : Display Next Page").setPaddingLeftRight(2);
+        at.addRow("9.", "Press","[L|l]  : Display Last Page").setPaddingLeftRight(2);
+        at.addRow("10.", "Press","[N|n] : Search product by name").setPaddingLeftRight(2);
+        at.addRow("11.", "Press","[V|v] : save record to file").setPaddingLeftRight(2);
+        at.addRow("12.", "Press","[C|c] : Backup Data").setPaddingLeftRight(2);
+        at.addRow("13.", "Press","[T|t] : Restore data").setPaddingLeftRight(2);
+        at.addRow("14.", "Press","[H|h] : Help").setPaddingLeftRight(2);
         at.addRule();
 
         CWC_LongestLine cwc = new CWC_LongestLine();
@@ -155,7 +154,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
         do {
             choice = TextFieldConsole.readCharType("Are you sure that you want to insert the product? [Y|y] or [N|n] : ");
-
+            System.out.println();
             switch (choice) {
                 case 'Y':
                 case 'y':
@@ -179,7 +178,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         else {
             setting.currentID++;
-            ConfigureSetting.writeToConfigureFile(setting); // think again
+            ConfigureSetting.writeToConfigureFile(setting);
 
             listOfProducts = new ArrayList<>(hashMap.values());
             outputMessageLayout("Product with ID : " + id + " was added successfully!");
@@ -299,7 +298,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
+            System.out.println();
             outputMessageErrorLayout("Product Not Found!");
+            return;
         }
         else {
             searchProduct = retreiveProductByID(productID, hashMap);
@@ -365,13 +366,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
                     case UPDATE_QUANTITY:
                         System.out.println("======== UPDATE PRODUCT ========");
-                        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
                         productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
-                        productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
 
-                        searchProduct.setProductName(productName);
                         searchProduct.setQuantity(productQuantity);
-                        searchProduct.setUnitPrice(productUnitPrice);
 
                         System.out.println();
                         outputProductData(searchProduct);
@@ -387,7 +384,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         break;
 
                     default:
+                        System.out.println();
                         outputMessageErrorLayout("Invalid Input!");
+                        System.out.println();
                         break;
                 }
             }
@@ -395,10 +394,14 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
 
         if(!hasUpdated) {
+            System.out.println();
             outputMessageErrorLayout("Process Canceled!");
+            System.out.println();
         }
         else {
             listOfProducts = new ArrayList<>(hashMap.values());
+
+            System.out.println();
             outputMessageLayout("Product with ID : " + productID + " was updated successfully!");
         }
     }
@@ -410,9 +413,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void backupDataToFileLayout() {
         boolean isSuccessful = backupDataToFileProcess();
         if(!isSuccessful) {
+            System.out.println();
             outputMessageErrorLayout("Process Failed!");
         }
         else {
+            System.out.println();
             outputMessageLayout("Backup Successfully!");
         }
     }
@@ -505,7 +510,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.getRenderer().setCWC(cwc);
         table.setTextAlignment(TextAlignment.CENTER);
         table.getContext().setGridTheme(TA_GridThemes.HORIZONTAL);
-        System.out.println(ANSI_RED);
+        System.out.print(ANSI_RED);
         System.out.println(table.render());
         System.out.print(ANSI_RESET);
     }
@@ -515,7 +520,15 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public ArrayList<Product> readDataFromFileProcess() {
         String str;
         String temp = "";
+
+        long startTime;
+        long endTime;
+        long duration;
+
         BufferedReader bufferedReader;
+
+        startTime = System.currentTimeMillis();
+
         try {
             bufferedReader = new BufferedReader(new FileReader(FileLocation.DEFAULT_FILE_NAME));
 
@@ -544,6 +557,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             String a[] = anArr1.split("#");
             obj.add(new Product(Integer.parseInt(a[0]), a[1], Double.parseDouble(a[2]), Integer.parseInt(a[3]), a[4]));
         }
+
+        endTime = System.currentTimeMillis();
+        duration = endTime - startTime;
+        System.out.println("Current Time Loading : " + duration);
         return obj;
     }
 
@@ -723,9 +740,12 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         if(temp >= 1 && temp <= 20) {
             setting.rowSetup = temp;
             ConfigureSetting.writeToConfigureFile(setting);
+
+            System.out.println();
             outputMessageLayout("SET " + temp + " ROWS PER PAGE");
         }
         else {
+            System.out.println();
             outputMessageErrorLayout("Row Out of Bound!");
         }
     }
@@ -908,6 +928,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     return false;
 
                 default:
+                    System.out.println();
                     outputMessageErrorLayout("Invalid Input!");
                     break;
             }

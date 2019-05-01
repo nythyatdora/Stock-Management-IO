@@ -8,7 +8,7 @@ public class ConfigureSetting implements Serializable {
     public int currentPage = 1;
     public int currentID;
 
-    public boolean hasSavedBeforeClose;
+    public boolean hasSavedBeforeClose = false;
     public String recoveryFileName;
     public String currentWriteName;
 

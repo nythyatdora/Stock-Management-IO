@@ -4,7 +4,7 @@ public class Tester implements InputCommand {
 
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
-        // baseCode.outputLoadingLayout();
+        baseCode.outputLoadingLayout();
 
         do {
             System.out.println();
