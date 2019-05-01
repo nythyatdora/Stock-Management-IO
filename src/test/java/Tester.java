@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Tester implements InputCommand {
     public static void main(String[] args) {
-        Scanner scanner= new Scanner(System.in);
-        BaseCode baseCode = new BaseCode();
 
+        BaseCode baseCode = new BaseCode();
+        baseCode.saveDataToFileProcess();
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
         // baseCode.outputLoadingLayout();
@@ -76,7 +77,8 @@ public class Tester implements InputCommand {
 
                 case SAVE_FILE_UPPER:
                 case SAVE_FILE_LOWER:
-                    baseCode.saveDataToFileLayout();
+                    baseCode.saveDataToFileProcess();
+//                    baseCode.saveDataToFileLayout();
                     break;
 
                 case BACKUP_FILE_UPPER:

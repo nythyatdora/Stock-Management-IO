@@ -6,10 +6,7 @@ import de.vandermeer.asciithemes.u8.U8_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import org.apache.commons.collections4.MapUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -82,12 +79,12 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         AsciiTable mainLayout = new AsciiTable();
 
         mainLayout.addRule();
-        mainLayout.addRow("[D|d]\tDisplay","[W|w]\tWrite","[R|r]\tRead","[U|u]\tUpdate","[D|d]\tDelete","[F|f]\tFirst","[P|p]\tPrevious","[N|n]\tNext");
+        mainLayout.addRow("[D|d]\tDisplay", "[W|w]\tWrite", "[R|r]\tRead", "[U|u]\tUpdate", "[D|d]\tDelete", "[F|f]\tFirst", "[P|p]\tPrevious", "[N|n]\tNext");
         mainLayout.addRule();
-        mainLayout.addRow("[L|l]\tLast","[G|g]\tGoto","[O|o]\tSet Row","[V|v]\tSave","[C|c]\tBack up","[T|t]\tRestore","[H|h]\tHelp","[E|e]\tExit");
+        mainLayout.addRow("[L|l]\tLast", "[G|g]\tGoto", "[O|o]\tSet Row", "[V|v]\tSave", "[C|c]\tBack up", "[T|t]\tRestore", "[H|h]\tHelp", "[E|e]\tExit");
         mainLayout.addRule();
 
-       mainLayout.getContext().setWidth(160);
+        mainLayout.getContext().setWidth(160);
         mainLayout.setTextAlignment(TextAlignment.CENTER);
         mainLayout.getContext().setGrid(U8_Grids.borderDouble());
 
@@ -97,23 +94,23 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void outputHelpLayout() {
         AsciiTable at = new AsciiTable();
         at.addRule();
-        at.addRow("1.", "Press","* : Display all record of product").setPaddingLeftRight(2);
-        at.addRow("2.", "Press","W : Add new product").setPaddingLeftRight(2);
-        at.addRow("",   "Press","W ->#proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
-        at.addRow("3.", "Press","r : read Content any content").setPaddingLeftRight(2);
-        at.addRow("",   "Press","r#proId shortcut for read product by Id").setPaddingLeftRight(2);
-        at.addRow("4.", "Press","u : Update Data").setPaddingLeftRight(2);
-        at.addRow("5.", "Press","d : Delete Data").setPaddingLeftRight(2);
-        at.addRow("",   "Press","d#proId shortcut for delete product by Id").setPaddingLeftRight(2);
-        at.addRow("6.", "Press","f : Display First Page").setPaddingLeftRight(2);
-        at.addRow("7.", "Press","p : Display Previous Page").setPaddingLeftRight(2);
-        at.addRow("8.", "Press","n : Display Next Page").setPaddingLeftRight(2);
-        at.addRow("9.", "Press","l : Display Last Page").setPaddingLeftRight(2);
-        at.addRow("10.", "Press","n : Search product by name").setPaddingLeftRight(2);
-        at.addRow("11.", "Press","sa : save record to file").setPaddingLeftRight(2);
-        at.addRow("12.", "Press","ba : Backup Data").setPaddingLeftRight(2);
-        at.addRow("13.", "Press","re : Restore data").setPaddingLeftRight(2);
-        at.addRow("14.", "Press","h : Help").setPaddingLeftRight(2);
+        at.addRow("1.", "Press", "* : Display all record of product").setPaddingLeftRight(2);
+        at.addRow("2.", "Press", "W : Add new product").setPaddingLeftRight(2);
+        at.addRow("", "Press", "W ->#proname-unit_price-qty : shortcut for add new product").setPaddingLeftRight(2);
+        at.addRow("3.", "Press", "r : read Content any content").setPaddingLeftRight(2);
+        at.addRow("", "Press", "r#proId shortcut for read product by Id").setPaddingLeftRight(2);
+        at.addRow("4.", "Press", "u : Update Data").setPaddingLeftRight(2);
+        at.addRow("5.", "Press", "d : Delete Data").setPaddingLeftRight(2);
+        at.addRow("", "Press", "d#proId shortcut for delete product by Id").setPaddingLeftRight(2);
+        at.addRow("6.", "Press", "f : Display First Page").setPaddingLeftRight(2);
+        at.addRow("7.", "Press", "p : Display Previous Page").setPaddingLeftRight(2);
+        at.addRow("8.", "Press", "n : Display Next Page").setPaddingLeftRight(2);
+        at.addRow("9.", "Press", "l : Display Last Page").setPaddingLeftRight(2);
+        at.addRow("10.", "Press", "n : Search product by name").setPaddingLeftRight(2);
+        at.addRow("11.", "Press", "sa : save record to file").setPaddingLeftRight(2);
+        at.addRow("12.", "Press", "ba : Backup Data").setPaddingLeftRight(2);
+        at.addRow("13.", "Press", "re : Restore data").setPaddingLeftRight(2);
+        at.addRow("14.", "Press", "h : Help").setPaddingLeftRight(2);
         at.addRule();
 
         CWC_LongestLine cwc = new CWC_LongestLine();
@@ -131,25 +128,26 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
         char choice;
-        int id = setting.currentID + 1;
+        int id = hashMap.size()+ 1;
         boolean hasInserted = false;
         boolean toContinue = true;
         Product insertProduct;
 
         System.out.println("[NEW] Product ID : " + id);
-        String productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+        String productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
         int productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
-        double productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+        double productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
         String importDate = dateFormat.format(date);
 
         insertProduct = new Product(id, productName, productUnitPrice, productQuantity, importDate);
 
-        do {
+
             choice = TextFieldConsole.readCharType("Are you sure that you want to insert the product? [Y|y] or [N|n] : ");
 
             switch (choice) {
                 case 'Y':
                 case 'y':
+                    listOfProducts.add(insertProduct);
                     hasInserted = insertNewProduct(insertProduct, hashMap);
                     break;
 
@@ -162,12 +160,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     outputInvalidInputLayout("INVALID INPUT!");
                     break;
             }
-        } while(toContinue);
 
-        if(!hasInserted) {
+
+        if (!hasInserted) {
             outputMessageLayout("Process Canceled!");
-        }
-        else {
+        } else {
             outputMessageLayout("Product was added!");
         }
     }
@@ -181,10 +178,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
 
-        if(!isFound) {
+        if (!isFound) {
             outputMessageLayout("Product not found!");
-        }
-        else {
+        } else {
             displayProductByID(productID, hashMap);
         }
     }
@@ -200,10 +196,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         productName = TextFieldConsole.readStringType("Input the Name of Product : ");
         isFound = findProductByName(productName, hashMap);
 
-        if(!isFound) {
+        if (!isFound) {
             outputMessageLayout("Product Not Found!");
-        }
-        else {
+        } else {
             searchResult = displayProductByName(productName, hashMap);
         }
 
@@ -223,10 +218,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         productID = TextFieldConsole.readIntegerType("Input the ID of Product to Delete : ");
         isFound = findProductByID(productID, hashMap);
 
-        if(!isFound) {
+        if (!isFound) {
             outputMessageLayout("Product Not Found!");
-        }
-        else {
+        } else {
             displayProductByID(productID, hashMap);
 
             do {
@@ -235,8 +229,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     case 'Y':
                     case 'y':
                         hasDeleted = deleteProductByID(productID, hashMap);
+                        toContinue = false;
                         break;
-
                     case 'N':
                     case 'n':
                         outputMessageLayout("Process Canceled!");
@@ -245,7 +239,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                 }
             }
             while (toContinue);
-
             if (!hasDeleted) {
                 outputMessageLayout("Process canceled!");
             } else {
@@ -256,7 +249,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     public void updataDataLayout() {
         int productID;
-        char choice;
+        int choice;
         char innerChoice;
 
         boolean isFound;
@@ -271,98 +264,35 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
 
-        if(!isFound) {
+        if (!isFound) {
             outputMessageLayout("Product not found!");
-        }
-        else {
+        } else {
             searchProduct = retreiveProductByID(productID, hashMap);
             outputProductData(searchProduct);
 
             do {
                 System.out.println("What do you want to update?");
                 outputUpdateOptionLayout();
-                choice = TextFieldConsole.readCharType("What do you want to update : ");
+                choice = TextFieldConsole.readIntegerType("What do you want to update : ");
 
                 switch (choice) {
                     case UPDATE_ALL:
-
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductData(searchProduct);
-                                    isContinue = false;
-                                    break;
-
-                                case 'N':
-                                case 'n':
-                                    outputMessageLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        outputProductData(searchProduct);
+                        hasUpdated = updateProductData(searchProduct);
+                        isContinue=false;
                         break;
-
                     case UPDATE_NAME:
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductName(searchProduct);
-                                    isContinue = false;
-                                    break;
-
-                                case 'N':
-                                case 'n':
-                                    outputMessageLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        hasUpdated = updateProductName(searchProduct);isContinue=false;
                         break;
 
                     case UPDATE_UNIT_PRICE:
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductUnitPrice(searchProduct);
-                                    isContinue = false;
-                                    break;
-
-                                case 'N':
-                                case 'n':
-                                    outputMessageLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        hasUpdated = updateProductUnitPrice(searchProduct);isContinue=false;
                         break;
 
                     case UPDATE_QUANTITY:
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductQuantity(searchProduct);
-                                    isContinue = false;
-                                    break;
 
-                                case 'N':
-                                case 'n':
-                                    outputMessageLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        outputProductData(searchProduct);
+                        hasUpdated = updateProductQuantity(searchProduct);isContinue=false;
                         break;
 
                     case RETURN_TO_MAIN:
@@ -375,16 +305,15 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             } while (isContinue);
         }
 
-        if(!hasUpdated) {
+        if (!hasUpdated) {
             outputMessageLayout("Update process canceled!");
-        }
-        else {
+        } else {
             outputMessageLayout("Product was updated!");
         }
     }
 
     public void saveDataToFileLayout() {
-        saveDataToFileProcess();
+        saveDataToFileProcess(listOfProducts);
     }
 
     public void backUpDataToFileLayout() {
@@ -485,8 +414,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             }
 
             bufferedReader.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -505,64 +433,46 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         return obj;
     }
-public void write1Mobject(){
-    long startTime;
-    long endTime;
-    long duration;
 
-    try {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
-
-        startTime = System.currentTimeMillis();
-        for (int i = 1; i <= 100; ++i) {
-            bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
-        }
-        endTime = System.currentTimeMillis();
-
-        duration = endTime - startTime;
-        System.out.println(duration);
-
-        bufferedWriter.close();
-    }
-    catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-    public void saveDataToFileProcess(ArrayList<Product> objTowriteToArray) {
+    public void write1Mobject() {
+        long startTime;
+        long endTime;
+        long duration;
 
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FileLocation.DEFAULT_FILE_NAME));
 
-
-            for (int i = 0; i < objTowriteToArray.size(); ++i) {
-                bufferedWriter.append("+"+objTowriteToArray);
+            startTime = System.currentTimeMillis();
+            for (int i = 1; i <= 100; ++i) {
                 bufferedWriter.append("+").append((new Product(i, "ca", 12, 12, "22")).ToString());
             }
+            endTime = System.currentTimeMillis();
+
+            duration = endTime - startTime;
+            System.out.println(duration);
 
             bufferedWriter.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-//    public void saveDataToFile() {
-//        try {
-//
-//            BufferedWriter out = new BufferedWriter(new FileWriter("mytext1.txt"));
-//            long l = System.currentTimeMillis();
-//
-//            for (int i = 1; i <= 100; ++i) {
-//                out.append("+" + (new Product(i, "ca", 12.5, 5, "12/23")).ToString());
-//            }
-//
-//            long s = System.currentTimeMillis();
-//            System.out.println(s - l);
-//            out.close();
-//        } catch (Exception var6) {
-//            var6.printStackTrace();
-//        }
 
-//    }
+    public void saveDataToFileProcess(ArrayList<Product> objTowriteToArray) {
+        File file = new File(FileLocation.DEFAULT_FILE_NAME);
+        file.delete();
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+
+            for (int i = 0; i < objTowriteToArray.size(); i++) {
+                bufferedWriter.append("+" + objTowriteToArray.get(i).ToString());
+            }
+
+            bufferedWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void moveToFirstProcess(int rowSetup, ArrayList<Product> products) {
         displayTableData(rowSetup, 1, products);
         setting.currentPage = 1;
@@ -577,7 +487,7 @@ public void write1Mobject(){
         }
 
         setting.currentPage = lastPage;
-        displayTableData(rowSetup,setting.currentPage, products);
+        displayTableData(rowSetup, setting.currentPage, products);
     }
 
     public void moveToPreviousPageProcess(int rowSetup, ArrayList<Product> products) {
@@ -624,7 +534,7 @@ public void write1Mobject(){
         AsciiTable table = new AsciiTable();
 
         table.addRule();
-        table.addRow("ID", " : " + + product.getProductID());
+        table.addRow("ID", " : " + +product.getProductID());
 
         table.addRow("Name", " : " + product.getProductName());
 
@@ -647,7 +557,7 @@ public void write1Mobject(){
     public void displayTableData(int rowSetup, int viewPage, ArrayList<Product> products) {
 
         if (rowSetup <= 0 || viewPage <= 0) {
-             System.out.println("Can not input less than 0");
+            System.out.println("Can not input less than 0");
             return;
         }
         AsciiTable table = new AsciiTable();
@@ -677,8 +587,7 @@ public void write1Mobject(){
                         product.getQuantity(), product.getImportDate());
                 table.addRule();
             }
-        }
-        else {
+        } else {
             int t = viewPage * rowSetup;
             for (int j = t - rowSetup; j < t; j++) {
                 Product product = products.get(j);
@@ -741,9 +650,9 @@ public void write1Mobject(){
         int productQuantity;
         double productUnitPrice;
 
-        productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
         productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
-        productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+        productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
 
         do {
             choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
@@ -819,7 +728,7 @@ public void write1Mobject(){
         char choice;
         double productUnitPrice;
 
-        productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+        productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
 
         do {
             choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
