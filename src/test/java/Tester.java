@@ -9,6 +9,7 @@ public class Tester implements InputCommand {
         do {
             System.out.println();
             baseCode.outputMainLayout();
+
             char inputCommand = TextFieldConsole.readCharType("Input Command : ");
             System.out.println();
 
