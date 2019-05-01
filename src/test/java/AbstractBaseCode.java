@@ -580,7 +580,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         int temp = products.size() % rowSetup;
         if (temp != 0) {
             lastPage++;
-        }
+        } 
 
         if (setting.currentPage == lastPage) {
             setting.currentPage = 0;
