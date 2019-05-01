@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,22 +23,30 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     private static ArrayList<Product> listOfProducts;
 
     AbstractBaseCode() {
-         setting = ConfigureSetting.readFromConfigureFile();
+        boolean isSettingExisted = ConfigureSetting.isFileExist();
 
-         listOfProducts = readDataFromFileProcess();
+        System.out.println(isSettingExisted);
+
+        if(!isSettingExisted)
+            ConfigureSetting.writeToConfigureFile(new ConfigureSetting());
+
+        setting = ConfigureSetting.readFromConfigureFile();
+        listOfProducts = readDataFromFileProcess();
     }
 
     // LAYOUT
     public void outputWelcomeLayout() {
         String[] stockText = {
-                "                      _____  _                _      __  __                                                            _    ",
-                "                     / ____|| |              | |    |  \\/  |                                                          | |   ",
-                "                    | (___  | |_  ___    ___ | | __ | \\  / |  __ _  _ __    __ _   __ _   ___  _ __ ___    ___  _ __  | |_  ",
-                "                     \\___ \\ | __|/ _ \\  / __|| |/ / | |\\/| | / _` || '_ \\  / _` | / _` | / _ \\| '_ ` _ \\  / _ \\| '_ \\ | __| ",
-                "                     ____) || |_| (_) || (__ |   <  | |  | || (_| || | | || (_| || (_| ||  __/| | | | | ||  __/| | | || |_  ",
-                "                    |_____/  \\__|\\___/  \\___||_|\\_\\ |_|  |_| \\__,_||_| |_| \\__,_| \\__, | \\___||_| |_| |_| \\___||_| |_| \\__| ",
-                "                                                                                   __/ |                                    ",
-                "                                                                                  |___/"};
+                "            ____    __                   __                                                                                       __",
+                "           /\\  _`\\ /\\ \\__               /\\ \\          /'\\_/`\\                                                                    /\\ \\__",
+                "           \\ \\,\\L\\_\\ \\ ,_\\   ___     ___\\ \\ \\/'\\     /\\      \\     __      ___      __       __      __    ___ ___      __    ___\\ \\ _\\",
+                "            \\/_\\__ \\\\ \\ \\/  / __`\\  /'___\\ \\ , <     \\ \\ \\__\\ \\  /'__`\\  /' _ `\\  /'__`\\   /'_ `\\  /'__`\\/' __` __`\\  /'__`\\/' _ `\\ \\ \\/",
+                "              /\\ \\L\\ \\ \\ \\_/\\ \\L\\ \\/\\ \\__/\\ \\ \\\\`\\    \\ \\ \\_/\\ \\/\\ \\L\\.\\_/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\L\\ \\/\\  __//\\ \\/\\ \\/\\ \\/\\  __//\\ \\/\\ \\ \\ \\_",
+                "              \\ `\\____\\ \\__\\ \\____/\\ \\____\\\\ \\_\\ \\_\\   \\ \\_\\\\ \\_\\ \\__/.\\_\\ \\_\\ \\_\\ \\__/.\\_\\ \\____ \\ \\____\\ \\_\\ \\_\\ \\_\\ \\____\\ \\_\\ \\_\\ \\__\\",
+                "               \\/_____/\\/__/\\/___/  \\/____/ \\/_/\\/_/    \\/_/ \\/_/\\/__/\\/_/\\/_/\\/_/\\/__/\\/_/\\/___L\\ \\/____/\\/_/\\/_/\\/_/\\/____/\\/_/\\/_/\\/__/",
+                "                                                                                             /\\____/",
+                "                                                                                             \\_/__/"
+        };
         CommonMethod.printlnStrings(stockText);
     }
 
@@ -82,7 +91,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         mainLayout.addRow("[L|l]\tLast","[G|g]\tGoto","[O|o]\tSet Row","[V|v]\tSave","[C|c]\tBack up","[T|t]\tRestore","[H|h]\tHelp","[E|e]\tExit");
         mainLayout.addRule();
 
-       mainLayout.getContext().setWidth(160);
+        mainLayout.getContext().setWidth(160);
         mainLayout.setTextAlignment(TextAlignment.CENTER);
         mainLayout.getContext().setGrid(U8_Grids.borderDouble());
 
@@ -115,11 +124,12 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         at.getRenderer().setCWC(cwc);
         at.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
         at.getContext().setGrid(U8_Grids.borderDouble());
+
         System.out.println(at.render());
     }
 
     public void writeDataLayout() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
 
         LinkedHashMap<Integer, Product> hashMap = new LinkedHashMap<>();
@@ -131,13 +141,18 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         boolean toContinue = true;
         Product insertProduct;
 
-        System.out.println("[NEW] Product ID : " + id);
-        String productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
+        System.out.println("======== INSERT NEW PRODUCT =========");
+        System.out.println("[NEW] Product ID         : " + id);
+        String productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
         int productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
-        double productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
+        double productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
         String importDate = dateFormat.format(date);
 
         insertProduct = new Product(id, productName, productUnitPrice, productQuantity, importDate);
+
+        System.out.println();
+        outputProductData(insertProduct);
+        System.out.println();
 
         do {
             choice = TextFieldConsole.readCharType("Are you sure that you want to insert the product? [Y|y] or [N|n] : ");
@@ -146,6 +161,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                 case 'Y':
                 case 'y':
                     hasInserted = insertNewProduct(insertProduct, hashMap);
+                    toContinue = false;
                     break;
 
                 case 'N':
@@ -154,16 +170,16 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     break;
 
                 default:
-                    outputInvalidInputLayout("INVALID INPUT!");
+                    outputMessageErrorLayout("Invalid Input!");
                     break;
             }
         } while(toContinue);
 
         if(!hasInserted) {
-            outputMessageLayout("Process Canceled!");
+            outputMessageErrorLayout("Process Canceled!");
         }
         else {
-            outputMessageLayout("Product was added!");
+            outputMessageLayout("Product with ID : " + id + " was added successfully!");
         }
     }
 
@@ -174,11 +190,14 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         HashMap<Integer, Product> hashMap = new HashMap<>();
         MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
+        System.out.println("======== READ PRODUCT =========");
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
 
+        System.out.println();
+
         if(!isFound) {
-            outputInvalidInputLayout("Product not found!");
+            outputMessageErrorLayout("Product not found!");
         }
         else {
             displayProductByID(productID, hashMap);
@@ -197,7 +216,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         isFound = findProductByName(productName, hashMap);
 
         if(!isFound) {
-            outputInvalidInputLayout("Product Not Found!" );
+            outputMessageErrorLayout("Product Not Found!" );
         }
         else {
             searchResult = displayProductByName(productName, hashMap);
@@ -216,26 +235,29 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         HashMap<Integer, Product> hashMap = new HashMap<>();
         MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
-        productID = TextFieldConsole.readIntegerType("Input the ID of Product to Delete : ");
+        System.out.println("======= DELETE PRODUCT ========");
+        productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
+        System.out.println();
 
         if(!isFound) {
-            outputInvalidInputLayout("Product Not Found!");
+            outputMessageErrorLayout("Product Not Found!");
         }
         else {
             displayProductByID(productID, hashMap);
+            System.out.println();
 
             do {
-                choice = TextFieldConsole.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] :");
+                choice = TextFieldConsole.readCharType("Are you sure that you want to delete this record? [Y|y] or [N|n] : ");
                 switch (choice) {
                     case 'Y':
                     case 'y':
                         hasDeleted = deleteProductByID(productID, hashMap);
+                        toContinue = false;
                         break;
 
                     case 'N':
                     case 'n':
-                        outputMessageLayout("Process Canceled!");
                         toContinue = false;
                         break;
                 }
@@ -243,123 +265,116 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             while (toContinue);
 
             if (!hasDeleted) {
-                outputMessageLayout("Process Canceled!");
+                outputMessageErrorLayout("Process Canceled!");
             } else {
-
-                outputMessageLayout("Product was removed");
+                outputMessageLayout("Product with ID : " + productID + " was deleted successfully!");
             }
         }
     }
 
     public void updataDataLayout() {
         int productID;
-        char choice;
-        char innerChoice;
+        int choice;
 
         boolean isFound;
         boolean hasUpdated = false;
         boolean isContinue = true;
+
+        String productName;
+        int productQuantity;
+        double productUnitPrice;
 
         Product searchProduct;
 
         HashMap<Integer, Product> hashMap = new HashMap<>();
         MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
+        System.out.println("======= UPDATE PRODUCT ========");
         productID = TextFieldConsole.readIntegerType("Input the ID of Product : ");
         isFound = findProductByID(productID, hashMap);
 
         if(!isFound) {
-            outputInvalidInputLayout("Product Not Found!");
+            outputMessageErrorLayout("Product Not Found!");
         }
         else {
             searchProduct = retreiveProductByID(productID, hashMap);
+
+            System.out.println();
             outputProductData(searchProduct);
+            System.out.println();
 
             do {
                 System.out.println("What do you want to update?");
                 outputUpdateOptionLayout();
-                choice = TextFieldConsole.readCharType("What do you want to update : ");
+                choice = TextFieldConsole.readIntegerType("Option : ");
 
                 switch (choice) {
                     case UPDATE_ALL:
+                        System.out.println("======== UPDATE PRODUCT ========");
+                        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
+                        productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
+                        productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
 
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductData(searchProduct);
-                                    isContinue = false;
-                                    break;
+                        searchProduct.setProductName(productName);
+                        searchProduct.setQuantity(productQuantity);
+                        searchProduct.setUnitPrice(productUnitPrice);
 
-                                case 'N':
-                                case 'n':
-                                    outputInvalidInputLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        System.out.println();
+                        outputProductData(searchProduct);
+                        System.out.println();
+
+                        hasUpdated = toUpdateOrNot(searchProduct, hashMap);
+
+                        isContinue = false;
                         break;
 
                     case UPDATE_NAME:
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductName(searchProduct);
-                                    isContinue = false;
-                                    break;
+                        System.out.println("======== UPDATE PRODUCT ========");
+                        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
 
-                                case 'N':
-                                case 'n':
-                                    outputInvalidInputLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        searchProduct.setProductName(productName);
+
+                        System.out.println();
+                        outputProductData(searchProduct);
+                        System.out.println();
+
+                        hasUpdated = toUpdateOrNot(searchProduct, hashMap);
+
+                        isContinue = false;
                         break;
 
                     case UPDATE_UNIT_PRICE:
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductUnitPrice(searchProduct);
-                                    isContinue = false;
-                                    break;
+                        System.out.println("======== UPDATE PRODUCT ========");
+                        productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
 
-                                case 'N':
-                                case 'n':
-                                    outputInvalidInputLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        searchProduct.setUnitPrice(productUnitPrice);
+
+                        System.out.println();
+                        outputProductData(searchProduct);
+                        System.out.println();
+
+                        hasUpdated = toUpdateOrNot(searchProduct, hashMap);
+
+                        isContinue = false;
                         break;
 
                     case UPDATE_QUANTITY:
-                        do {
-                            outputProductData(searchProduct);
-                            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-                            switch (innerChoice) {
-                                case 'Y':
-                                case 'y':
-                                    hasUpdated = updateProductQuantity(searchProduct);
-                                    isContinue = false;
-                                    break;
+                        System.out.println("======== UPDATE PRODUCT ========");
+                        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
+                        productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
+                        productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
 
-                                case 'N':
-                                case 'n':
-                                    outputInvalidInputLayout("Invalid input!");
-                                    break;
-                            }
-                        }
-                        while(isContinue);
+                        searchProduct.setProductName(productName);
+                        searchProduct.setQuantity(productQuantity);
+                        searchProduct.setUnitPrice(productUnitPrice);
+
+                        System.out.println();
+                        outputProductData(searchProduct);
+                        System.out.println();
+
+                        hasUpdated = toUpdateOrNot(searchProduct, hashMap);
+
+                        isContinue = false;
                         break;
 
                     case RETURN_TO_MAIN:
@@ -367,18 +382,18 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         break;
 
                     default:
-                        outputInvalidInputLayout("Invalid input!");
-
+                        outputMessageErrorLayout("Invalid Input!");
+                        break;
                 }
-            } while (isContinue);
+            }
+            while (isContinue);
         }
 
         if(!hasUpdated) {
-            outputMessageLayout("Update process canceled!");
+            outputMessageErrorLayout("Process Canceled!");
         }
         else {
-            outputMessageLayout("Product was updated!");
-
+            outputMessageLayout("Product with ID : " + productID + " was updated successfully!");
         }
     }
 
@@ -389,7 +404,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void backupDataToFileLayout() {
         boolean isSuccessful = backupDataToFileProcess();
         if(!isSuccessful) {
-            outputInvalidInputLayout("Process Failed!");
+            outputMessageErrorLayout("Process Failed!");
         }
         else {
             outputMessageLayout("Backup Successfully!");
@@ -399,7 +414,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void restoreDataToFileLayout() {
         boolean isSuccessful = restoreDataToFileProcess();
         if(!isSuccessful) {
-            outputInvalidInputLayout("Process Failed!");
+            outputMessageErrorLayout("Process Failed!");
         }
         else {
             outputMessageLayout("Restore Successfully!");
@@ -435,24 +450,23 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void outputMessageLayout(String message) {
-
         String ANSI_RESET = "\u001B[0m";
         String GREEN_BOLD = "\033[1;32m";
 
         // DIALOG
-        AsciiTable at = new AsciiTable();
-        at.addRule();
-        at.addRow(message);
-        at.addRule();
+        AsciiTable dialog = new AsciiTable();
+        dialog.addRule();
+        dialog.addRow(message);
+        dialog.addRule();
 
-        at.setPaddingLeftRight(3);
+        dialog.setPaddingLeftRight(3);
         CWC_LongestLine cwc = new CWC_LongestLine();
-        at.getRenderer().setCWC(cwc);
-        at.setTextAlignment(TextAlignment.CENTER);
-        at.getContext().setGrid(A8_Grids.lineDoubleBlocks());
+        dialog.getRenderer().setCWC(cwc);
+        dialog.setTextAlignment(TextAlignment.CENTER);
+        dialog.getContext().setGrid(A8_Grids.lineDoubleBlocks());
         System.out.println(GREEN_BOLD);
-        System.out.println(at.render());
-        System.out.println(ANSI_RESET);
+        System.out.println(dialog.render());
+        System.out.print(ANSI_RESET);
     }
 
     public void outputUpdateOptionLayout() {
@@ -461,16 +475,16 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.addRule();
         table.addRow("[1] - All", "[2] - Name", "[3] - Quantity", "[4] - Unit Price", "[5] - Back to Menu");
         table.addRule();
-        table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+        table.getContext().setGridTheme(TA_GridThemes.FULL);
         table.setTextAlignment(TextAlignment.CENTER);
-        System.out.println(table.render());
+        System.out.println(table.render(110));
     }
 
     public void outputTableDataLayout() {
         displayTableData(setting.rowSetup, setting.currentPage, listOfProducts);
     }
 
-    public void outputInvalidInputLayout(String message) {
+    public void outputMessageErrorLayout(String message) {
         String ANSI_RED = "\u001B[31;1m";
         String ANSI_RESET = "\u001B[0m";
 
@@ -485,9 +499,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         table.getRenderer().setCWC(cwc);
         table.setTextAlignment(TextAlignment.CENTER);
         table.getContext().setGridTheme(TA_GridThemes.HORIZONTAL);
-        System.out.print(ANSI_RED);
+        System.out.println(ANSI_RED);
         System.out.println(table.render());
-        System.out.println(ANSI_RESET);
+        System.out.print(ANSI_RESET);
     }
     // END LAYOUT
 
@@ -577,7 +591,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         FileOutputStream outputStream;
 
         try {
-
             System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
             try (Stream<Path> walk = Files.walk(Paths.get("src/Backup"))) {
 
@@ -625,11 +638,13 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         return true;
     }
 
+    @Override
     public void moveToFirstProcess(int rowSetup, ArrayList<Product> products) {
         displayTableData(rowSetup, 1, products);
         setting.currentPage = 1;
     }
 
+    @Override
     public void moveToLastPageProcess(int rowSetup, ArrayList<Product> products) {
         int lastPage = products.size() / rowSetup;
         int temp = products.size() % rowSetup;
@@ -642,6 +657,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         displayTableData(rowSetup,setting.currentPage, products);
     }
 
+    @Override
     public void moveToPreviousPageProcess(int rowSetup, ArrayList<Product> products) {
         int lastPage = products.size() / rowSetup;
         int temp = products.size() % rowSetup;
@@ -658,6 +674,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         displayTableData(rowSetup, setting.currentPage, products);
     }
 
+    @Override
     public void moveToNextPageProcess(int rowSetup, ArrayList<Product> products) {
         int lastPage = products.size() / rowSetup;
         int temp = products.size() % rowSetup;
@@ -673,17 +690,19 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         displayTableData(rowSetup, setting.currentPage, products);
     }
 
+    @Override
     public void setRowProcess() {
         setting.rowSetup = TextFieldConsole.readIntegerType("Enter Row for Display : ");
     }
 
+    @Override
     public void gotoDataProcess(int rowSetup, ArrayList<Product> products) {
         setting.currentPage = TextFieldConsole.readIntegerType("Go to Page : ");
 
         displayTableData(setting.rowSetup, setting.currentPage, products);
-
     }
 
+    @Override
     public void outputProductData(Product product) {
         AsciiTable table = new AsciiTable();
 
@@ -708,10 +727,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         System.out.println(table.render());
     }
 
+    @Override
     public void displayTableData(int rowSetup, int viewPage, ArrayList<Product> products) {
-
         if (rowSetup <= 0 || viewPage <= 0) {
-             System.out.println("Can not input less than 0");
+            outputMessageErrorLayout("Input Value Less Than 0!");
             return;
         }
         AsciiTable table = new AsciiTable();
@@ -725,7 +744,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
 
         if (viewPage > lastPage) {
-            // System.out.println("This viewPage is not found!");
+            outputMessageErrorLayout("View Page Bigger Than Total Page!");
             return;
         }
 
@@ -755,17 +774,17 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
         table.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
         table.getContext().setGrid(U8_Grids.borderDouble());
-        System.out.println(table.render());
 
         pagination.addRule();
-        pagination.addRow("viewPage:" + viewPage + "/" + lastPage, " \t\t   ", " Total Record:" + products.size());
+        pagination.addRow("Page : " + viewPage + " of " + lastPage, " Total Record : " + products.size());
         pagination.addRule();
 
         pagination.setTextAlignment(de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment.CENTER);
         pagination.getContext().setGrid(U8_Grids.borderDoubleLight());
-
         pagination.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
-        System.out.println(pagination.render());
+
+        System.out.println(table.render(100));
+        System.out.println(pagination.render(100));
     }
 
     public boolean findProductByID(int productID, HashMap hashMap) {
@@ -799,106 +818,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         return true;
     }
 
-    public boolean updateProductData(Product product) {
-        char choice;
-        String productName;
-        int productQuantity;
-        double productUnitPrice;
-
-        productName = TextFieldConsole.readStringType( "[NEW] Product Name       : ");
-        productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
-        productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
-
-        do {
-            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-            switch (choice) {
-                case 'Y':
-                case 'y':
-                    product.setProductName(productName);
-                    product.setQuantity(productQuantity);
-                    product.setUnitPrice(productUnitPrice);
-                    return true;
-
-                case 'N':
-                case 'n':
-                    outputMessageLayout("Process Canceled!");
-                    return false;
-
-                default:
-                    outputInvalidInputLayout("Invalid Input!");
-            }
-        } while (true);
-    }
-
-    public boolean updateProductName(Product product) {
-        char choice;
-        String productName;
-        productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
-
-        do {
-            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-            switch (choice) {
-                case 'Y':
-                case 'y':
-                    product.setProductName(productName);
-                    return true;
-
-                case 'N':
-                case 'n':
-                    outputMessageLayout("Process Canceled!");
-                    return false;
-
-                default:
-                    outputInvalidInputLayout("Invalid Input!");
-            }
-        } while (true);
-    }
-
-    public boolean updateProductQuantity(Product product) {
-        char choice;
-        int productQuantity;
-        productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
-
-        do {
-            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-            switch (choice) {
-                case 'Y':
-                case 'y':
-                    product.setQuantity(productQuantity);
-                    return true;
-
-                case 'N':
-                case 'n':
-                    return false;
-
-                default:
-                    outputInvalidInputLayout("INVALID INPUT!");
-            }
-        } while (true);
-    }
-
-    public boolean updateProductUnitPrice(Product product) {
-        char choice;
-        double productUnitPrice;
-        productUnitPrice = TextFieldConsole.readDoubleType( "[NEW] Product Unit-Price : ");
-
-        do {
-            choice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
-            switch (choice) {
-                case 'Y':
-                case 'y':
-                    product.setUnitPrice(productUnitPrice);
-                    return true;
-
-                case 'N':
-                case 'n':
-                    outputMessageLayout("Process Canceled!");
-                    return false;
-
-                default:
-                    outputInvalidInputLayout("Invalid Input!");
-            }
-        } while (true);
+    public boolean updateProductData(Product product, HashMap<Integer, Product> hashMap) {
+        hashMap.put(product.getProductID(), product);
+        return true;
     }
     // END PROCESS
 
@@ -924,6 +846,27 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean toUpdateOrNot(Product product, HashMap<Integer, Product> hashMap) {
+        char innerChoice;
+        do {
+            innerChoice = TextFieldConsole.readCharType("Are you sure that you want to update this record? [Y|y] or [N|n] : ");
+            switch (innerChoice) {
+                case 'Y':
+                case 'y':
+                    return updateProductData(product, hashMap);
+
+                case 'N':
+                case 'n':
+                    return false;
+
+                default:
+                    outputMessageErrorLayout("Invalid Input!");
+                    break;
+            }
+        }
+        while(true);
     }
 
     @Override
