@@ -613,7 +613,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
         try {
             System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
-            try (Stream<Path> walk = Files.walk(Paths.get("src/Backup"))) {
+            try (Stream<Path> walk = Files.walk(Paths.get(FileLocation.BACKUP_FILE_LOCATION))) {
 
                 result = walk.filter(Files::isRegularFile)
                         .map(x -> x.toString()).collect(Collectors.toList());
