@@ -267,6 +267,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             while (toContinue);
 
             if (!hasDeleted) {
+                System.out.println();
                 outputMessageErrorLayout("Process Canceled!");
             }
             else {
@@ -760,6 +761,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             displayTableData(setting.rowSetup, setting.currentPage, products);
         }
         else {
+            System.out.println();
             outputMessageErrorLayout("Page Out of Bound!");
         }
     }

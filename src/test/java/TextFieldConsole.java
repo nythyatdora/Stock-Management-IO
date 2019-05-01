@@ -48,7 +48,7 @@ public class TextFieldConsole {
         Scanner scan = new Scanner(System.in);
         System.out.print(placeholder);
         try {
-            str = scan.nextLine().split(" ")[0];
+            str = scan.nextLine();
         }
         catch (RuntimeException e) {
             str = "\0";
