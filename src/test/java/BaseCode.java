@@ -233,4 +233,9 @@ public class BaseCode extends AbstractBaseCode {
      *  - (working on it)
      */
     public void shortcutCommand() {}
+
+    @Override
+    public void saveDataToFileProcess() {
+
+    }
 }
