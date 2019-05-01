@@ -651,6 +651,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             //Closing the input/output file streams
             inputStream.close();
             outputStream.close();
+
+            listOfProducts = readDataFromFileProcess();
         }
         catch (IOException e) {
             e.printStackTrace();
