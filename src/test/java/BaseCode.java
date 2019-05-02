@@ -1,173 +1,236 @@
 public class BaseCode extends AbstractBaseCode {
-    public void saveDataToFile() {
-        // OUTPUT "DATA IS ADDING..."
-        // SAVE DATA INTO FILE
-        // OUTPUT MESSAGE
-    }
 
-    public void backUpDataToFile() {
-        // CREATE BACKUP FILE
-        // TO BACKUP OR NOT
-        // OUTPUT MESSAGE
-    }
-
-    public void restoreDataToFile() {
-        // OUTPUT BACKUP FILE
-        // SELECT FILE
-        // TO RESTORE OR NOT
-        // OUTPUT MESSAGE
-    }
-
-    public void moveToFirstPage() {
-        // DISPLAY TABLE
-        // WITH SET ROWS AT FIRST PAGE
-        // SHOW PAGE NUMBER
-    }
-
-    public void moveToLastPage() {
-        // DISPLAY TABLE
-        // WITH SET ROWS AT LAST PAGE
-        // SHOW PAGE NUMBER
-    }
-
-    public void moveToPreviousRow() {
-        // DISPLAY TABLE
-        // MOVE -1 PAGE
-        // SHOW PAGE NUMBER
-    }
-
-    public void moveToNextRow() {
-        // DISPLAY TABLE
-        // MOVE +1 PAGE
-        // SHOW PAGE NUMBER
-    }
-
-    /*
-        public void shortcutCommand() {
-            // READ_PRODUCT_ID
-            // UPDATE_ALL
-            // UPDATE_...
-        }
-    */
-
-    public void exitProgram() {
-        // TO SAVE WRITE/UPDATE/DELETE RECORD OR NOT
-        // OUTPUT MESSAGE
-        // WRITE DATA INTO LOG FILE
-        // EXIT PROGRAM
-    }
-
+    /**
+     *  process:
+     *  - output welcome layout
+     */
+    @Override
     public void outputWelcomeLayout() {
-        // OUTPUT WELCOME
+        super.outputWelcomeLayout();
     }
 
+    /**
+     *  process:
+     *  - output logo
+     *  - output group logo
+     */
+    @Override
     public void outputLogoLayout() {
-        // OUTPUT LOGO
-        // TEAM LOGO
+        super.outputLogoLayout();
     }
 
+    /**
+     *  process:
+     *  - output loading screen
+     *  - read file to collection
+     */
+    @Override
     public void outputLoadingLayout() {
-        // OUTPUT LOADING SCREEN
+        super.outputLoadingLayout();
     }
 
-    public void outputInvalidInputLayout() {
-        // OUTPUT INVALID LAYOUT
-    }
-
+    /**
+     *  process:
+     *  - output main table
+     */
+    @Override
     public void outputMainLayout() {
-        // OUTPUT MAIN TABLE
+        super.outputMainLayout();
     }
 
+    /**
+     *  process:
+     *  - output help layout
+     */
+    @Override
     public void outputHelpLayout() {
-        // OUTPUT SHORTCUT
-        // PROGRAM DESCRIPTION
+        super.outputHelpLayout();
     }
 
-    public void outputProductData() {
-        // DISPLAY PRODUCT INFORMATION
+    @Override
+    public void outputTableDataLayout() {
+        super.outputTableDataLayout();
     }
 
-    public void displayTableData() {
-        // DRAW TABLE
-        // DISPLAY ROW FROM START_ROW TO LENGTH_ROW
-        // CURRENT PAGE
-    }
-
+    /**
+     *  process:
+     *  - input product id
+     *  - input product name
+     *  - input product price
+     *  - input product quantity
+     *  - input product import-date (explicitly)
+     *  - display product data
+     *  - to save data or not
+     *  - output message
+     */
+    @Override
     public void writeDataLayout() {
-        // INPUT PRODUCT ID
-        // INPUT PRODUCT NAME
-        // INPUT PRODUCT PRICE
-        // INPUT PRODUCT QUANTITY
-        // INPUT IMPORT DATE (IMPLICITLY)
-        // OUTPUT INPUTED PRODUCT INFORMATION
-        // TO SAVE OR NOT
-        // OUTPUT MESSAGE SUCCESSFULLY
+        super.writeDataLayout();
     }
 
-    public void updataDataLayout() {
-        // UPDATE BY ID
-        // OUTPUT PRODUCT INFORMATION
-        // OUTPUT OPTIONS
-        // SELECT OPTIONS
-        // INPUT OPTIONS
-        // OUTPUT FINAL INFORMATION
-        // TO SAVE OR NOT
-        // OUTPUT MESSAGE
-    }
-
+    /**
+     *  process:
+     *  - input id
+     *  - search by id
+     *  - display product data
+     */
+    @Override
     public void readDataLayout() {
-        // READ BY ID
-        // SEARCH DATA BY ID
-        // OUTPUT SCREEN AT ID
+        super.readDataLayout();
     }
 
-    public void deleteDataLayout() {
-        // DELETE BY ID
-        // OUTPUT PRODUCT INFORMATION OR MESSAGE
-        // TO DELETE OR NOT
-        // OUTPUT MESSAGE
-    }
-
+    /**
+     *  process:
+     *  - input name
+     *  - regular expression search
+     *  - output search result count or message
+     *  - display search result table
+     *  - display pagination with total record
+     */
+    @Override
     public void searchDataLayout() {
-        // SEARCH BY NAME (REGEX EDITION)
-        // OUTPUT SEARCH RESULT COUNT OR MESSAGE
-        // DISPLAY TABLE
-        // DISPLAY PAGE NUMBER
-        // TOTAL RECORD
+        super.searchDataLayout();
     }
 
+    /**
+     *  process:
+     *  - delete by id
+     *  - display product data
+     *  - to delete or not
+     *  - output message
+     */
+    @Override
+    public void deleteDataLayout() {
+        super.deleteDataLayout();
+    }
+
+    /**
+     *  process:
+     *  - update by id
+     *  - output product information
+     *  - output option
+     *  - select option
+     *  - input option
+     *  - display product data
+     *  - to save or not
+     *  - output message
+     */
+    @Override
+    public void updataDataLayout() {
+        super.updataDataLayout();
+    }
+
+    /**
+     *  process:
+     *  - save data to file
+     *  - output message
+     */
+    @Override
+    public void saveDataToFileLayout() {
+        super.saveDataToFileLayout();
+    }
+
+    /**
+     *  process:
+     *  - create backup file
+     *  - to back up or not
+     *  - output message
+     */
+    @Override
+    public void backupDataToFileLayout() {
+        super.backupDataToFileLayout();
+    }
+
+    /**
+     *  process
+     *  - output backup file
+     *  - select file
+     *  - to restore or not
+     *  - output message
+     */
+    @Override
+    public void restoreDataToFileLayout() {
+        super.restoreDataToFileLayout();
+    }
+
+    /**
+     *  process:
+     *  - display table
+     *  - first page display
+     *  - show pagination
+     */
+    @Override
+    public void moveToFirstPageLayout() {
+        super.moveToFirstPageLayout();
+    }
+
+    /**
+     *  process:
+     *  - display table
+     *  - last page display
+     *  - show pagination
+     */
+    @Override
+    public void moveToLastPageLayout() {
+        super.moveToLastPageLayout();
+    }
+
+    /**
+     *  process:
+     *  - display table
+     *  - move -1 page
+     *  - show pagination
+     */
+    @Override
+    public void moveToPreviousPageLayout() {
+        super.moveToPreviousPageLayout();
+    }
+
+    /**
+     *  process:
+     *  - display table
+     *  - move + 1 page
+     *  - show pagination
+     */
+    @Override
+    public void moveToNextPageLayout() {
+        super.moveToNextPageLayout();
+    }
+
+    /**
+     *  process:
+     *  - output message
+     *  - write data into log file
+     *  - exit program
+     */
+    @Override
+    public void exitProgramLayout() {
+        super.exitProgramLayout();
+    }
+
+    /**
+     *  process:
+     *  - input page
+     *  - display table at page
+     */
+    @Override
     public void gotoDataLayout() {
-        // INPUT PAGE
-        // DISPLAY TABLE
-        // AT SPECIFIC PAGE
+        super.gotoDataLayout();
     }
 
+    /**
+     *  process:
+     *  - input row
+     *  - output message
+     */
+    @Override
     public void setRowLayout() {
-        // INPUT SET ROW (HOW MANY ROW TO DISPLAY)
-        // OUTPUT MESSAGE
+        super.setRowLayout();
     }
 
-    public boolean findProductByName() {
-        // FIND PRODUCT BY ID
-        // RETURN TRUE IF FOUND
-        return false;
-    }
-
-    public int displayProductByName() {
-        // FIND PRODUCT BY ID
-        // RETURN TRUE IF FOUND
-        return 0;
-    }
-
-    public boolean findProductByID(int productID) {
-        return false;
-    }
-
-    public int displayProductByID(int productID) {
-        return 0;
-    }
-
-    public boolean deleteProductByID(int productID) {
-        return false;
-    }
+    /**
+     *  process:
+     *  - (working on it)
+     */
+    public void shortcutCommand() {}
 }
