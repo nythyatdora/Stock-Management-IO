@@ -426,9 +426,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void restoreDataToFileLayout() {
         boolean isSuccessful = restoreDataToFileProcess();
         if(!isSuccessful) {
-            outputMessageErrorLayout("Process Failed!");
+            System.out.println();
+            outputMessageErrorLayout("Restore Canceled!");
         }
         else {
+            System.out.println();
             outputMessageLayout("Restore Successfully!");
         }
     }
@@ -625,29 +627,40 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         int numberOfFile = 1;
         String fileToBackup;
 
-        List<String> result = null;
+        List<String> listFiles = null;
         FileInputStream inputStream;
         FileOutputStream outputStream;
 
         try {
-            System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
             try (Stream<Path> walk = Files.walk(Paths.get(FileLocation.BACKUP_FILE_LOCATION))) {
 
-                result = walk.filter(Files::isRegularFile)
+                listFiles = walk.filter(Files::isRegularFile)
                         .map(x -> x.toString()).collect(Collectors.toList());
 
-                for (String listOfFile : result){
+                System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
+                for (String listOfFile : listFiles){
                     System.out.println(numberOfFile+")"+listOfFile);
                     numberOfFile++;
                 }
+
+                if(listFiles.isEmpty()) {
+                    return false;
+                }
+
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
 
+            System.out.println();
+
             int indexOfFile = TextFieldConsole.readIntegerType("Choose File for Backup : ");
 
-            fileToBackup = result.get(indexOfFile - 1);
+            if(indexOfFile<0 || indexOfFile > listFiles.size()) {
+                return false;
+            }
+
+            fileToBackup = listFiles.get(indexOfFile - 1);
 
             File infile = new File(fileToBackup);
             File outfile = new File(FileLocation.DEFAULT_FILE_NAME);
