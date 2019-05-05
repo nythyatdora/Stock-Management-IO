@@ -1,7 +1,31 @@
 public class Tester implements InputCommand {
     public static void main(String[] args) {
         BaseCode baseCode = new BaseCode();
+        ConfigureSetting setting = new ConfigureSetting();
 
+        if (!setting.hasSavedBeforeClose) {
+
+            System.out.println("Do you want to update [Y/y] or [N/n]");
+
+            char ch = TextFieldConsole.readCharType("Choose:");
+
+            switch (ch) {
+
+                case 'y':
+                case 'Y':
+
+                    baseCode.restoreDataFromTemp();
+                    break;
+
+                case 'n':
+                case 'N':
+                    System.out.println("Recovery has been cancel....");
+
+                    break;
+            }
+
+
+        }
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
         // baseCode.outputLoadingLayout();
@@ -95,6 +119,12 @@ public class Tester implements InputCommand {
 
                 case EXIT_UPPER:
                 case EXIT_LOWER:
+
+                    if (!setting.hasSavedBeforeClose) {
+                        baseCode.saveDataToFileTemp();
+                        setting.hasSavedBeforeClose = false;
+                        ConfigureSetting.writeToConfigureFile(setting);
+                    }
                     System.exit(0);
                     break;
 

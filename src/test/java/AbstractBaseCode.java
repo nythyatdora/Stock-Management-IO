@@ -548,9 +548,33 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     @Override
-    public void saveDataToFileProcess() {
+    public void
+    saveDataToFileProcess() {
+        File fileTemp = new File("temp.txt");
         File file = new File(FileLocation.DEFAULT_FILE_NAME);
         file.delete();
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+
+            for (int i = 0; i < listOfProducts.size(); i++) {
+                bufferedWriter.append("+" + listOfProducts.get(i).ToString());
+            }
+
+            bufferedWriter.close();
+
+            outputMessageLayout("Save Data Successfully!");
+            fileTemp.delete();
+            setting.hasSavedBeforeClose = true;
+            ConfigureSetting.writeToConfigureFile(setting);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveDataToFileTemp() {
+        File file = new File("mytext1.bak");
+//        file.delete();
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
 
@@ -566,6 +590,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             e.printStackTrace();
         }
     }
+
+
 
     @Override
     public boolean backupDataToFileProcess() {
@@ -601,6 +627,43 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         return true;
     }
+
+    public boolean restoreDataFromTemp(){
+        FileInputStream inputStream=null;
+        FileOutputStream outputStream=null;
+        File infile = new File("mytext1.txt");
+        File outfile = new File(FileLocation.DEFAULT_FILE_NAME);
+        try {
+            inputStream = new FileInputStream(infile);
+            outputStream = new FileOutputStream(outfile);
+        }catch (IOException ex) {
+                ex.printStackTrace();
+        }
+        byte[] buffer = new byte[1024];
+
+        int length;
+            /*
+            copying the contents from input stream to
+             * output stream using read and write methods
+             */
+        try {  while ((length = inputStream.read(buffer)) > 0) {
+
+                outputStream.write(buffer, 0, length);
+
+        }
+
+        //Closing the input/output file streams
+        inputStream.close();
+        outputStream.close();
+    }  catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        listOfProducts = readDataFromFileProcess();
+            return true;
+
+    }
+
 
     @Override
     public boolean restoreDataToFileProcess() {
@@ -918,5 +981,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-    }
+        setting.hasSavedBeforeClose=false;
+        saveDataToFileTemp();
+        ConfigureSetting.writeToConfigureFile(setting);
+         }
 }

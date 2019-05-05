@@ -1,4 +1,8 @@
 public class BaseCode extends AbstractBaseCode {
+    @Override
+    public void saveDataToFileTemp() {
+        super.saveDataToFileTemp();
+    }
 
     /**
      *  process:
@@ -63,6 +67,8 @@ public class BaseCode extends AbstractBaseCode {
      *  - to save data or not
      *  - output message
      */
+
+
     @Override
     public void writeDataLayout() {
         super.writeDataLayout();
