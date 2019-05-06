@@ -1,6 +1,21 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_LongestLine;
+import de.vandermeer.asciithemes.TA_GridThemes;
+import de.vandermeer.asciithemes.u8.U8_Grids;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GetConnection {
 
@@ -21,82 +36,188 @@ public class GetConnection {
 
 	public static void main(String[] args) {
 		Connection connection = GetConnection.getConnection();
-			if (connection != null) {
-				System.out.println("connected");
-
-			}
 		GetConnection getConnection = new GetConnection();
-		getConnection.copyTable();
-		getConnection.updateDescriptionAndAuthor(connection,10);
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("Select * from temp_table");
+			if (resultSet.next()) {
 
+				System.out.println("Do you want to recovery");
+				//getConnection.saveToDB();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		//getConnection.backupTable();
+		//	getConnection.copyTable();
+		System.out.println("backup");
+		//getConnection.backupDataToFileProcess();
+		System.out.println("restore");
+		getConnection.restoreDataToFileProcess();
+		// getConnection.reStore();
+		//	getConnection.updateDescriptionAndAuthor(connection,13);
+		//	getConnection.insertStudent(connection);
 		//getConnection.writeExampleRecords();
-		System.out.println(	getConnection.getProduct(10));
-		getConnection.saveToDB();
+		//	System.out.println(getConnection.getProduct(10));
+		//	getConnection.saveToDB();
 	}
-	private boolean  copyTable(){
-		String sqlCheck ="CREATE TABLE IF NOT EXISTS temp_table LIKE tbproduct;";
-		String sqlCopy ="INSERT temp_table\n" +
+
+
+	public boolean restoreDataToFileProcess() {
+		int numberOfFile = 1;
+		String fileToBackup;
+
+		List<String> result = null;
+
+		try {
+			System.out.println("==================== PLEASE CHOOSE A BACKUP FILE ====================");
+			try (Stream<Path> walk = Files.walk(Paths.get(FileLocation.BACKUP_FILE_LOCATION))) {
+
+				result = walk.filter(Files::isRegularFile)
+						.map(x -> x.toString()).collect(Collectors.toList());
+
+				for (String listOfFile : result) {
+					System.out.println(numberOfFile + ")" + listOfFile);
+					numberOfFile++;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			int indexOfFile = TextFieldConsole.readIntegerType("Choose File for Backup : ");
+
+			fileToBackup = result.get(indexOfFile - 1);
+
+			File infile = new File(fileToBackup);
+
+
+			Statement reMoveTemp = GetConnection.getConnection().createStatement();
+			reMoveTemp.execute("DELETE FROM tbproduct");
+			Statement statement = GetConnection.getConnection().createStatement();
+			try (BufferedReader buffer = new BufferedReader(new FileReader(infile))
+			) {
+ 				String sqlInsert;
+				while ((sqlInsert = buffer.readLine()) != null) {
+					// process the sqlInsert.
+					statement.execute(sqlInsert);
+					System.out.println(sqlInsert);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+ 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	private boolean copyTable() {
+		String sqlCheck = "CREATE TABLE IF NOT EXISTS temp_table LIKE tbproduct;";
+		String sqlCopy = "INSERT temp_table\n" +
 				"SELECT * FROM tbproduct;";
 		String sqlDelete = "DELETE FROM temp_table";
 		try {
 			Statement checkStatement = GetConnection.getConnection().createStatement();
-		boolean i =	checkStatement.execute(sqlCheck);
-			System.out.println(i);
-			if (i){
-				System.out.println("creating table please wait");
-			}else {
-				Statement reMoveStatement = GetConnection.getConnection().createStatement();
-				reMoveStatement.execute(sqlDelete);
-				Statement copyStatement = GetConnection.getConnection().createStatement();
-				copyStatement.execute(sqlCopy);
-			}
+			checkStatement.execute(sqlCheck);
 
-
+			Statement reMoveStatement = GetConnection.getConnection().createStatement();
+			reMoveStatement.execute(sqlDelete);
+			Statement copyStatement = GetConnection.getConnection().createStatement();
+			copyStatement.execute(sqlCopy);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 
-
+		System.out.println("success");
 		return true;
- 	}
-	public  void updateDescriptionAndAuthor(Connection conn,int id)
+	}
 
-	{
-		try
-		{
+	public void updateDescriptionAndAuthor(Connection conn, int id) {
+		try {
 			// create our java preparedstatement using a sql update query
 			PreparedStatement ps = conn.prepareStatement(
 					"UPDATE temp_table SET proName = ?, proUnitPrice = ?,proQty=? WHERE proID = ? ");
 
 			// set the preparedstatement parameters
-			ps.setString(1,"colo2");
-			ps.setDouble(2,12);
-			ps.setInt(3,10);
-			ps.setInt(4,id);
+			ps.setString(1, "colo2");
+			ps.setDouble(2, 12);
+			ps.setInt(3, 10);
+			ps.setInt(4, id);
 
 			// call executeUpdate to execute our sql update statement
 			ps.executeUpdate();
 			ps.close();
-		}
-		catch (SQLException se)
-		{
+		} catch (SQLException se) {
 			// log the exception
 
 		}
 	}
 
-	public boolean insertStudent(Product product) {
-		Connection connection = GetConnection.getConnection();
 
+	private boolean backupDataToFileProcess() {
+
+		FileOutputStream outputStream;
+
+		String sql = "SELECT * FROM tbproduct";
+		ArrayList<String> list = new ArrayList<>();
+		File backupCollectionFileWithLocation = new File(ConfigureSetting.getBackupFileName());
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO tbproduct VALUES ( ?,?, ?, ?,?)");
-			ps.setInt(1, product.getProductID());
-			ps.setString(2, product.getProductName());
-			ps.setDouble(3, product.getUnitPrice());
-			ps.setInt(4, product.getQuantity());
-			ps.setString(5, product.getImportDate());
+			outputStream = new FileOutputStream(backupCollectionFileWithLocation);
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(backupCollectionFileWithLocation));
+
+			String script = "INSERT INTO tbproduct (proID,proName,proUnitPrice,proQty,importDate)";
+			String script2 = "VALUES(";
+			Statement statement = GetConnection.getConnection().createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				String value = resultSet.getInt(1) + "," + "'" + resultSet.getString(2) + "'" + "," + resultSet.getDouble(3) + "," + resultSet.getInt(4) + "," + "'" + resultSet.getString(5) + "'";
+
+				bufferedWriter.write(script + script2 + value + ");");
+				bufferedWriter.newLine();
+				System.out.println(script + script2 + value + ");");
+			}
+
+			bufferedWriter.close();
+
+
+			// Closing the input/output file streams
+
+			outputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+
+	public boolean insertStudent(Connection connection) {
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date date = new Date();
+		Product insertProduct = new Product();
+		System.out.println("======== INSERT NEW PRODUCT =========");
+		System.out.println("[NEW] Product ID         : " + getLastRecord());
+		String productName = TextFieldConsole.readStringType("[NEW] Product Name       : ");
+		int productQuantity = TextFieldConsole.readIntegerType("[NEW] Product Quantity   : ");
+		double productUnitPrice = TextFieldConsole.readDoubleType("[NEW] Product Unit-Price : ");
+		String importDate = dateFormat.format(date);
+
+		insertProduct = new Product(getLastRecord(), productName, productUnitPrice, productQuantity, importDate);
+
+		System.out.println();
+		outputProductData(insertProduct);
+		System.out.println();
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO temp_table VALUES ( ?,?, ?, ?,?)");
+			ps.setInt(1, insertProduct.getProductID());
+			ps.setString(2, insertProduct.getProductName());
+			ps.setDouble(3, insertProduct.getUnitPrice());
+			ps.setInt(4, insertProduct.getQuantity());
+			ps.setString(5, insertProduct.getImportDate());
 			int i = ps.executeUpdate();
 
 			if (i == 1) {
@@ -116,6 +237,30 @@ public class GetConnection {
 
 		return false;
 	}
+
+
+	private int getLastRecord() {
+		Connection connection = GetConnection.getConnection();
+		int last = 0;
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM  temp_table ");
+			if (resultSet != null) {
+				while (resultSet.next()) {
+					last = resultSet.getInt("proID") + 1;
+				}
+
+				connection.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+
+		return last;
+	}
+
+
 	private Product extractUserFromResultSet(ResultSet rs) throws SQLException {
 		Product product = new Product();
 		product.setProductID(rs.getInt("proID"));
@@ -125,6 +270,7 @@ public class GetConnection {
 		product.setImportDate(rs.getString("importDate"));
 		return product;
 	}
+
 	public Product getProduct(int proID) {
 
 		Connection connection = GetConnection.getConnection();
@@ -149,34 +295,90 @@ public class GetConnection {
 	}
 
 
-
 	public void writeExampleRecords() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
 
+		try {
+			Statement reMoveTemp = GetConnection.getConnection().createStatement();
+			reMoveTemp.execute("DELETE FROM tbproduct");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		for (int i = 1; i <= 100; i++) {
-			insertStudent((new Product(0, "fanta", 10, 15, "22/09/2019")));
+			insertStudent((new Product(0, "fanta2", 10, 15, dateFormat.format(date))));
+		}
+	}
 
+	public boolean insertStudent(Product product) {
+		Connection connection = GetConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO tbproduct VALUES ( ?,?, ?, ?,?)");
+			ps.setInt(1, product.getProductID());
+			ps.setString(2, product.getProductName());
+			ps.setDouble(3, product.getUnitPrice());
+			ps.setInt(4, product.getQuantity());
+			ps.setString(5, product.getImportDate());
+			int i = ps.executeUpdate();
+
+			if (i == 1) {
+				System.out.println(product.getImportDate());
+				System.out.println("Success");
+				connection.close();
+				return true;
+
+			} else
+				throw new SQLException();
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.print("error");
 		}
 
 
+		return false;
 	}
 
+	public void saveToDB() {
 
-	public void saveToDB(){
-
-		String sqlCopy ="INSERT tbproduct\n" +
+		String sqlCopy = "INSERT tbproduct\n" +
 				"SELECT * FROM temp_table;";
 		String sqlDelete = "DELETE FROM tbproduct";
 		try {
- 				Statement reMoveStatement = GetConnection.getConnection().createStatement();
-				reMoveStatement.execute(sqlDelete);
-				Statement copyStatement = GetConnection.getConnection().createStatement();
-				copyStatement.execute(sqlCopy);
-
- 			} catch (SQLException e) {
+			Statement reMoveStatement = GetConnection.getConnection().createStatement();
+			reMoveStatement.execute(sqlDelete);
+			Statement copyStatement = GetConnection.getConnection().createStatement();
+			copyStatement.execute(sqlCopy);
+			Statement reMoveTemp = GetConnection.getConnection().createStatement();
+			reMoveTemp.execute("DELETE FROM temp_table");
+		} catch (SQLException e) {
 			e.printStackTrace();
-
-
 		}
+	}
+
+	public void outputProductData(Product product) {
+		AsciiTable table = new AsciiTable();
+
+		table.addRule();
+		table.addRow("ID", " : " + +product.getProductID());
+
+		table.addRow("Name", " : " + product.getProductName());
+
+		table.addRow("Unit price", " : " + product.getUnitPrice());
+
+		table.addRow("Qty", " : " + product.getQuantity());
+
+		table.addRow("Imported Date", " : " + product.getImportDate());
+		table.addRule();
+
+		table.setPaddingRight(3);
+		table.setPaddingLeft(1);
+		CWC_LongestLine cwc = new CWC_LongestLine();
+		table.getRenderer().setCWC(cwc);
+		table.getContext().setGridTheme(TA_GridThemes.OUTSIDE);
+		table.getContext().setGrid(U8_Grids.borderDouble());
+		System.out.println(table.render());
 	}
 
 
