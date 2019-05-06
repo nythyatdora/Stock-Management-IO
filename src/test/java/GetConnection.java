@@ -83,11 +83,17 @@ public class GetConnection {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
+
 			}
 
 			int indexOfFile = TextFieldConsole.readIntegerType("Choose File for Backup : ");
 
+			if (indexOfFile<0||indexOfFile>result.size()) {return false;}
+
+
 			fileToBackup = result.get(indexOfFile - 1);
+			
 
 			File infile = new File(fileToBackup);
 
@@ -106,9 +112,11 @@ public class GetConnection {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
  		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}
@@ -163,7 +171,7 @@ public class GetConnection {
 		FileOutputStream outputStream;
 
 		String sql = "SELECT * FROM tbproduct";
-		ArrayList<String> list = new ArrayList<>();
+
 		File backupCollectionFileWithLocation = new File(ConfigureSetting.getBackupFileName());
 		try {
 			outputStream = new FileOutputStream(backupCollectionFileWithLocation);
@@ -173,6 +181,7 @@ public class GetConnection {
 			String script2 = "VALUES(";
 			Statement statement = GetConnection.getConnection().createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
+
 			while (resultSet.next()) {
 				String value = resultSet.getInt(1) + "," + "'" + resultSet.getString(2) + "'" + "," + resultSet.getDouble(3) + "," + resultSet.getInt(4) + "," + "'" + resultSet.getString(5) + "'";
 
