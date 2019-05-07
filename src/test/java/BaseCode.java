@@ -1,4 +1,10 @@
+import java.util.ArrayList;
+
 public class BaseCode extends AbstractBaseCode {
+    @Override
+    public void saveDataToFileTemp() {
+        super.saveDataToFileTemp();
+    }
 
     /**
      *  process:
@@ -63,6 +69,8 @@ public class BaseCode extends AbstractBaseCode {
      *  - to save data or not
      *  - output message
      */
+
+
     @Override
     public void writeDataLayout() {
         super.writeDataLayout();
@@ -233,4 +241,14 @@ public class BaseCode extends AbstractBaseCode {
      *  - (working on it)
      */
     public void shortcutCommand() {}
+
+    @Override
+    public ArrayList<Product> readDataFromFileProcess() {
+        return null;
+    }
+
+    @Override
+    public void saveDataToFileProcess() {
+
+    }
 }

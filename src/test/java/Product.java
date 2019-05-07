@@ -21,6 +21,14 @@ public class Product {
         this.importDate = importDate;
     }
 
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
+    public void setImportDate(String importDate) {
+        this.importDate = importDate;
+    }
+
     public void setProductName(String productName) {
         this.productName = productName;
     }

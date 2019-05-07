@@ -7,5 +7,5 @@ public interface FileLocation {
     String RESTORE_FILE_LOCATION = "./meta/";
 
     String BACKUP_FILE_PREFIX = "file_backup-";
-    String EXTENSION_FILE_DATA = ".bak";
+    String EXTENSION_FILE_DATA = ".sql";
 }

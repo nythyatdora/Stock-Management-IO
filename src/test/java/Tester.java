@@ -1,6 +1,8 @@
 public class Tester implements InputCommand {
     public static void main(String[] args) {
         BaseCode baseCode = new BaseCode();
+        ConfigureSetting setting = new ConfigureSetting();
+
 
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
@@ -58,12 +60,13 @@ public class Tester implements InputCommand {
                     baseCode.moveToLastPageLayout();
                     break;
 
-                /*
+
                     case SEARCH_PRODUCT_UPPER:
                     case SEARCH_PRODUCT_LOWER:
                         baseCode.searchDataLayout();
+                       // Recover.findRecordByName()
                         break;
-                */
+
 
                 case GOTO_PAGE_UPPER:
                 case GOTO_PAGE_LOWER:
@@ -97,6 +100,12 @@ public class Tester implements InputCommand {
 
                 case EXIT_UPPER:
                 case EXIT_LOWER:
+
+                    if (!setting.hasSavedBeforeClose) {
+                        baseCode.saveDataToFileTemp();
+                        setting.hasSavedBeforeClose = false;
+                        ConfigureSetting.writeToConfigureFile(setting);
+                    }
                     System.exit(0);
                     break;
 
