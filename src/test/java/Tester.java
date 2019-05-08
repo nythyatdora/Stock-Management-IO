@@ -3,29 +3,7 @@ public class Tester implements InputCommand {
         BaseCode baseCode = new BaseCode();
         ConfigureSetting setting = new ConfigureSetting();
 
-        if (!setting.hasSavedBeforeClose) {
 
-            System.out.println("Do you want to update [Y/y] or [N/n]");
-
-            char ch = TextFieldConsole.readCharType("Choose:");
-
-            switch (ch) {
-
-                case 'y':
-                case 'Y':
-
-                    baseCode.restoreDataFromTemp();
-                    break;
-
-                case 'n':
-                case 'N':
-                    System.out.println("Recovery has been cancel....");
-
-                    break;
-            }
-
-
-        }
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
         baseCode.outputLoadingLayout();
@@ -82,12 +60,13 @@ public class Tester implements InputCommand {
                     baseCode.moveToLastPageLayout();
                     break;
 
-                /*
+
                     case SEARCH_PRODUCT_UPPER:
                     case SEARCH_PRODUCT_LOWER:
                         baseCode.searchDataLayout();
+                       // Recover.findObjectByCharacterInName()
                         break;
-                */
+
 
                 case GOTO_PAGE_UPPER:
                 case GOTO_PAGE_LOWER:

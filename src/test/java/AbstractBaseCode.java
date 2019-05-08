@@ -10,9 +10,11 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,7 +22,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
 
     private static ConfigureSetting setting;
     private static ArrayList<Product> listOfProducts;
-
+    private Connection connection = GetConnection.getConnection();
     AbstractBaseCode() {
         boolean isSettingExisted = ConfigureSetting.isFileExist();
 
@@ -77,7 +79,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     public void outputLoadingLayout() {
 //        OutputLoadingScreen outputLoadingScreen = new OutputLoadingScreen();
 //        outputLoadingScreen.startThread();
-        listOfProducts = readDataFromFileProcess();
+      //  listOfProducts = readDataFromFileProcess();
+        listOfProducts = readDataFormDatabase();
     }
 
     public void outputMainLayout() {
@@ -134,7 +137,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         MapUtils.populateMap(hashMap, listOfProducts, Product::getProductID);
 
         char choice;
-        int id = setting.currentID + 1;
+       int id = setting.currentID + 1;
         boolean hasInserted = false;
         boolean toContinue = true;
         Product insertProduct;
@@ -159,6 +162,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                 case 'Y':
                 case 'y':
                     hasInserted = insertNewProduct(insertProduct, hashMap);
+                    Recover.insertion(insertProduct,"temp_table");
                     toContinue = false;
                     break;
 
@@ -171,7 +175,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     outputMessageErrorLayout("Invalid Input!");
                     break;
             }
-        } while(toContinue);
+        }while(toContinue);
 
         if(!hasInserted) {
             outputMessageErrorLayout("Process Canceled!");
@@ -181,6 +185,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             ConfigureSetting.writeToConfigureFile(setting);
 
             listOfProducts = new ArrayList<>(hashMap.values());
+
+
             outputMessageLayout("Product with ID : " + id + " was added successfully!");
         }
     }
@@ -207,24 +213,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void searchDataLayout() {
-        String productName;
-        boolean isFound;
-        int searchResult = -1;
-
-        HashMap<String, Product> hashMap = new HashMap<>();
-        MapUtils.populateMap(hashMap, listOfProducts, Product::getProductName);
-
-        productName = TextFieldConsole.readStringType("Input the Name of Product : ");
-        isFound = findProductByName(productName, hashMap);
-
-        if(!isFound) {
-            outputMessageErrorLayout("Product Not Found!" );
-        }
-        else {
-            searchResult = displayProductByName(productName, hashMap);
-        }
-
-        System.out.println("Product Found for [" + productName + "] : " + searchResult);
+  ArrayList resultList = Recover.findObjectByCharacterInName(new Scanner(System.in).nextLine(),listOfProducts);
+        displayTableData(setting.rowSetup, setting.currentPage, resultList);
     }
 
     public void deleteDataLayout() {
@@ -255,6 +245,7 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                     case 'Y':
                     case 'y':
                         hasDeleted = deleteProductByID(productID, hashMap);
+
                         toContinue = false;
                         break;
 
@@ -272,15 +263,49 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
             }
             else {
                 listOfProducts = new ArrayList<>(hashMap.values());
+				String sqlDelete = "UPDATE tbproduct SET status = 0 WHERE proID ="+productID;
+				updateQuery(sqlDelete);
                 outputMessageLayout("Product with ID : " + productID + " was deleted successfully!");
             }
         }
     }
 
+    public boolean updateQuery(String sql) {
+        try {
+            Connection getConnection = GetConnection.getConnection();
+            PreparedStatement ps = getConnection.prepareStatement("INSERT INTO Sql_table (statement) VALUES (?)");
+
+            ps.setString(1,sql);
+            int i = ps.executeUpdate();
+            if (i == 1) {
+                System.out.println("Success");
+                getConnection.close();
+                return true;
+
+            } else
+                throw new SQLException();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.print("error");
+            return false;
+        }
+
+
+    }
+
+
     public void updataDataLayout() {
         int productID;
         int choice;
 
+        try {
+            Statement reMoveTemp = GetConnection.getConnection().createStatement();
+            reMoveTemp.execute("DELETE FROM temp_table");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         boolean isFound;
         boolean hasUpdated = false;
         boolean isContinue = true;
@@ -288,6 +313,11 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         String productName;
         int productQuantity;
         double productUnitPrice;
+        try {
+            Statement statement = connection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         Product searchProduct;
 
@@ -305,7 +335,6 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
         }
         else {
             searchProduct = retreiveProductByID(productID, hashMap);
-
             System.out.println();
             outputProductData(searchProduct);
             System.out.println();
@@ -326,12 +355,14 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         searchProduct.setQuantity(productQuantity);
                         searchProduct.setUnitPrice(productUnitPrice);
 
+                        String updateSqlAll = "UPDATE tbproduct SET proName ="+"'"+searchProduct.getProductName()+"'"+", proUnitPrice = "+searchProduct.getUnitPrice()+",proQty="+searchProduct.getQuantity()+",importDate="+"'"+searchProduct.getImportDate()+"'"+" WHERE proID =" +productID ;
+
                         System.out.println();
                         outputProductData(searchProduct);
                         System.out.println();
 
                         hasUpdated = toUpdateOrNot(searchProduct, hashMap);
-
+                        updateQuery(updateSqlAll);
                         isContinue = false;
                         break;
 
@@ -344,9 +375,10 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         System.out.println();
                         outputProductData(searchProduct);
                         System.out.println();
-
+                        String updateSqlName = "UPDATE tbproduct SET proName ="+searchProduct.getProductName()+", proUnitPrice = "+searchProduct.getUnitPrice()+",proQty="
+                                +searchProduct.getQuantity()+" WHERE proID =" +productID ;
                         hasUpdated = toUpdateOrNot(searchProduct, hashMap);
-
+                        updateQuery(updateSqlName);
                         isContinue = false;
                         break;
 
@@ -359,9 +391,9 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         System.out.println();
                         outputProductData(searchProduct);
                         System.out.println();
-
+                        String updateSqlUnitPrice =" UPDATE tbproduct SET proName ="+searchProduct.getProductName()+", proUnitPrice = "+searchProduct.getUnitPrice()+",proQty="+searchProduct.getQuantity()+" WHERE proID =" +productID ;
                         hasUpdated = toUpdateOrNot(searchProduct, hashMap);
-
+                        updateQuery(updateSqlUnitPrice);
                         isContinue = false;
                         break;
 
@@ -376,7 +408,8 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
                         System.out.println();
 
                         hasUpdated = toUpdateOrNot(searchProduct, hashMap);
-
+                        String updateSqlQuantity = "UPDATE tbproduct SET proName ="+searchProduct.getProductName()+", proUnitPrice = "+searchProduct.getUnitPrice()+",proQty="+searchProduct.getQuantity()+" WHERE proID =" +productID ;
+                        updateQuery(updateSqlQuantity);
                         isContinue = false;
                         break;
 
@@ -408,7 +441,14 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
 
     public void saveDataToFileLayout() {
-        saveDataToFileProcess();
+        Recover.savAndRecovery();
+        try {
+            Recover.statementQueryer("SELECT * FROM Sql_table");
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        //saveDataToFileProcess();
     }
 
     public void backupDataToFileLayout() {
@@ -519,52 +559,28 @@ public abstract class AbstractBaseCode implements DisplayLayout, CoreProcess, Da
     }
     // END LAYOUT
 
+
+
     // PROCESS
-    public ArrayList<Product> readDataFromFileProcess() {
-        String str;
-        String temp = "";
 
-        long startTime;
-        long endTime;
-        long duration;
+    public ArrayList<Product> readDataFormDatabase(){
 
-        BufferedReader bufferedReader;
-
-        startTime = System.currentTimeMillis();
-
+        String sqlStatement = "SELECT * FROM tbproduct WHERE status = 1";
+        ArrayList<Product> list = new ArrayList<>();
         try {
-            bufferedReader = new BufferedReader(new FileReader(FileLocation.DEFAULT_FILE_NAME));
+            Statement statement = GetConnection.getConnection().createStatement();
+          ResultSet resultSet=  statement.executeQuery(sqlStatement);
 
-            str = bufferedReader.readLine();
-            while (str != null) {
-                temp = temp.concat(str);
-                str = bufferedReader.readLine();
+            while (resultSet.next()){
+
+                list.add(new Product(resultSet.getInt(1),resultSet.getString(2),resultSet.getDouble(3),resultSet.getInt(4),resultSet.getString(3)));
             }
 
-            bufferedReader.close();
-        }
-        catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+
         }
-
-        StringTokenizer stringTokenizer = new StringTokenizer(temp, "+");
-        ArrayList<String> arr = new ArrayList<>();
-
-        while (stringTokenizer.hasMoreTokens()) {
-            arr.add(stringTokenizer.nextToken());
-        }
-
-        ArrayList<Product> obj = new ArrayList<>();
-
-        for (String anArr1 : arr) {
-            String a[] = anArr1.split("#");
-            obj.add(new Product(Integer.parseInt(a[0]), a[1], Double.parseDouble(a[2]), Integer.parseInt(a[3]), a[4]));
-        }
-
-        endTime = System.currentTimeMillis();
-        duration = endTime - startTime;
-        System.out.println("Current Time Loading : " + duration);
-        return obj;
+        return list;
     }
 
     @Override

@@ -10,10 +10,8 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,7 +52,7 @@ public class GetConnection {
 		System.out.println("backup");
 		//getConnection.backupDataToFileProcess();
 		System.out.println("restore");
-		getConnection.restoreDataToFileProcess();
+		//getConnection.restoreDataToDatabaseProcess();
 		// getConnection.reStore();
 		//	getConnection.updateDescriptionAndAuthor(connection,13);
 		//	getConnection.insertStudent(connection);
@@ -64,7 +62,7 @@ public class GetConnection {
 	}
 
 
-	public boolean restoreDataToFileProcess() {
+	public boolean restoreDataToDatabaseProcess() {
 		int numberOfFile = 1;
 		String fileToBackup;
 
@@ -93,7 +91,7 @@ public class GetConnection {
 
 
 			fileToBackup = result.get(indexOfFile - 1);
-			
+
 
 			File infile = new File(fileToBackup);
 
@@ -322,7 +320,7 @@ public class GetConnection {
 	public boolean insertStudent(Product product) {
 		Connection connection = GetConnection.getConnection();
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO tbproduct VALUES ( ?,?, ?, ?,?)");
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO tbproduct VALUES ( ?,?, ?, ?,?,1)");
 			ps.setInt(1, product.getProductID());
 			ps.setString(2, product.getProductName());
 			ps.setDouble(3, product.getUnitPrice());
