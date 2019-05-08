@@ -28,7 +28,7 @@ public class Tester implements InputCommand {
         }
         baseCode.outputWelcomeLayout();
         baseCode.outputLogoLayout();
-        // baseCode.outputLoadingLayout();
+        baseCode.outputLoadingLayout();
 
         do {
             System.out.println();
@@ -82,10 +82,12 @@ public class Tester implements InputCommand {
                     baseCode.moveToLastPageLayout();
                     break;
 
-                case SEARCH_PRODUCT_UPPER:
-                case SEARCH_PRODUCT_LOWER:
-                    baseCode.searchDataLayout();
-                    break;
+                /*
+                    case SEARCH_PRODUCT_UPPER:
+                    case SEARCH_PRODUCT_LOWER:
+                        baseCode.searchDataLayout();
+                        break;
+                */
 
                 case GOTO_PAGE_UPPER:
                 case GOTO_PAGE_LOWER:
