@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public class Recover {
 
-	public static ArrayList<String> statementQueryer(String sqlStatementGetDataFromStatementTable) throws SQLException {
+	public static ArrayList<String> queryStatement(String sqlStatement) throws SQLException {
 
 		ArrayList<String> arrayList = new ArrayList();
 
@@ -13,10 +13,10 @@ public class Recover {
 
 		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = connection.prepareStatement(sqlStatementGetDataFromStatementTable);
-		  resultSet = preparedStatement.executeQuery();
+			preparedStatement = connection.prepareStatement(sqlStatement);
+			resultSet = preparedStatement.executeQuery();
 
-			//<<<<< add statement to be executed ;
+			// executed statement;
 			while (resultSet.next()) {
 
 				arrayList.add(resultSet.getString(2));
@@ -27,17 +27,14 @@ public class Recover {
 		}
 
 
-
-		if (arrayList.size()>0){
-			arrayList.forEach((statement)->{
+		if (!arrayList.isEmpty()) {
+			arrayList.forEach((statement) -> {
 				try {
 					//str2 = statement;
 
-				connection.createStatement().executeUpdate(statement);
-
-
-				}catch (SQLException sql){
-					System.out.println("problem with sql statement update");
+					connection.createStatement().executeUpdate(statement);
+ 				} catch (SQLException sql) {
+					System.out.println("Something went wrong....");
 					sql.printStackTrace();
 				}
 			});
@@ -48,22 +45,24 @@ public class Recover {
 			preparedStatement.close();
 			connection.close();
 			return arrayList;
-		}else {
+		} else {
 			//if statement from table not found
+			System.out.println("There is no statement to query");
 			return null;
 		}
 
 	}//endoffunction
+
 	public static void insertion(Product product, String table) {
 
 		Connection connection = GetConnection.getConnection();
 		String mySQLStatement =
-				"INSERT INTO "+table+
-						" (proID,proName, proUnitPrice, proQty, importDate, status) "+
-						" VALUES ("+ product.getProductID()+","+"'"+product.getProductName()+"'"+","+product.getUnitPrice()+","
-						+product.getQuantity()+","+ "'"+product.getImportDate()+"'"+","+"1"+")";
-		//mySQLStatement = "Insert into "+table+" (name, unitprice, stockqty, importeddate, status) values ('hahaha',2,2,'24-424-2',1) ";
-		try{
+				"INSERT INTO " + table +
+						" (proID,proName, proUnitPrice, proQty, importDate, status) " +
+						" VALUES (" + product.getProductID() + "," + "'"+product.getProductName()+"'" + "," + product.getUnitPrice() + ","
+						+ product.getQuantity() + "," + "'" + product.getImportDate() + "'" + "," + "1" + ")";
+
+		try {
 			Statement statement = connection.createStatement();
 
 			statement.execute(mySQLStatement);
@@ -77,7 +76,7 @@ public class Recover {
 	}
 
 
-	public static ArrayList findObjectByCharacterInName(String character, ArrayList<Product> products) {
+	public static ArrayList findRecordByName(String character, ArrayList<Product> products) {
 
 		ArrayList arrayList = new ArrayList();
 
@@ -92,29 +91,48 @@ public class Recover {
 
 		return arrayList;
 	}
+
 	private static Boolean stringHasChar(String regex, String text) {
 		return Pattern.matches(".*" + regex + ".*", text);
 	}
 
 
-
-	public static void savAndRecovery(){
-		Connection connection =  GetConnection.getConnection();
+	public static void saveRecovery() {
+		Connection connection = GetConnection.getConnection();
 		try {
-			Statement statement =connection.createStatement();
-			String queryData="INSERT INTO tbproduct (proName, proUnitPrice, proQty, importDate, status) SELECT proName, proUnitPrice, proQty, importDate, status FROM temp_table ORDER BY proID ASC";
+			Statement statement = connection.createStatement();
+			String queryData = "INSERT INTO tbproduct (proName, proUnitPrice, proQty, importDate, status) SELECT proName, proUnitPrice, proQty, importDate, status FROM temp_table ORDER BY proID ASC";
 
-		 		statement.executeUpdate(queryData);
-		 		statement.executeUpdate("DELETE FROM temp_table");
+			statement.executeUpdate(queryData);
+			statement.executeUpdate("DELETE FROM temp_table");
 			connection.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
+	
+	public static boolean checkTable(){
+		Connection connection = GetConnection.getConnection();
+		try {
+			Statement statement = connection.createStatement();
+		//	ResultSet resultSet = statement.
+
+
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			return false;
+		}
+		return true;
+	}
+	
+
 	public static void main(String[] args) throws SQLException {
-		Recover.statementQueryer("SELECT * FROM Sql_table");
-		Recover.insertion(new Product(0,"chan",12,19,"22/33/12"),"temp_table");
-		Recover.savAndRecovery();
+		Recover.queryStatement("SELECT * FROM Sql_table");
+		Recover.insertion(new Product(0, "chan", 12, 19, "22/33/12"), "temp_table");
+		Recover.saveRecovery();
 	}
 }

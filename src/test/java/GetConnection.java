@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+ /*class use for testing and get connection from Database*/
 public class GetConnection {
 
 	private static final String url = "jdbc:mysql://127.0.0.1:3306/dbproduct";
@@ -47,8 +49,7 @@ public class GetConnection {
 			e.printStackTrace();
 		}
 
-		//getConnection.backupTable();
-		//	getConnection.copyTable();
+
 		System.out.println("backup");
 		//getConnection.backupDataToFileProcess();
 		System.out.println("restore");
@@ -119,49 +120,9 @@ public class GetConnection {
 		return true;
 	}
 
-	private boolean copyTable() {
-		String sqlCheck = "CREATE TABLE IF NOT EXISTS temp_table LIKE tbproduct;";
-		String sqlCopy = "INSERT temp_table\n" +
-				"SELECT * FROM tbproduct;";
-		String sqlDelete = "DELETE FROM temp_table";
-		try {
-			Statement checkStatement = GetConnection.getConnection().createStatement();
-			checkStatement.execute(sqlCheck);
 
-			Statement reMoveStatement = GetConnection.getConnection().createStatement();
-			reMoveStatement.execute(sqlDelete);
-			Statement copyStatement = GetConnection.getConnection().createStatement();
-			copyStatement.execute(sqlCopy);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
 
-		System.out.println("success");
-		return true;
-	}
-
-	public void updateDescriptionAndAuthor(Connection conn, int id) {
-		try {
-			// create our java preparedstatement using a sql update query
-			PreparedStatement ps = conn.prepareStatement(
-					"UPDATE temp_table SET proName = ?, proUnitPrice = ?,proQty=? WHERE proID = ? ");
-
-			// set the preparedstatement parameters
-			ps.setString(1, "colo2");
-			ps.setDouble(2, 12);
-			ps.setInt(3, 10);
-			ps.setInt(4, id);
-
-			// call executeUpdate to execute our sql update statement
-			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException se) {
-			// log the exception
-
-		}
-	}
 
 
 	private boolean backupDataToFileProcess() {
@@ -246,12 +207,12 @@ public class GetConnection {
 	}
 
 
-	private int getLastRecord() {
+	public int getLastRecord() {
 		Connection connection = GetConnection.getConnection();
 		int last = 0;
 		try {
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM  temp_table ");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM  tbproduct ");
 			if (resultSet != null) {
 				while (resultSet.next()) {
 					last = resultSet.getInt("proID") + 1;

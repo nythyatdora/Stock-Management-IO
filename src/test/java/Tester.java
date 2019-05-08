@@ -64,7 +64,7 @@ public class Tester implements InputCommand {
                     case SEARCH_PRODUCT_UPPER:
                     case SEARCH_PRODUCT_LOWER:
                         baseCode.searchDataLayout();
-                       // Recover.findObjectByCharacterInName()
+                       // Recover.findRecordByName()
                         break;
 
 
